@@ -31,4 +31,8 @@
     <color name="material_deep_teal_50">#ff009688</color>
     <color name="color_black_0D">#0D0D0D</color>
     <color name="color_yellow">#FFF7D23E</color>
+    <!-- 橙色 -->
+    <color name="color_base_orange">#FE9C01</color>
+    <!-- 菜单栏黑背景色 -->
+    <color name="color_base_black_bg">#21292C</color>
 </resources>
