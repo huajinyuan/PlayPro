@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+
+    <EditText
+        android:id="@+id/edt_login_username"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_rec_999"
+        android:ems="10"
+        android:hint="Enter your User Name"
+        android:inputType="textPersonName"
+        android:paddingLeft="5dp"
+        android:text="1" />
+
+    <EditText
+        android:id="@+id/edt_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_rec_999"
+        android:ems="10"
+        android:hint="Enter your Password"
+        android:inputType="textPassword"
+        android:paddingLeft="5dp"
+        android:text="1" />
+
+
+    <CheckBox
+        android:id="@+id/che_login_remember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:text="Remember password" />
+
+
+    <Button
+        android:id="@+id/btn_login_admin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/colorBlue"
+        android:text="LOGIN"
+        android:textColor="@color/colorwhite" />
+
+    <TextView
+        android:id="@+id/tv_login_go2register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Register"
+        android:textColor="#47a3df"
+        android:textSize="18sp" />
+
+
+</LinearLayout>

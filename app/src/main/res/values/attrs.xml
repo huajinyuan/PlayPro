@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="NRecyclerView">
+        <attr name="push_resistance" format="float"/>
+        <attr name="over_resistance" format="float"/>
+        <attr name="duration" format="integer"/>
+        <attr name="pull_eable" format="boolean"/>
+        <attr name="push_able" format="boolean"/>
+        <attr name="over_scroll" format="boolean"/>
+        <attr name="layout_color" format="color"/>
+        <attr name="contentview_color" format="color"/>
+        <attr name="inner_view" format="string"/>
+        <attr name="loaddata_scrolleable" format="boolean"/>
+        <attr name="interpolator" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="AmountView">
+        <!-- 左右2边+-按钮的宽度 -->
+        <attr name="btnWidth" format="dimension" />
+        <!-- 中间TextView的宽度 -->
+        <attr name="tvWidth" format="dimension" />
+        <!--<attr name="tvColor" format="color"/>-->
+        <attr name="tvTextSize" format="dimension"/>
+        <attr name="btnTextSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="Rotate3dAnimation">
+        <attr name="rollType" format="enum">
+            <enum name="x" value="0"/>
+            <enum name="y" value="1"/>
+            <enum name="z" value="2"/>
+        </attr>
+        <attr name="fromDeg" format="float" />
+        <attr name="toDeg" format="float" />
+        <attr name="pivotX" format="fraction"/>
+        <attr name="pivotY" format="fraction" />
+    </declare-styleable>
+
+    <declare-styleable name="LineBreakLayout">
+        <!--标签之间左右距离-->
+        <attr name="leftAndRightSpace" format="dimension" />
+        <!--标签行距-->
+        <attr name="rowSpace" format="dimension" />
+    </declare-styleable>
+</resources>
