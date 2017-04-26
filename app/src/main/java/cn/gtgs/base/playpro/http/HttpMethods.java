@@ -30,7 +30,8 @@ public class HttpMethods {
 
     public HttpParams getHttpParams() {
         HttpParams params = new HttpParams();//param支持中文,直接传,不要自己编码
-        params.put("key", "E0yZjK6rBV1Lq47I1k7QPuN2LmADsXLS");
+        params.put("key", "z45CasVgh8K3q6300g0d95VkK197291A");
+//        params.put("key", "E0yZjK6rBV1Lq47I1k7QPuN2LmADsXLS");
         return params;
     }
 

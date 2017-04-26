@@ -24,6 +24,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.gtgs.base.playpro.base.view.IDelegate;
 
 
@@ -36,6 +38,7 @@ import cn.gtgs.base.playpro.base.view.IDelegate;
  */
 public abstract class FragmentPresenter<T extends IDelegate> extends Fragment {
     public T viewDelegate;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,17 +58,24 @@ public abstract class FragmentPresenter<T extends IDelegate> extends Fragment {
             savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         viewDelegate.create(inflater, container, savedInstanceState);
-        return viewDelegate.getRootView();
+        View view = viewDelegate.getRootView();
+        unbinder = ButterKnife.bind(view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewDelegate.initWidget();
-        bindEvenListener();
+//        bindEvenListener();
+        init();
     }
 
-    protected void bindEvenListener() {
+//    protected void bindEvenListener() {
+//    }
+    public void init()
+    {
+
     }
 
     @Override
@@ -93,6 +103,8 @@ public abstract class FragmentPresenter<T extends IDelegate> extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        viewDelegate.unBunderButterknife();
+        unbinder.unbind();
         viewDelegate = null;
     }
 

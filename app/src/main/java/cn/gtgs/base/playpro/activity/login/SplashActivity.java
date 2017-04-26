@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.HomeActivity;
 import cn.gtgs.base.playpro.utils.F;
 
 
@@ -50,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    startActivity(intent);
 //                } else {
                     overridePendingTransition(0, 0);
-                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
 //                }
             }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/LAYOUT_TOP_HEADER"
+        android:layout_width="match_parent"
+        android:background="@color/colorwhite"
+        android:layout_height="45.5dp"
+        android:padding="0.0px" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_orange_indicator_r"
+                android:text="土豪榜"
+                android:layout_weight="1"
+                android:textColor="@color/color_base_orange" />
+
+            <Button
+                android:id="@+id/btn_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/float_transparent"
+                android:text="明星榜"
+                android:layout_weight="1"
+                android:textColor="@color/cardview_dark_background" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_ranking_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </FrameLayout>
+
+</LinearLayout>

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".PApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,7 +31,7 @@
         <activity android:name=".activity.login.RegisterActivity" />
         <activity android:name=".activity.home.HomeActivity" />
         <activity android:name=".activity.center.CenterActivity" />
-        <activity android:name=".activity.center.AnchorApproveActivity"></activity>
+        <activity android:name=".activity.center.AnchorApproveActivity" />
     </application>
 
 </manifest>

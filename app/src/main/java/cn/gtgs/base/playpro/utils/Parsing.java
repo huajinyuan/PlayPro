@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.base.model.BaseError;
 import cn.gtgs.base.playpro.base.model.CheckError;
-import cn.gtgs.base.playpro.widget.SweetAlert.SweetAlertDialog;
 import okhttp3.Response;
 
 /**
@@ -40,18 +39,18 @@ public class Parsing {
     public CheckError parsingError(Response response, final Context context) {
         CheckError checkError = new CheckError();
         if (response.code() == 401) {
-            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Login has expired")
-                    .setContentText("Return to the login page")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                            OApplication.getInstance().finishAll();
-//                            Intent intent = new Intent(context, LoginActivity.class);
-//                            context.startActivity(intent);
-                        }
-                    })
-                    .show();
+//            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+//                    .setTitleText("Login has expired")
+//                    .setContentText("Return to the login page")
+//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+////                            OApplication.getInstance().finishAll();
+////                            Intent intent = new Intent(context, LoginActivity.class);
+////                            context.startActivity(intent);
+//                        }
+//                    })
+//                    .show();
             return null;
         } else if (response.code() == 200) {
             checkError.setSuccess(true);

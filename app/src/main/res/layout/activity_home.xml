@@ -19,7 +19,7 @@
             android:layout_centerInParent="true">
 
             <Button
-                android:id="@+id/btn_user"
+                android:id="@+id/btn_ranking"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_orange_indicator"
@@ -27,7 +27,7 @@
                 android:textColor="@color/colorwhite" />
 
             <Button
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_recommented"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:background="@color/float_transparent"
@@ -54,16 +54,19 @@
             app:srcCompat="@android:drawable/ic_menu_search" />
 
         <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_myplaces"
             android:layout_alignBottom="@+id/imageView3"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="11dp"
+            android:layout_alignParentRight="true"
             android:layout_marginEnd="11dp"
-            android:id="@+id/imageView4" />
+            android:layout_marginRight="11dp"
+            app:srcCompat="@android:drawable/ic_menu_myplaces" />
     </RelativeLayout>
 
-
+    <FrameLayout
+        android:id="@+id/fragment_home_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
