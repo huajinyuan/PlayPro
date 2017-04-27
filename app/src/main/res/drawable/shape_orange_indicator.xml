@@ -4,14 +4,14 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="@color/color_base_black_bg"/>
+            <solid android:color="@color/colorwhite"/>
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
     <item
         android:bottom="@dimen/dimen_indicator_line_height">
         <shape>
-            <solid android:color="@color/color_base_orange"/>
+            <solid android:color="@color/material_deep_teal_50"/>
 
             <padding
                 android:bottom="@dimen/dimen_indicator_line_height"/>

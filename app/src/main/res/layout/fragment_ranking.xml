@@ -20,7 +20,7 @@
             >
 
             <Button
-                android:id="@+id/btn_user"
+                android:id="@+id/btn_tyrants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_orange_indicator_r"
@@ -29,13 +29,13 @@
                 android:textColor="@color/color_base_orange" />
 
             <Button
-                android:id="@+id/btn_video"
+                android:id="@+id/btn_star"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/float_transparent"
                 android:text="明星榜"
                 android:layout_weight="1"
-                android:textColor="@color/cardview_dark_background" />
+                android:textColor="@color/gray_btn_bg_pressed_color" />
         </LinearLayout>
 
 

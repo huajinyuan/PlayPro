@@ -10,6 +10,9 @@ import com.gt.okgo.request.PutRequest;
 
 import java.io.IOException;
 
+import cn.gtgs.base.playpro.PApplication;
+import cn.gtgs.base.playpro.activity.home.live.model.LoginInfo;
+import cn.gtgs.base.playpro.utils.ACache;
 import okhttp3.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,9 +40,10 @@ public class HttpMethods {
 
     public HttpHeaders getHeaders() {
         HttpHeaders heads = new HttpHeaders(); //header不支持中文，不允许有特殊字符
-//        ACache aCache = ACache.get(OApplication.getInstance());
+        ACache aCache = ACache.get(PApplication.getInstance());
+        LoginInfo  loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
 //        Account account = (Account) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-//        heads.put("Authorization", "Bearer " + account.getToken());
+        heads.put("Authorization", "Bearer " + loginInfo.token);
         return heads;
     }
 

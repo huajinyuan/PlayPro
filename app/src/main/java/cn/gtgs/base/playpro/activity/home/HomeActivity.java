@@ -49,22 +49,25 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (i) {
             case 0:
+                viewDelegate.setStatus(0);
                 fragmentTransaction.hide(mRecommented);
                 fragmentTransaction.hide(mFollow);
                 fragmentTransaction.show(mRanking);
                 break;
             case 1:
+                viewDelegate.setStatus(1);
                 fragmentTransaction.hide(mFollow);
                 fragmentTransaction.hide(mRanking);
                 fragmentTransaction.show(mRecommented);
                 break;
             case 2:
+                viewDelegate.setStatus(2);
                 fragmentTransaction.hide(mRecommented);
                 fragmentTransaction.hide(mRanking);
                 fragmentTransaction.show(mFollow);
                 break;
         }
-                fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.commitAllowingStateLoss();
 
     }
 

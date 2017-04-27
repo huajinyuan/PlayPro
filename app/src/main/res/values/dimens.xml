@@ -7,5 +7,5 @@
     <dimen name="progress_circle_radius">34dp</dimen>
     <dimen name="text_tip_sp_18">18sp</dimen>
     <!--指示线-->
-    <dimen name="dimen_indicator_line_height">2dp</dimen>
+    <dimen name="dimen_indicator_line_height">3dp</dimen>
 </resources>

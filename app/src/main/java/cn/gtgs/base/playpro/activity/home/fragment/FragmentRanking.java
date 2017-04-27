@@ -14,6 +14,7 @@ import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 public class FragmentRanking extends FragmentPresenter<RankingDelegate> {
     private FragmentManager fragmentManager;
     FragmentTyrants tyrants;
+
     @Override
     protected Class getDelegateClass() {
         return RankingDelegate.class;
@@ -22,10 +23,10 @@ public class FragmentRanking extends FragmentPresenter<RankingDelegate> {
     @Override
     public void init() {
         super.init();
-        tyrants= new FragmentTyrants();
+        tyrants = new FragmentTyrants();
         fragmentManager = getChildFragmentManager();
-         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( R.id.layout_ranking_content,tyrants);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.layout_ranking_content, tyrants);
         fragmentTransaction.show(tyrants);
         fragmentTransaction.commit();
 

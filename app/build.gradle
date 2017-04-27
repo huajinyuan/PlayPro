@@ -38,4 +38,8 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.56.android'
     compile 'com.damnhandy:handy-uri-templates:2.1.6'
     compile project(':okgo')
+    compile files('libs/hyphenatechat_3.2.0.jar')
+    compile files('libs/pldroid-media-streaming-2.0.1.jar')
+    compile 'com.qiniu:happy-dns:0.2.+'
+    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
 }

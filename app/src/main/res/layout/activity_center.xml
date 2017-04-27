@@ -42,13 +42,14 @@
                     android:id="@+id/tv_center_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="asfdasd" />
 
                 <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/ic_delete" />
+                    android:layout_marginLeft="3dp"
+                    app:srcCompat="@mipmap/global_male" />
 
 
             </LinearLayout>
@@ -58,16 +59,24 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:gravity="center"
+                    android:text="01"
+                    android:background="@mipmap/chat_message_state_green_bg_image"
+                    android:textColor="@color/colorwhite"
+                    />
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:gravity="center"
+                    android:text="01"
+                    android:background="@mipmap/chat_message_state_orange_bg_image"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/colorwhite"
+                    />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/ic_delete" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/ic_delete" />
 
             </LinearLayout>
 
@@ -79,11 +88,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="10sp"
                     android:text="ID:" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="10sp"
                     android:text="123456789" />
 
             </LinearLayout>
@@ -96,8 +107,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:textSize="12sp"
             android:layout_margin="20dp"
-            android:drawableRight="@android:drawable/ic_delete"
+            android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center_vertical"
             android:text="编辑资料" />
 
@@ -145,7 +157,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:drawableRight="@android:drawable/ic_delete"
+            android:textSize="12sp"
+            android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center"
             android:text="充值"
             android:textColor="@color/color_yellow" />
@@ -175,8 +188,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:drawableRight="@android:drawable/ic_delete"
+            android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center"
+            android:textSize="12sp"
             android:text="未认证"
             android:textColor="@color/color_yellow" />
 
@@ -211,7 +225,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            app:srcCompat="@android:drawable/ic_delete" />
+            app:srcCompat="@mipmap/icon_home_classify_more" />
 
     </RelativeLayout>
 
@@ -244,7 +258,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            app:srcCompat="@android:drawable/ic_delete" />
+            app:srcCompat="@mipmap/icon_home_classify_more" />
 
     </RelativeLayout>
 
@@ -273,10 +287,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_marginRight="19dp"
+            app:srcCompat="@mipmap/icon_home_classify_more"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            app:srcCompat="@android:drawable/ic_delete" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="19dp"
+            android:id="@+id/imageView8" />
 
     </RelativeLayout>
 

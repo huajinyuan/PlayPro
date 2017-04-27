@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_home"
@@ -9,9 +9,10 @@
     tools:context="cn.gtgs.base.playpro.activity.home.HomeActivity">
 
     <RelativeLayout
+        android:id="@+id/rel_home_tab_top"
         android:layout_width="match_parent"
         android:layout_height="45.5dp"
-        android:background="@color/color_base_orange">
+        android:background="@color/material_deep_teal_50">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/float_transparent"
                 android:text="推荐"
-                android:textColor="#FF888888" />
+                android:textColor="@color/gray_btn_bg_color" />
 
             <Button
                 android:id="@+id/btn_follow"
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/float_transparent"
                 android:text="关注"
-                android:textColor="#FF888888" />
+                android:textColor="@color/gray_btn_bg_color" />
         </LinearLayout>
 
         <ImageView
@@ -68,5 +69,15 @@
     <FrameLayout
         android:id="@+id/fragment_home_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rel_home_tab_top" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        app:srcCompat="@mipmap/tab_launch_play" />
+</RelativeLayout>

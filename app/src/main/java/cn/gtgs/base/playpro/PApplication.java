@@ -1,12 +1,21 @@
 package cn.gtgs.base.playpro;
 
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
 import com.gt.okgo.OkGo;
 import com.gt.okgo.cache.CacheEntity;
 import com.gt.okgo.cache.CacheMode;
 import com.gt.okgo.cookie.store.PersistentCookieStore;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -15,11 +24,17 @@ import java.util.logging.Level;
 
 public class PApplication extends Application {
     private static PApplication application;
+    public static List<String> emoticonList = new ArrayList<String>();
+    public static Map<String, Integer> emoticonsIdMap = new HashMap<String, Integer>();
+    public static List<String> emoticonKeyList = new ArrayList<String>();
+    public static Context applicationContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         application = this;
+        applicationContext = this;
         OkGo.init(this);
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
@@ -74,9 +89,50 @@ public class PApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        EMClient.getInstance().init(applicationContext, initChatOptions());
+        EMClient.getInstance().setDebugMode(true);
+        initEmotions();
     }
 
     public static PApplication getInstance() {
         return application;
+    }
+
+    /**
+     * 初始化表情 list
+     */
+    private void initEmotions() {
+
+        emoticonList.addAll(Arrays.asList(this.getResources().getStringArray(R.array.emoticos)));
+        emoticonKeyList.addAll(Arrays.asList(this.getResources().getStringArray(R.array.emoticoKeys)));
+        for (int i = 0; i < emoticonKeyList.size(); i++) {
+            int emoticonsId = getResources().getIdentifier(emoticonList.get(i), "drawable", getPackageName());
+            emoticonsIdMap.put(emoticonKeyList.get(i), emoticonsId);
+        }
+    }
+    private EMOptions initChatOptions() {
+        Log.d("DemoHelper", "init HuanXin Options");
+
+        EMOptions options = new EMOptions();
+        // set if accept the invitation automatically
+        options.setAcceptInvitationAlways(false);
+        // set if you need read ack
+        options.setRequireAck(true);
+        // set if you need delivery ack
+        options.setRequireDeliveryAck(false);
+
+        //you need apply & set your own id if you want to use google cloud messaging.
+        options.setGCMNumber("324169311137");
+        //you need apply & set your own id if you want to use Mi push notification
+        options.setMipushConfig("2882303761517426801", "5381742660801");
+        //you need apply & set your own id if you want to use Huawei push notification
+        options.setHuaweiPushAppId("10492024");
+
+//		options.allowChatroomOwnerLeave(getModel().isChatroomOwnerLeaveAllowed());
+//		options.setDeleteMessagesAsExitGroup(getModel().isDeleteMessagesAsExitGroup());
+//		options.setAutoAcceptGroupInvitation(getModel().isAutoAcceptGroupInvitation());
+
+        return options;
     }
 }

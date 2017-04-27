@@ -152,9 +152,11 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:srcCompat="@drawable/ic_launcher"
+        app:srcCompat="@mipmap/add_pic_bg"
         android:layout_margin="20dp"
-        android:id="@+id/imageView" />
+        android:id="@+id/imageView"
+
+        />
 
     <TextView
         android:text="提交审核"
