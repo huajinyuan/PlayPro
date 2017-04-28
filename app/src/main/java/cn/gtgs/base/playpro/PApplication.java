@@ -28,6 +28,8 @@ public class PApplication extends Application {
     public static Map<String, Integer> emoticonsIdMap = new HashMap<String, Integer>();
     public static List<String> emoticonKeyList = new ArrayList<String>();
     public static Context applicationContext;
+    public static String Phone;
+    public static String JPushID;
 
     @Override
     public void onCreate() {
@@ -111,6 +113,7 @@ public class PApplication extends Application {
             emoticonsIdMap.put(emoticonKeyList.get(i), emoticonsId);
         }
     }
+
     private EMOptions initChatOptions() {
         Log.d("DemoHelper", "init HuanXin Options");
 
@@ -134,5 +137,21 @@ public class PApplication extends Application {
 //		options.setAutoAcceptGroupInvitation(getModel().isAutoAcceptGroupInvitation());
 
         return options;
+    }
+
+    public static String getJPushID() {
+        return JPushID;
+    }
+
+    public static void setJPushID(String JPushID) {
+        PApplication.JPushID = JPushID;
+    }
+
+    public static String getPhone() {
+        return Phone;
+    }
+
+    public static void setPhone(String phone) {
+        Phone = phone + "_anchor";
     }
 }

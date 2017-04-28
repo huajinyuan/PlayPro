@@ -27,7 +27,8 @@ public interface Config {
     public static final String URL_OnlineNum = "https://api.yequtv.cn/v1/chatrooms/anchors/{anchor_id}/online_count?key=z45CasVgh8K3q6300g0d95VkK197291A";
     //订台列表
     public static final String URL_BookingValid = "https://api.yequtv.cn/v1/anchor/bookings/valid?key=z45CasVgh8K3q6300g0d95VkK197291A";
-
+    public static final String URL_SMS = "https://api.yequtv.cn/v1/sms";
+    public static final String URL_LOGIN = "https://api.yequtv.cn/v1/anchors/login";
 
     String BASE_URL = "http://foruo2o.com";
     String REGISTER_URL = BASE_URL + "/wp-json/login/v1/wordpress/register";

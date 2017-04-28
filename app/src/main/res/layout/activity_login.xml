@@ -1,67 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF"
-    android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:background="@color/colorbg"
+    android:orientation="vertical">
 
+    <include layout="@layout/layout_com_topbar" />
 
     <EditText
-        android:id="@+id/edt_login_username"
+        android:id="@+id/et_phone"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/shape_rec_999"
-        android:ems="10"
-        android:hint="Enter your User Name"
-        android:inputType="textPersonName"
-        android:paddingLeft="5dp"
-        android:text="1" />
+        android:background="@color/colorwhite"
+        android:drawablePadding="10dp"
+        android:hint="输入您的手机号"
+        android:inputType="phone"
+        android:paddingLeft="10dp" />
 
-    <EditText
-        android:id="@+id/edt_login_password"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/shape_rec_999"
-        android:ems="10"
-        android:hint="Enter your Password"
-        android:inputType="textPassword"
-        android:paddingLeft="5dp"
-        android:text="1" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp">
 
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/tv_login_sms"
+            android:background="@color/colorwhite"
+            android:drawablePadding="10dp"
+            android:hint="输入您的验证码"
+            android:inputType="number"
+            android:paddingLeft="10dp" />
 
-    <CheckBox
-        android:id="@+id/che_login_remember"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:text="Remember password" />
+        <TextView
+            android:id="@+id/tv_login_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/material_deep_teal_50"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="获取验证码"
+            android:textColor="@color/colorwhite" />
+    </RelativeLayout>
 
 
     <Button
-        android:id="@+id/btn_login_admin"
+        android:id="@+id/bt_login"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="18dp"
-        android:background="@color/colorBlue"
-        android:text="LOGIN"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/material_deep_teal_50"
+        android:text="登录"
         android:textColor="@color/colorwhite" />
 
-    <TextView
-        android:id="@+id/tv_login_go2register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:text="Register"
-        android:textColor="#47a3df"
-        android:textSize="18sp" />
-
+        android:background="@color/material_deep_teal_50"
+        android:text="注册"
+        android:textColor="@color/colorwhite" />
 
 </LinearLayout>

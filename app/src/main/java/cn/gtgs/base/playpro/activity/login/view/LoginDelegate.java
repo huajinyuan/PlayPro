@@ -1,5 +1,9 @@
 package cn.gtgs.base.playpro.activity.login.view;
 
+import android.widget.EditText;
+import android.widget.TextView;
+
+import butterknife.BindView;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 
@@ -8,23 +12,30 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
  */
 
 public class LoginDelegate extends AppDelegate {
-//    @BindView(R.id.edt_login_username)
-//    EditText mEdtUserName;
-//    @BindView(R.id.edt_login_password)
-//    EditText mEdtPassword;
+    @BindView(R.id.et_phone)
+    EditText mEdtPhone;
+    @BindView(R.id.et_code)
+    EditText mEdtCode;
+    @BindView(R.id.tv_login_sms)
+    TextView mTvSms;
+    @BindView(R.id.bt_login)
+    TextView mBtnLogin;
 
     @Override
     public int getRootLayoutId() {
         return R.layout.activity_login;
     }
 
-//    public String getUserName()
-//    {
-//        return mEdtUserName.getText().toString();
-//    }
-//    public String getPassWord()
-//    {
-//        return mEdtPassword.getText().toString();
-//    }
+    public TextView getSmsView() {
+        return mTvSms;
+    }
+
+    public String getPhone() {
+        return mEdtPhone.getText().toString();
+    }
+
+    public String getCode() {
+        return mEdtCode.getText().toString();
+    }
 
 }

@@ -42,4 +42,5 @@ dependencies {
     compile files('libs/pldroid-media-streaming-2.0.1.jar')
     compile 'com.qiniu:happy-dns:0.2.+'
     compile 'com.qiniu.pili:pili-android-qos:0.8.+'
+    compile 'cn.jiguang:jpush:2.1.9'
 }
