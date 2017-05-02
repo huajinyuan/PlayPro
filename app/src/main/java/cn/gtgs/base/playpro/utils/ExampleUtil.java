@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.jpush.android.api.JPushInterface;
+//import cn.jpush.android.api.JPushInterface;
 
 public class ExampleUtil {
     public static final String PREFS_NAME = "JPUSH_EXAMPLE";
@@ -74,11 +74,11 @@ public class ExampleUtil {
 		}
 	}
 
-    public static String getDeviceId(Context context) {
-        String deviceId = JPushInterface.getUdid(context);
-
-        return deviceId;
-    }
+//    public static String getDeviceId(Context context) {
+////        String deviceId = JPushInterface.getUdid(context);
+//
+//        return deviceId;
+//    }
 	
     public static void showToast(final String toast, final Context context)
     {

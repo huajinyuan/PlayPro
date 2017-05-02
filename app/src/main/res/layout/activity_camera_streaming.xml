@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
@@ -14,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true">
 
-        <com.foru.yequtvrec.CameraPreviewFrameView
+        <cn.gtgs.base.playpro.activity.home.live.CameraPreviewFrameView
             android:id="@+id/cameraPreview_surfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

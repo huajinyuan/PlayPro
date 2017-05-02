@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro.activity.home;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -9,6 +10,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentFollow;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentRanking;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentRecommented;
+import cn.gtgs.base.playpro.activity.home.live.HWCodecCameraStreamingActivity;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 
@@ -71,7 +73,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
 
     }
 
-    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow})
+    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow, R.id.img_home_play})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.btn_ranking:
@@ -82,6 +84,10 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
                 break;
             case R.id.btn_follow:
                 setTab(2);
+                break;
+            case R.id.img_home_play:
+                Intent intent = new Intent(this, HWCodecCameraStreamingActivity.class);
+                startActivity(intent);
                 break;
         }
     }

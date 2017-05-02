@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import cn.gtgs.base.playpro.activity.home.fragment.view.TyrantsDelegate;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.http.HttpMethods;
-import cn.gtgs.base.playpro.utils.Parsing;
+import cn.gtgs.base.playpro.http.Parsing;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -47,8 +47,14 @@ public class TyrantsPresenter implements IRecommented {
             public void onNext(Response response) {
 
 //                        F.e(response.body().toString());
-                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-                delegate.setData(lists);
+                try {
+                    ArrayList<AnchorItem> list = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
+//                    HttpBase<ArrayList<AnchorItem>> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
+                    delegate.setData(list);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 

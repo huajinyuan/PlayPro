@@ -29,12 +29,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.damnhandy.uri.template.UriTemplate;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.request.GetRequest;
-import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
@@ -81,11 +78,8 @@ import java.util.TimerTask;
 
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
-import cn.gtgs.base.playpro.activity.home.live.model.LoginInfo;
-import cn.gtgs.base.playpro.activity.home.live.model.OnlineNum;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
-import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.gles.FBO;
@@ -109,7 +103,7 @@ public class StreamingBaseActivity extends Activity implements
     Context context;
 
     //-----------以下为环信
-    ACache aCache;
+//    ACache aCache;
     ListView listView;
     TextView tv_likes;
     String chatroomid = "261649293176209844";
@@ -121,7 +115,7 @@ public class StreamingBaseActivity extends Activity implements
     String message_from, message_content;
     Timer timer_hide = new Timer();
     ImageView iv_gift;
-    LoginInfo loginInfo;
+//    LoginInfo loginInfo;
     //--------------------
 
     private static final String TAG = "StreamingBaseActivity";
@@ -239,8 +233,8 @@ public class StreamingBaseActivity extends Activity implements
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         super.onCreate(savedInstanceState);
-        aCache = ACache.get(this);
-        loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
+//        aCache = ACache.get(this);
+//        loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
 
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -256,26 +250,26 @@ public class StreamingBaseActivity extends Activity implements
         //----------------------------------------------------------以下为环信
         //-------------------------------------------------------------------
         context = this;
-        aCache = ACache.get(this);
-        chatroomid = ((LoginInfo) aCache.getAsObject("logininfo")).huanxin_chatroom_id;
+//        aCache = ACache.get(this);
+//        chatroomid = ((LoginInfo) aCache.getAsObject("logininfo")).huanxin_chatroom_id;
         listView = (ListView) findViewById(R.id.listView);
         tv_likes = (TextView) findViewById(R.id.tv_likes);
         iv_gift = (ImageView) findViewById(R.id.iv_gift);
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            login();
-            Log.e("main", "islogged");
-        } else {
-            login();
-            Log.e("main", "logging");
-        }
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isJoined)
-                    joinchatroom();
-            }
-        }, 5000);
+//        if (EMClient.getInstance().isLoggedInBefore()) {
+//            login();
+//            Log.e("main", "islogged");
+//        } else {
+//            login();
+//            Log.e("main", "logging");
+//        }
+//
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (!isJoined)
+//                    joinchatroom();
+//            }
+//        }, 5000);
         //-------------------------------------------------------------------
         //-------------------------------------------------------------------
 
@@ -290,7 +284,10 @@ public class StreamingBaseActivity extends Activity implements
 //        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
 //                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_H264, "pldroid_streaming_h264_encoder_v7a");
 
-        String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
+//        String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
+
+
+        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493720528&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:cC6VIRArO2xkJctNTF0zK818Dyw=";
         Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
 
         mContext = this;
@@ -373,8 +370,8 @@ public class StreamingBaseActivity extends Activity implements
         mMediaStreamingManager.destroy();
 
         //-----------------------------------以下为环信
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+//        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
 
 //        Request<String> request = NoHttp.createStringRequest(Config.URL_StopStreaming, RequestMethod.DELETE);
 //        request.addHeader("Authorization","Bearer "+loginInfo.token);
@@ -632,7 +629,7 @@ public class StreamingBaseActivity extends Activity implements
         tv_live_onlinenum = (TextView) findViewById(R.id.tv_live_onlinenum);
         ll_live_onlinenum = (LinearLayout) findViewById(R.id.ll_live_onlinenum);
 
-        tv_live_id.setText("ID:" + loginInfo.id);
+//        tv_live_id.setText("ID:" + loginInfo.id);
         iv_live_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -692,41 +689,51 @@ public class StreamingBaseActivity extends Activity implements
                 ll_live_booking.setVisibility(View.INVISIBLE);
             }
         });
-        checkOnlineNum();
+//        checkOnlineNum();
     }
 
-    void checkOnlineNum() {
-        String uri = UriTemplate.fromTemplate(Config.URL_OnlineNum).set("anchor_id", loginInfo.id).expand();
-//        Request<String> request = NoHttp.createStringRequest(uri);
-//        requestQueue.add(Int_OnlineNum, request, responseListener);
-
-        GetRequest request = OkGo.get(uri);
-        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Response response) {
-
-                ArrayList<OnlineNum> onlineNums = (ArrayList<OnlineNum>) JSON.parseArray(response.body().toString(), OnlineNum.class);
-                if (onlineNums != null) {
-                    tv_live_onlinenum.setText(onlineNums.get(0).count);
-                    Log.e("aaa", onlineNums.get(0).count);
-                }
-//                        F.e(response.body().toString());
-//                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-//                delegate.setData(lists);
-            }
-        });
-
-    }
+//    void checkOnlineNum() {
+//        String uri = UriTemplate.fromTemplate(Config.URL_OnlineNum).set("anchor_id", loginInfo.id).expand();
+////        Request<String> request = NoHttp.createStringRequest(uri);
+////        requestQueue.add(Int_OnlineNum, request, responseListener);
+//
+//        GetRequest request = OkGo.get(uri);
+//        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Response response) {
+//                try {
+//                    ArrayList<OnlineNum> onlineNums = Parsing.getInstance().ResponseToList(response, OnlineNum.class);
+////                    HttpBase< ArrayList<OnlineNum>> onlineNums = Parsing.getInstance().ResponseToList(response,OnlineNum.class);
+//                    if (onlineNums != null) {
+//                        tv_live_onlinenum.setText(onlineNums.get(0).count);
+//                        Log.e("aaa", onlineNums.get(0).count);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+////                ArrayList<OnlineNum> onlineNums = (ArrayList<OnlineNum>) JSON.parseArray(response.body().toString(), OnlineNum.class);
+////                if (onlineNums != null) {
+////                    tv_live_onlinenum.setText(onlineNums.get(0).count);
+////                    Log.e("aaa", onlineNums.get(0).count);
+////                }
+////                        F.e(response.body().toString());
+////                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
+////                delegate.setData(lists);
+//            }
+//        });
+//
+//    }
 
     private void initButtonText() {
         updateFBButtonText();
@@ -895,31 +902,31 @@ public class StreamingBaseActivity extends Activity implements
     //------------------------------------------------------------------------------
     public void login() {
         Log.e("sdad", "start login...");
-        EMClient.getInstance().login(loginInfo.huanxin_username, loginInfo.huanxin_password, new EMCallBack() {//回调
-            @Override
-            public void onSuccess() {
-                EMClient.getInstance().groupManager().loadAllGroups();
-                EMClient.getInstance().chatManager().loadAllConversations();
-                Log.e("main", "登录聊天服务器成功！");
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        joinchatroom();
-                    }
-                });
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-                Log.e("main", "progress" + progress + "");
-            }
-
-            @Override
-            public void onError(int code, String message) {
-                Log.e("main", "登录聊天服务器失败！");
-            }
-        });
+//        EMClient.getInstance().login(loginInfo.huanxin_username, loginInfo.huanxin_password, new EMCallBack() {//回调
+//            @Override
+//            public void onSuccess() {
+//                EMClient.getInstance().groupManager().loadAllGroups();
+//                EMClient.getInstance().chatManager().loadAllConversations();
+//                Log.e("main", "登录聊天服务器成功！");
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        joinchatroom();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onProgress(int progress, String status) {
+//                Log.e("main", "progress" + progress + "");
+//            }
+//
+//            @Override
+//            public void onError(int code, String message) {
+//                Log.e("main", "登录聊天服务器失败！");
+//            }
+//        });
 
     }
 
@@ -1071,7 +1078,7 @@ public class StreamingBaseActivity extends Activity implements
 
             @Override
             public void onMemberJoined(String roomId, String participant) {
-                checkOnlineNum();
+//                checkOnlineNum();
 
                 EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
                 message.setChatType(EMMessage.ChatType.ChatRoom);
@@ -1091,7 +1098,7 @@ public class StreamingBaseActivity extends Activity implements
 
             @Override
             public void onMemberExited(String roomId, String roomName, String participant) {
-                checkOnlineNum();
+//                checkOnlineNum();
 
                 EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
                 message.setChatType(EMMessage.ChatType.ChatRoom);
@@ -1158,12 +1165,12 @@ public class StreamingBaseActivity extends Activity implements
         ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
         animation.setDuration(800);
         iv_gift.startAnimation(animation);
-        if (from.equals(loginInfo.name)) {
-            tv_likes.setText("你 给主播送了一个" + gift.name);
-        } else {
-            tv_likes.setText("用户 " + from + " 给主播送了一个" + gift.name);
-
-        }
+//        if (from.equals(loginInfo.name)) {
+//            tv_likes.setText("你 给主播送了一个" + gift.name);
+//        } else {
+//            tv_likes.setText("用户 " + from + " 给主播送了一个" + gift.name);
+//
+//        }
 
         iv_gift.setVisibility(View.VISIBLE);
         tv_likes.setVisibility(View.VISIBLE);
@@ -1246,7 +1253,7 @@ public class StreamingBaseActivity extends Activity implements
                 fbSetting.redden = progress / 100.0f;
                 mMediaStreamingManager.updateFaceBeautySetting(fbSetting);
 
-                aCache.put("beautyLevel", progress + "");
+//                aCache.put("beautyLevel", progress + "");
             }
 
             @Override
@@ -1258,28 +1265,28 @@ public class StreamingBaseActivity extends Activity implements
             }
         });
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String levelString = aCache.getAsString("beautyLevel");
-                        if (levelString != null) {
-                            int level = Integer.parseInt(levelString);
-
-                            CameraStreamingSetting.FaceBeautySetting fbSetting = mCameraStreamingSetting.getFaceBeautySetting();
-                            fbSetting.beautyLevel = level / 100.0f;
-                            fbSetting.whiten = level / 100.0f;
-                            fbSetting.redden = level / 100.0f;
-                            mMediaStreamingManager.updateFaceBeautySetting(fbSetting);
-                            Log.e("aaa", levelString + "  " + (level + 10000));
-                            seekBarBeauty.setProgress(level);
-                        }
-                    }
-                });
-            }
-        }, 2000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        String levelString = aCache.getAsString("beautyLevel");
+//                        if (levelString != null) {
+//                            int level = Integer.parseInt(levelString);
+//
+//                            CameraStreamingSetting.FaceBeautySetting fbSetting = mCameraStreamingSetting.getFaceBeautySetting();
+//                            fbSetting.beautyLevel = level / 100.0f;
+//                            fbSetting.whiten = level / 100.0f;
+//                            fbSetting.redden = level / 100.0f;
+//                            mMediaStreamingManager.updateFaceBeautySetting(fbSetting);
+//                            Log.e("aaa", levelString + "  " + (level + 10000));
+//                            seekBarBeauty.setProgress(level);
+//                        }
+//                    }
+//                });
+//            }
+//        }, 2000);
 
         initButtonText();
         dialogsettings.hide();

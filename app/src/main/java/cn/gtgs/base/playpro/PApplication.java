@@ -8,8 +8,8 @@ import com.gt.okgo.OkGo;
 import com.gt.okgo.cache.CacheEntity;
 import com.gt.okgo.cache.CacheMode;
 import com.gt.okgo.cookie.store.PersistentCookieStore;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import com.qiniu.pili.droid.streaming.StreamingEnv;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +38,7 @@ public class PApplication extends Application {
         application = this;
         applicationContext = this;
         OkGo.init(this);
+        StreamingEnv.init(getApplicationContext());
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
         try {
@@ -92,8 +93,8 @@ public class PApplication extends Application {
             e.printStackTrace();
         }
 
-        EMClient.getInstance().init(applicationContext, initChatOptions());
-        EMClient.getInstance().setDebugMode(true);
+//        EMClient.getInstance().init(applicationContext, initChatOptions());
+//        EMClient.getInstance().setDebugMode(true);
         initEmotions();
     }
 
@@ -139,13 +140,13 @@ public class PApplication extends Application {
         return options;
     }
 
-    public static String getJPushID() {
-        return JPushID;
-    }
-
-    public static void setJPushID(String JPushID) {
-        PApplication.JPushID = JPushID;
-    }
+//    public static String getJPushID() {
+//        return JPushID;
+//    }
+//
+//    public static void setJPushID(String JPushID) {
+//        PApplication.JPushID = JPushID;
+//    }
 
     public static String getPhone() {
         return Phone;

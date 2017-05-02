@@ -73,7 +73,7 @@
         android:layout_below="@+id/rel_home_tab_top" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/img_home_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

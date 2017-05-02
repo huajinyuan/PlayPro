@@ -52,6 +52,7 @@ public class SplashActivity extends AppCompatActivity {
 //                } else {
                     overridePendingTransition(0, 0);
                     intent = new Intent(SplashActivity.this, HomeActivity.class);
+//                    intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
 //                }
             }

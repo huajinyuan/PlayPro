@@ -7,6 +7,7 @@ import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
 import cn.gtgs.base.playpro.activity.login.model.Account;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginListener;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginPresenter;
 import cn.gtgs.base.playpro.activity.login.presenter.LoginPresenter;
@@ -25,22 +26,25 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
         return LoginDelegate.class;
     }
 
-    @OnClick({R.id.btn_login_admin, R.id.tv_login_go2register})
+    @OnClick({R.id.bt_login, R.id.btn_register, R.id.tv_login_sms})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_login_admin:
-                mLoginPresenter.login(viewDelegate, this);
+            case R.id.bt_login:
+                mLoginPresenter.login();
                 break;
-            case R.id.tv_login_go2register:
+            case R.id.btn_register:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.tv_login_sms:
+                mLoginPresenter.getCode();
                 break;
         }
     }
 
     @Override
     protected void onInitPresenters() {
-        mLoginPresenter = new LoginPresenter();
+        mLoginPresenter = new LoginPresenter(viewDelegate, this);
     }
 
     @Override
@@ -70,12 +74,12 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
     }
 
     @Override
-    public void LoginSuccess(Account account) {
+    public void LoginSuccess(UserInfo userInfo) {
         ToastUtil.showToast("LoginSuccess", this);
-        mACache.put(ACacheKey.CURRENT_ACCOUNT, account);
-        this.finish();
+        mACache.put(ACacheKey.CURRENT_ACCOUNT, userInfo);
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
+        this.finish();
 
     }
 

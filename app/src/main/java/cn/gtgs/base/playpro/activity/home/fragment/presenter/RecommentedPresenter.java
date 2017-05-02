@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import cn.gtgs.base.playpro.activity.home.fragment.view.RecommentedDelegate;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.http.HttpMethods;
-import cn.gtgs.base.playpro.utils.Parsing;
+import cn.gtgs.base.playpro.http.Parsing;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -47,8 +47,14 @@ public class RecommentedPresenter implements IRecommented {
             public void onNext(Response response) {
 
 //                        F.e(response.body().toString());
-                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-                delegate.setData(lists);
+                try {
+                    ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
+                    delegate.setData(lists);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+//                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
             }
         });
 
