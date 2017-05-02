@@ -9,6 +9,8 @@
     <color name="colorred">#DB2F29</color>
     <color name="divider">#ffd2d2d2</color>
     <color name="color_text_gray_80">#808080</color>
+    <color name="color_trans_80">#80000000</color>
+    <color name="color_yellow_B1">#B1E427</color>
     <color name="color_background_gray">#f0f0f0</color>
     <color name="color_grey">#999</color>
     <!--Dialog-->
@@ -42,4 +44,5 @@
     <color name="color_base_orange">#FE9C01</color>
     <!-- 菜单栏黑背景色 -->
     <color name="color_base_black_bg">#21292C</color>
+    <color name="color_black">#212121</color>
 </resources>

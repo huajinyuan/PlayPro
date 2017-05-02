@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.pili.pldroid.player.widget.PLVideoView
+        android:id="@+id/vv_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        />
+
+    <ImageView
+        android:id="@+id/img_live_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/living_bg_image" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:background="@color/float_transparent"
+        android:divider="@null" />
+
+    <TextView
+        android:id="@+id/tv_likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/listView"
+        android:layout_margin="10dp"
+        android:background="@drawable/background_grey_trans"
+        android:padding="5dp"
+        android:textColor="@color/color_progress_end"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/iv_gift"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_above="@id/tv_likes"
+        android:adjustViewBounds="true" />
+
+    <RelativeLayout
+        android:id="@+id/frame_live_menu"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/bt_live_chat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/selector_button_live_chat" />
+
+        <Button
+            android:id="@+id/bt_live_booking"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/selector_button_live_booking" />
+
+        <Button
+            android:id="@+id/bt_live_like"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_button_live_like"
+            android:onClick="bt_likes" />
+
+        <Button
+            android:id="@+id/bt_live_gifts"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/bt_live_like"
+            android:background="@drawable/selector_button_live_gifts" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/frame_live_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_bottom_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bt_send"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/selector_button_black"
+                android:onClick="bt_send"
+                android:text="发送"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/bt_openemoji"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/emoji" />
+
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:layout_toLeftOf="@id/bt_send"
+                android:layout_toRightOf="@id/bt_openemoji"
+                android:background="#f0f0f0"
+                android:hint="请输入内容"
+                android:minHeight="@dimen/dp_40"
+                android:padding="@dimen/dp_10"
+                android:paddingLeft="10dp"
+                android:textColor="@color/color_black"
+                android:textColorHint="@color/color_grey"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:visibility="gone"></android.support.v4.view.ViewPager>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/frame_live_gifts"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_260"
+        android:layout_alignParentBottom="true"
+        android:background="#d000"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <!--<include-->
+        <!--android:id="@+id/GiftGiveView"-->
+        <!--layout="@layout/giftgiveview" />-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_gifts"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_200"
+            android:layout_marginBottom="@dimen/dp_5" />
+
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="15dp" />-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingLeft="@dimen/dp_8">
+
+            <TextView
+                android:id="@+id/tv_live_credits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_8"
+                android:text="趣味币："
+                android:textColor="@color/color_progress_end" />
+
+            <TextView
+                android:id="@+id/tv_live_recharge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/tv_live_credits"
+                android:drawableRight="@drawable/icon_doller"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:text="充值 >" />
+
+            <Button
+                android:id="@+id/bt_live_sendgift"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_button_pink_noradius"
+                android:text="发送" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/frame_live_booking"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="28dp"
+            android:background="#d000"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:id="@+id/tv_live_booking_jubao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableTop="@drawable/icon_jubao"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:text="举报"
+                    android:textColor="@color/colorwhite" />
+
+                <TextView
+                    android:id="@+id/tv_live_booking_lahei"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="60dp"
+                    android:drawableTop="@drawable/icon_lahei"
+                    android:gravity="center"
+                    android:text="拉黑"
+                    android:textColor="@color/colorwhite" />
+
+                <TextView
+                    android:id="@+id/tv_live_booking_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:drawableTop="@drawable/icon_close"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_5"
+                    android:text="关闭"
+                    android:textColor="@color/colorwhite" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp">
+
+                <TextView
+                    android:id="@+id/tv_booking_currentname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:text="主播昵称"
+                    android:textColor="@color/color_grey"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_booking_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tv_booking_currentname"
+                    android:background="@drawable/shape_level"
+                    android:text="LV"
+                    android:textColor="@color/colorwhite"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/iv_booking_sex"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/tv_booking_currentname"
+                    android:background="@color/color_pink" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_live_booking_anchorid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="ID:123456"
+                android:textSize="10sp" />
+
+
+            <TextView
+                android:id="@+id/tv_live_booking_anchorplace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@mipmap/icon_position"
+                android:drawablePadding="3dp"
+                android:text="所属场所:金碧辉煌"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingBottom="7dp"
+                android:paddingTop="9dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="订台"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_anchor_info_dingtai_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="100"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/color_grey" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="关注"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_anchor_info_followers_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="100"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/color_grey" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="收礼"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_anchor_info_shouli_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="100"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/color_grey" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="粉丝"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_anchor_info_fensi_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="100"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_live_dingtai"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_button_pink_noradius"
+                    android:text="订台"
+                    android:textColor="@color/color_black_background" />
+
+                <Button
+                    android:id="@+id/lin_anchor_info_action_follow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_greystorke"
+                    android:text="关注" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_greystorke"
+                    android:text="\@TA" />
+
+                <Button
+                    android:id="@+id/bt_live_booking_tochat"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_greystorke"
+                    android:text="私信" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_live_booking_anchoricon"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_launcher" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_click"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/frame_live_gifts" />
+
+    <include
+        android:id="@+id/layout_live_icon_content"
+        layout="@layout/layout_content_live_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_50" />
+
+    <com.foru.yequtvplay.widget.PeriscopeLayout
+        android:id="@+id/periscope"
+        android:layout_width="100dp"
+        android:layout_marginTop="@dimen/dp_50"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="70dp" />
+
+</RelativeLayout>
