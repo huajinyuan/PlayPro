@@ -52,7 +52,7 @@ public abstract class ActivityPresenter<T extends IDelegate> extends AppCompatAc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        OApplication.getInstance().activities.add(this);
+//        .getInstance().activities.add(this);
         viewDelegate.create(getLayoutInflater(), null, savedInstanceState);
         setContentView(viewDelegate.getRootView());
         initToolbar();

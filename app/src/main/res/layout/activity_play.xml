@@ -143,13 +143,13 @@
             android:id="@+id/vp_emoji"
             android:layout_width="match_parent"
             android:layout_height="155dp"
-            android:visibility="gone"></android.support.v4.view.ViewPager>
+            android:visibility="gone"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/frame_live_gifts"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_260"
+        android:layout_height="@dimen/dp_230"
         android:layout_alignParentBottom="true"
         android:background="#d000"
         android:orientation="vertical"
@@ -161,7 +161,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_gifts"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_200"
+            android:layout_height="@dimen/dp_180"
             android:layout_marginBottom="@dimen/dp_5" />
 
         <!--<ImageView-->
@@ -495,13 +495,13 @@
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_50" />
 
-    <com.foru.yequtvplay.widget.PeriscopeLayout
-        android:id="@+id/periscope"
-        android:layout_width="100dp"
-        android:layout_marginTop="@dimen/dp_50"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="70dp" />
+    <!--<com.foru.yequtvplay.widget.PeriscopeLayout-->
+        <!--android:id="@+id/periscope"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_marginTop="@dimen/dp_50"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginBottom="70dp" />-->
 
 </RelativeLayout>

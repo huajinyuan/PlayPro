@@ -978,7 +978,7 @@ public class StreamingBaseActivity extends Activity implements
                     } else if (spotType.equals("GIFT")) {
                         mGetGift = new Gift();
                         mGetGift.name = (String) map.get("GiftName");
-                        mGetGift.picture = (String) map.get("GiftPicture");
+//                        mGetGift.picture = (String) map.get("GiftPicture");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

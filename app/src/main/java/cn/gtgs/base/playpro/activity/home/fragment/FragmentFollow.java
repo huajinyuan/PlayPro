@@ -12,4 +12,5 @@ public class FragmentFollow extends FragmentPresenter<FollowDelegate> {
     protected Class getDelegateClass() {
         return FollowDelegate.class;
     }
+
 }

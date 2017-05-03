@@ -5,7 +5,8 @@ package cn.gtgs.base.playpro.activity.home.live.model;
  */
 
 public class Gift {
-    public String id, name, credits, picture;
+    public String id, name, credits;
+    public int picture;
 
     @Override
     public String toString() {

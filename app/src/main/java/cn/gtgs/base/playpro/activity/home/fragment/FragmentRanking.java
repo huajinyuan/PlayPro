@@ -55,4 +55,5 @@ public class FragmentRanking extends FragmentPresenter<RankingDelegate> {
         }
         fragmentTransaction.commit();
     }
+
 }

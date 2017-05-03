@@ -34,11 +34,11 @@ public class RankingDelegate extends AppDelegate {
         switch (i) {
             case 0:
                 mBtnTyrants.setBackgroundResource(R.drawable.shape_orange_indicator_r);
-                mBtnTyrants.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorwhite));
+                mBtnTyrants.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.color_base_orange));
                 break;
             case 1:
                 mBtnStar.setBackgroundResource(R.drawable.shape_orange_indicator_r);
-                mBtnStar.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorwhite));
+                mBtnStar.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.color_base_orange));
                 break;
         }
     }

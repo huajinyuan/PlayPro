@@ -22,4 +22,5 @@ public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> {
         presenter.initData();
 
     }
+
 }

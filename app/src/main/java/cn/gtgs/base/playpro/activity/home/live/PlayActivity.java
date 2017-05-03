@@ -27,15 +27,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.EMChatRoomChangeListener;
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoView;
@@ -56,11 +50,12 @@ import cn.gtgs.base.playpro.activity.home.live.model.LoginInfo;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.F;
-import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.widget.AllGiftViewpager;
+import cn.gtgs.base.playpro.widget.MyViewPagerAdapter;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class PlayActivity extends AppCompatActivity  {
+public class PlayActivity extends AppCompatActivity {
     //-----------以下为环信
     String chatroomid = "261649293176209844";
     EditText et_content;
@@ -127,7 +122,7 @@ public class PlayActivity extends AppCompatActivity  {
     TextView mFensiCount;
     Timer timer_hide = new Timer();
     AnchorItem anchorItem;
-//    RequestQueue requestQueue = NoHttp.newRequestQueue();
+    //    RequestQueue requestQueue = NoHttp.newRequestQueue();
     LoginInfo loginInfo;
     ArrayList<Gift> gifts;
     Gift gift = null;
@@ -139,8 +134,8 @@ public class PlayActivity extends AppCompatActivity  {
     private final int FOLLOWINGANCHOR = 6;
 
     private final String defautPath2 = "http://playback.yequtv.cn/appleplayback2.m3u8";
-//    AllGiftViewpager viewpager;
-    //    private boolean mIsGetGift = false;
+    AllGiftViewpager viewpager;
+    //        private boolean mIsGetGift = false;
     private String[] mReport = {"广告欺诈", "淫秽色情", "骚扰谩骂", "反动政治", "其他内容"};
     private String star_at;
     View view_emoji1, view_emoji2;
@@ -159,30 +154,30 @@ public class PlayActivity extends AppCompatActivity  {
             //透明导航栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
-
         setContentView(R.layout.activity_play);
+        gifts = new ArrayList<>();
         context = this;
         ButterKnife.bind(this);
         ACache aCache = ACache.get(context);
         loginInfo = (LoginInfo) (aCache.getAsObject("logininfo"));
         Intent intent = getIntent();
         anchorItem = (AnchorItem) (intent.getSerializableExtra("anchoritem"));
-        if (null != anchorItem) {
-            chatroomid = anchorItem.huanxin_chatroom_id;
-            Glide.with(context).load(anchorItem.avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
-                @Override
-                protected void setResource(Bitmap resource) {
-                    RoundedBitmapDrawable circularBitmapDrawable =
-                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    mImgIcon.setImageDrawable(circularBitmapDrawable);
-                }
-            });
-            mTvName.setText(anchorItem.name);
-            mTvLv.setText(anchorItem.level);
-            mTvCount.setText(anchorItem.online_count);
-//            mDingtaiCount.setText(anchorItem.);
-        }
+//        if (null != anchorItem) {
+//            chatroomid = anchorItem.huanxin_chatroom_id;
+//            Glide.with(context).load(anchorItem.avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
+//                @Override
+//                protected void setResource(Bitmap resource) {
+//                    RoundedBitmapDrawable circularBitmapDrawable =
+//                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+//                    circularBitmapDrawable.setCircular(true);
+//                    mImgIcon.setImageDrawable(circularBitmapDrawable);
+//                }
+//            });
+//            mTvName.setText(anchorItem.name);
+//            mTvLv.setText(anchorItem.level);
+//            mTvCount.setText(anchorItem.online_count);
+////            mDingtaiCount.setText(anchorItem.);
+//        }
         initviews();
         initEmoji();
 
@@ -228,15 +223,15 @@ public class PlayActivity extends AppCompatActivity  {
 
         //----------------------------------------------------------以下为环信
         //-------------------------------------------------------------------
-        listView = (ListView) findViewById(R.id.listView);
-        et_content = (EditText) findViewById(R.id.et_content);
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            Log.e("main", "islogged");
-            login();
-        } else {
-            Log.e("main", "logging");
-            login();
-        }
+//        listView = (ListView) findViewById(R.id.listView);
+//        et_content = (EditText) findViewById(R.id.et_content);
+//        if (EMClient.getInstance().isLoggedInBefore()) {
+//            Log.e("main", "islogged");
+//            login();
+//        } else {
+//            Log.e("main", "logging");
+//            login();
+//        }
     }
 
     @Override
@@ -262,10 +257,10 @@ public class PlayActivity extends AppCompatActivity  {
     protected void onDestroy() {
         super.onDestroy();
         //-----------------------------------以下为环信
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+//        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
 //
-        if (StringUtils.isNotEmpty(star_at)) {
+//        if (StringUtils.isNotEmpty(star_at)) {
 //            String url = UriTemplate.fromTemplate(Config.URL_LEAVECHAT)
 //                    .set("id", anchorItem.id)
 //                    .expand();
@@ -273,51 +268,51 @@ public class PlayActivity extends AppCompatActivity  {
 //            request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
 //            request.add("start_at", star_at);
 //            CallServer.getRequestInstance().add(LEAVECHAT, request, joinRoomListener);
-        }
+//        }
 
 
     }
 
     //------------------------------------------------------------------------------以下为环信功能
     //------------------------------------------------------------------------------
-    public void login() {
-        String userName = "111";
-        String password = "111";
-        if (null != loginInfo) {
-            userName = loginInfo.huanxin_username;
-            password = loginInfo.huanxin_password;
-        }
-        EMClient.getInstance().login(userName, password, new EMCallBack() {//回调
-            @Override
-            public void onSuccess() {
-                EMClient.getInstance().groupManager().loadAllGroups();
-                EMClient.getInstance().chatManager().loadAllConversations();
-                Log.e("main", "登录聊天服务器成功！");
-                JoinChatRoom(anchorItem.id);
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-                Log.e("main", "progress" + progress + "");
-            }
-
-            @Override
-            public void onError(int code, String message) {
-                Log.e("main", "登录聊天服务器失败！");
-            }
-        });
-
-    }
+//    public void login() {
+//        String userName = "111";
+//        String password = "111";
+//        if (null != loginInfo) {
+//            userName = loginInfo.huanxin_username;
+//            password = loginInfo.huanxin_password;
+//        }
+//        EMClient.getInstance().login(userName, password, new EMCallBack() {//回调
+//            @Override
+//            public void onSuccess() {
+//                EMClient.getInstance().groupManager().loadAllGroups();
+//                EMClient.getInstance().chatManager().loadAllConversations();
+//                Log.e("main", "登录聊天服务器成功！");
+//                JoinChatRoom(anchorItem.id);
+//            }
+//
+//            @Override
+//            public void onProgress(int progress, String status) {
+//                Log.e("main", "progress" + progress + "");
+//            }
+//
+//            @Override
+//            public void onError(int code, String message) {
+//                Log.e("main", "登录聊天服务器失败！");
+//            }
+//        });
+//
+//    }
 
     public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
 //        adapter = new MessageChatroomAdapter(msgList, LiveActivity.this);
-        listView.setAdapter(adapter);
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
-        if (msgList.size() > 0)
-            listView.setSelection(listView.getCount() - 1);
-        Log.e("sdad", "finish loadsomes");
+//        listView.setAdapter(adapter);
+//        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+//        if (msgList.size() > 0)
+//            listView.setSelection(listView.getCount() - 1);
+//        Log.e("sdad", "finish loadsomes");
     }
 
     public void bt_send(View v) {
@@ -351,9 +346,7 @@ public class PlayActivity extends AppCompatActivity  {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
         if (isOpen) {
-//            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(LiveActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(PlayActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -375,212 +368,212 @@ public class PlayActivity extends AppCompatActivity  {
 
     }
 
-    private Gift mGetGift;
-    EMMessageListener msgListener = new EMMessageListener() {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-            Log.e("main", "收到消息");
-
-            for (EMMessage message : messages) {
-                String username = null;
-                // 群组消息
-                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
-                    username = message.getFrom();
-                    message_from = username;
-                }
-                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                message_content = txtBody.getMessage();
-                Map<String, Object> map = message.ext();
-                String spotType = null;
-                if (map.containsKey("SPOT_KEY")) {
-                    spotType = (String) map.get("SPOT_KEY");
-                }
-                if (null != spotType) {
-                    if (spotType.equals("FJZY_SPOT")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showLikes(message_from);
-                            }
-                        });
-                    } else if (spotType.equals("GIFT")) {
-                        mGetGift = new Gift();
-                        mGetGift.name = (String) map.get("GiftName");
-                        mGetGift.picture = (String) map.get("GiftPicture");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showGifts(message_from, mGetGift);
-//                                showGifts(message_from, message_content.substring(message_content.length() - 2));
-                            }
-                        });
-                    } else {
-                        msgList.add(message);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                                if (msgList.size() > 0) {
-                                    listView.setSelection(listView.getCount() - 1);
-                                    Log.e("sad", "setselection");
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    msgList.add(message);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                            if (msgList.size() > 0) {
-                                listView.setSelection(listView.getCount() - 1);
-                                Log.e("sad", "setselection");
-                            }
-                        }
-                    });
-                }
-
-            }
-            // 收到消息
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            // 收到透传消息
-        }
-
-        @Override
-        public void onMessageReadAckReceived(List<EMMessage> messages) {
-            // 收到已读回执
-        }
-
-        @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-            // 收到已送达回执
-        }
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            // 消息状态变动
-
-        }
-    };
-
-    public void joinchatroom() {
-        Log.e("adad", "startJoinChatRoom..");
-        EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
-            @Override
-            public void onSuccess(EMChatRoom emChatRoom) {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(chatroomid);
-                if (room != null) {
-//                    showChatroomToast("join room success : " + room.getName());
-                    Log.e("adad", "JoinChatRoom succeed");
-                    isJoined = true;
-                } else {
-                    Log.e("dasda", "JoinChatRoom Failed!");
-                }
-                addChatRoomChangeListenr();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadsomes();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.e("sdad", "joinchatroom OnError");
-            }
-        });
-    }
-
-    public void addChatRoomChangeListenr() {
-        EMChatRoomChangeListener chatRoomChangeListener = new EMChatRoomChangeListener() {
-
-            @Override
-            public void onChatRoomDestroyed(String roomId, String roomName) {
-                if (roomId.equals(chatroomid)) {
-//                    showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
-                }
-            }
-
-            @Override
-            public void onMemberJoined(String roomId, String participant) {
-                getCountOnline();
-
-                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onMemberExited(String roomId, String roomName, String participant) {
-                getCountOnline();
-
-                EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onMemberKicked(String roomId, String roomName, String participant) {
-                if (roomId.equals(chatroomid)) {
-                    String curUser = EMClient.getInstance().getCurrentUser();
-                    if (curUser.equals(participant)) {
-                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
-                    } else {
-//                        showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
-                    }
-                }
-            }
-
-        };
-
-        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
-    }
-
-    public void JoinChatRoom(String anchorId) {
-//        String url = UriTemplate.fromTemplate(Config.URL_JOINCHAT)
-//                .set("id", anchorId)
-////                .expand();
-//        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
-//        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        request.addHeader("Authorization", "Bearer  " + loginInfo.token);
+//    private Gift mGetGift;
+//    EMMessageListener msgListener = new EMMessageListener() {
 //
-//        CallServer.getRequestInstance().add(JOINCHATROOM, request, joinRoomListener);
-    }
+//        @Override
+//        public void onMessageReceived(List<EMMessage> messages) {
+//            Log.e("main", "收到消息");
+//
+//            for (EMMessage message : messages) {
+//                String username = null;
+//                // 群组消息
+//                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+//                    username = message.getFrom();
+//                    message_from = username;
+//                }
+//                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+//                message_content = txtBody.getMessage();
+//                Map<String, Object> map = message.ext();
+//                String spotType = null;
+//                if (map.containsKey("SPOT_KEY")) {
+//                    spotType = (String) map.get("SPOT_KEY");
+//                }
+//                if (null != spotType) {
+//                    if (spotType.equals("FJZY_SPOT")) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showLikes(message_from);
+//                            }
+//                        });
+//                    } else if (spotType.equals("GIFT")) {
+//                        mGetGift = new Gift();
+//                        mGetGift.name = (String) map.get("GiftName");
+//                        mGetGift.picture = (String) map.get("GiftPicture");
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showGifts(message_from, mGetGift);
+////                                showGifts(message_from, message_content.substring(message_content.length() - 2));
+//                            }
+//                        });
+//                    } else {
+//                        msgList.add(message);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adapter.notifyDataSetChanged();
+//                                if (msgList.size() > 0) {
+//                                    listView.setSelection(listView.getCount() - 1);
+//                                    Log.e("sad", "setselection");
+//                                }
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    msgList.add(message);
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.notifyDataSetChanged();
+//                            if (msgList.size() > 0) {
+//                                listView.setSelection(listView.getCount() - 1);
+//                                Log.e("sad", "setselection");
+//                            }
+//                        }
+//                    });
+//                }
+//
+//            }
+//            // 收到消息
+//        }
+//
+//        @Override
+//        public void onCmdMessageReceived(List<EMMessage> messages) {
+//            // 收到透传消息
+//        }
+//
+//        @Override
+//        public void onMessageReadAckReceived(List<EMMessage> messages) {
+//            // 收到已读回执
+//        }
+//
+//        @Override
+//        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
+//            // 收到已送达回执
+//        }
+//
+//        @Override
+//        public void onMessageChanged(EMMessage message, Object change) {
+//            // 消息状态变动
+//
+//        }
+//    };
 
-    public void getCountOnline() {
-//        String url = UriTemplate.fromTemplate(Config.URL_ANCHOR_ONLINE_COUNT)
-//                .set("ids", anchorItem.id)
-//                .expand();
-//        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
-//        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        CallServer.getRequestInstance().add(GETONLINECOUNT, request, ActionListener);
-    }
+//    public void joinchatroom() {
+//        Log.e("adad", "startJoinChatRoom..");
+//        EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
+//            @Override
+//            public void onSuccess(EMChatRoom emChatRoom) {
+//                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(chatroomid);
+//                if (room != null) {
+////                    showChatroomToast("join room success : " + room.getName());
+//                    Log.e("adad", "JoinChatRoom succeed");
+//                    isJoined = true;
+//                } else {
+//                    Log.e("dasda", "JoinChatRoom Failed!");
+//                }
+//                addChatRoomChangeListenr();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        loadsomes();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(int i, String s) {
+//                Log.e("sdad", "joinchatroom OnError");
+//            }
+//        });
+//    }
+
+//    public void addChatRoomChangeListenr() {
+//        EMChatRoomChangeListener chatRoomChangeListener = new EMChatRoomChangeListener() {
+//
+//            @Override
+//            public void onChatRoomDestroyed(String roomId, String roomName) {
+//                if (roomId.equals(chatroomid)) {
+////                    showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
+//                }
+//            }
+//
+//            @Override
+//            public void onMemberJoined(String roomId, String participant) {
+//                getCountOnline();
+//
+//                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
+//                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                message.setFrom("动态");
+//                msgList.add(message);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.notifyDataSetChanged();
+//                        if (msgList.size() > 0) {
+//                            listView.setSelection(listView.getCount() - 1);
+//                        }
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onMemberExited(String roomId, String roomName, String participant) {
+//                getCountOnline();
+//
+//                EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
+//                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                message.setFrom("动态");
+//                msgList.add(message);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.notifyDataSetChanged();
+//                        if (msgList.size() > 0) {
+//                            listView.setSelection(listView.getCount() - 1);
+//                        }
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onMemberKicked(String roomId, String roomName, String participant) {
+//                if (roomId.equals(chatroomid)) {
+//                    String curUser = EMClient.getInstance().getCurrentUser();
+//                    if (curUser.equals(participant)) {
+//                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//                    } else {
+////                        showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
+//                    }
+//                }
+//            }
+//
+//        };
+//
+//        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
+//    }
+
+//    public void JoinChatRoom(String anchorId) {
+////        String url = UriTemplate.fromTemplate(Config.URL_JOINCHAT)
+////                .set("id", anchorId)
+//////                .expand();
+////        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
+////        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
+////        request.addHeader("Authorization", "Bearer  " + loginInfo.token);
+////
+////        CallServer.getRequestInstance().add(JOINCHATROOM, request, joinRoomListener);
+//    }
+
+//    public void getCountOnline() {
+////        String url = UriTemplate.fromTemplate(Config.URL_ANCHOR_ONLINE_COUNT)
+////                .set("ids", anchorItem.id)
+////                .expand();
+////        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
+////        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
+////        CallServer.getRequestInstance().add(GETONLINECOUNT, request, ActionListener);
+//    }
 
     @OnClick(R.id.bt_openemoji)
     void setopenemoji() {
@@ -632,28 +625,39 @@ public class PlayActivity extends AppCompatActivity  {
     @OnClick(R.id.bt_live_gifts)
     void setgifts() {
         hidelayout();
-//        framel_live_gifts.setVisibility(View.VISIBLE);
+        framel_live_gifts.setVisibility(View.VISIBLE);
 //        gifts = (ArrayList<Gift>) ACache.get(this).getAsObject("Lives_Gifts");
+
+        if (gifts.isEmpty()) {
+            for (int i = 1; i <= 10; i++) {
+                Gift g = new Gift();
+                g.id = i + "";
+                int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
+                g.picture = emoticonsId;
+                gifts.add(g);
+            }
+
+        }
 //        if (null != gifts && !gifts.isEmpty()) {
-//            viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
-//
-//                @Override
-//                public void onPageSelected(int arg0) {
-////                                indicatorScroll(arg0);
-//                }
-//
-//                @Override
-//                public void onPageScrolled(int arg0, float arg1, int arg2) {
-//
-//                }
-//
-//                @Override
-//                public void onPageScrollStateChanged(int arg0) {
-//
-//                }
-//            });
-//            view_giftslist.add(viewpager);
-//            vp_gifts.setAdapter(new MyViewPagerAdapter(view_giftslist));
+        viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int arg0) {
+//                                indicatorScroll(arg0);
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+
+            }
+        });
+        view_giftslist.add(viewpager);
+        vp_gifts.setAdapter(new MyViewPagerAdapter(view_giftslist));
 //        } else {
 //            Request<String> request = NoHttp.createStringRequest(Config.URL_Gifts);
 //            request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");

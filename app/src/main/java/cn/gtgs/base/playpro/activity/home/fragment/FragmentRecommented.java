@@ -21,5 +21,4 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
         presenter = new RecommentedPresenter(viewDelegate);
         presenter.initData();
     }
-
 }

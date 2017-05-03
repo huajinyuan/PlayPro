@@ -22,4 +22,5 @@ public class FragmentStar extends FragmentPresenter<StarDelegate> {
         presenter.initData();
 
     }
+
 }

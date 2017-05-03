@@ -59,7 +59,7 @@ public abstract class FragmentPresenter<T extends IDelegate> extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         viewDelegate.create(inflater, container, savedInstanceState);
         View view = viewDelegate.getRootView();
-        unbinder = ButterKnife.bind(view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -71,10 +71,9 @@ public abstract class FragmentPresenter<T extends IDelegate> extends Fragment {
         init();
     }
 
-//    protected void bindEvenListener() {
+    //    protected void bindEvenListener() {
 //    }
-    public void init()
-    {
+    public void init() {
 
     }
 

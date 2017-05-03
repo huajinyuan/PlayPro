@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 
 
@@ -41,20 +44,22 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation arg0) {
                 F.e("启动页面动画执行完毕...");
-//                ACache aCache = ACache.get(SplashActivity.this);
-//                Account account = (Account) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                ACache aCache = ACache.get(SplashActivity.this);
+                UserInfo info = (UserInfo) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
                 Intent intent;
-//                if (null != account) {
-//                    SplashActivity.this.finish();
-//                    overridePendingTransition(0, 0);
-//                    intent = new Intent(SplashActivity.this, HomeActivity.class);
-//                    startActivity(intent);
-//                } else {
+                if (null != info) {
+                    SplashActivity.this.finish();
                     overridePendingTransition(0, 0);
                     intent = new Intent(SplashActivity.this, HomeActivity.class);
-//                    intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
-//                }
+                    SplashActivity.this.finish();
+                } else {
+                    overridePendingTransition(0, 0);
+//                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }
             }
 
             @Override

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="46dp"-->
+        <!--android:background="@color/color_black_0D">-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_back"-->
+        <!--android:layout_width="10dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:src="@drawable/icon_back" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:text="设置资料"-->
+        <!--android:textSize="16sp" />-->
+        <!--</RelativeLayout>-->
+        <include layout="@layout/layout_com_topbar" />
+
+        <ImageView
+            android:id="@+id/iv_register_icon"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginTop="29dp"
+            android:background="@drawable/shape_circle_pink"
+            android:padding="1px"
+            android:src="@drawable/icon_registericon" />
+
+        <EditText
+            android:id="@+id/et_register_nickname"
+            android:layout_width="289dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@null"
+            android:drawableBottom="@drawable/shape_login_et"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:hint="请设置一个新昵称" />
+
+        <RadioGroup
+            android:id="@+id/rg_register_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_register_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男" />
+
+            <RadioButton
+                android:id="@+id/rb_register_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:checked="true"
+                android:text="女" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/bt_next"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/selector_button_pink"
+            android:text="下一步"
+            android:textColor="@color/color_black_background" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_cuticon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_background"
+        android:visibility="invisible">
+
+        <RelativeLayout
+            android:id="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <ImageView
+                android:id="@+id/iv_cancel"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/icon_cancel" />
+
+            <ImageView
+                android:id="@+id/iv_ok"
+                android:layout_width="25dp"
+                android:layout_height="17dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_ok" />
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="720px"
+            android:layout_height="720px"
+            android:layout_below="@id/rl_top"
+            android:layout_centerHorizontal="true"
+            android:scaleType="matrix" />
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="720px"
+            android:layout_height="720px"
+            android:layout_below="@id/rl_top"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/icon_cover" />
+    </RelativeLayout>
+
+</RelativeLayout>

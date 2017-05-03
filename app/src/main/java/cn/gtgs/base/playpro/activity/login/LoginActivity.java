@@ -6,7 +6,7 @@ import android.view.View;
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
-import cn.gtgs.base.playpro.activity.login.model.Account;
+import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginListener;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginPresenter;
@@ -21,6 +21,9 @@ import cn.gtgs.base.playpro.utils.ToastUtil;
 public class LoginActivity extends DataBindActivity<LoginDelegate> implements ILoginListener {
     ILoginPresenter mLoginPresenter;
 
+    boolean isRegist = false;
+    RegisterInfo registerInfo;
+
     @Override
     protected Class<LoginDelegate> getDelegateClass() {
         return LoginDelegate.class;
@@ -30,11 +33,12 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-                mLoginPresenter.login();
+                mLoginPresenter.login(registerInfo);
                 break;
             case R.id.btn_register:
-                Intent intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(this, RegisterIconActivity.class);
+//                startActivity(intent);
+                startActivityForResult(intent, 999);
                 break;
             case R.id.tv_login_sms:
                 mLoginPresenter.getCode();
@@ -50,11 +54,11 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
     @Override
     protected void initData() {
 
-        Account account = (Account) mACache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        if (null != account) {
-            this.finish();
+        UserInfo info = (UserInfo) mACache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        if (null != info) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -80,7 +84,6 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         this.finish();
-
     }
 
     @Override
@@ -88,4 +91,20 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
         ToastUtil.showToast(msg, this);
     }
 
+    // 为了获取结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // RESULT_OK，判断另外一个activity已经结束数据输入功能，Standard activity result:
+        // operation succeeded. 默认值是-1
+        if (resultCode == 2) {
+            if (requestCode == 999) {
+//                int three = data.getIntExtra("three", 0);
+//                //设置结果显示框的显示数值
+//                result.setText(String.valueOf(three));
+                registerInfo = (RegisterInfo) data.getSerializableExtra("RegisterInfo");
+
+            }
+        }
+    }
 }

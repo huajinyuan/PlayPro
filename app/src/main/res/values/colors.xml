@@ -39,6 +39,7 @@
     <color name="color_progress_end">#9e2</color>
     <color name="color_pink">#fe4498</color>
     <color name="color_myred">#c93437</color>
+    <color name="color_grey555">#555</color>
     <color name="color_black_background">#212121</color>
     <!-- 橙色 -->
     <color name="color_base_orange">#FE9C01</color>

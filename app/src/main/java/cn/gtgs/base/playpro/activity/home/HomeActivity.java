@@ -23,9 +23,16 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
 
     @Override
     protected void onInitPresenters() {
-        mRanking = new FragmentRanking();
-        mRecommented = new FragmentRecommented();
-        mFollow = new FragmentFollow();
+        if (null == mRanking) {
+            mRanking = new FragmentRanking();
+        }
+        if (null == mRecommented) {
+            mRecommented = new FragmentRecommented();
+        }
+        if (null == mFollow) {
+
+            mFollow = new FragmentFollow();
+        }
     }
 
     @Override
@@ -91,4 +98,5 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
                 break;
         }
     }
+
 }

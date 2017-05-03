@@ -11,8 +11,11 @@ import com.gt.okgo.request.PostRequest;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.view.LoginDelegate;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.http.SimpleResponse;
@@ -34,18 +37,17 @@ public class LoginPresenter implements ILoginPresenter {
     }
 
     @Override
-    public void login() {
+    public void login(RegisterInfo registerInfo) {
         String code = delegate.getCode();
-
-//        if (sms_hash == null)
-//            Toast.makeText(delegate.getActivity(), "请先获取验证码", Toast.LENGTH_SHORT).show();
-//        else
         if (code.equals(""))
             Toast.makeText(delegate.getActivity(), "输入您的验证码", Toast.LENGTH_SHORT).show();
         else {
             HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbPhone", delegate.getPhone());
             params.put("smsAuthCode", code);
+            if (null != registerInfo) {
+
+            }
             final PostRequest request = OkGo.post(Config.POST_LOGIN).params(params);
             HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override
@@ -60,13 +62,16 @@ public class LoginPresenter implements ILoginPresenter {
 
                 @Override
                 public void onNext(Response response) {
-//                    if (response.code() == 200) {
-//                        HttpBase<UserInfo> u = Parsing.getInstance().ResponseToObject(response, UserInfo.class);
-//                        if (null != listener) {
-//                            listener.LoginSuccess(u.data);
-//                        }
-//                    }
-                            listener.LoginSuccess(null);
+                    HttpBase<UserInfo> u = Parsing.getInstance().ResponseToObject(response, UserInfo.class);
+                    if (u.getCode() == 1) {
+                        if (null != listener) {
+                            listener.LoginSuccess(u.data);
+                        }
+                    } else {
+                        if (null != listener) {
+                            listener.LoginFailed(u.msg);
+                        }
+                    }
 
 
                 }
@@ -92,6 +97,7 @@ public class LoginPresenter implements ILoginPresenter {
                 public void onCompleted() {
 
                 }
+
                 @Override
                 public void onError(Throwable e) {
 

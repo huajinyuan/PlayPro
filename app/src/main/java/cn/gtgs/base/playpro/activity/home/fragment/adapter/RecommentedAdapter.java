@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.home.fragment.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.target.Target;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.live.PlayActivity;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
@@ -75,9 +77,9 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(mContext, LiveActivity.class);
-//                intent.putExtra("anchoritem", mData.get(position));
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, PlayActivity.class);
+                intent.putExtra("anchoritem", mData.get(position));
+                mContext.startActivity(intent);
             }
         });
 

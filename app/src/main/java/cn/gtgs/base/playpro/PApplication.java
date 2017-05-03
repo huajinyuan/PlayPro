@@ -2,6 +2,7 @@ package cn.gtgs.base.playpro;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.gt.okgo.OkGo;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import cn.gtgs.base.playpro.activity.home.HomeActivity;
+
 /**
  * Created by gtgs on 2017/4/26.
  */
@@ -30,11 +33,14 @@ public class PApplication extends Application {
     public static Context applicationContext;
     public static String Phone;
     public static String JPushID;
+//    public ArrayList<Activity> mActiviyts = new ArrayList<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+//        UnCeHandler catchExcep = new UnCeHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(catchExcep);
+        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
         application = this;
         applicationContext = this;
         OkGo.init(this);
@@ -154,5 +160,27 @@ public class PApplication extends Application {
 
     public static void setPhone(String phone) {
         Phone = phone + "_anchor";
+    }
+
+//    public void finishActivity() {
+//        for (Activity a : mActiviyts) {
+//            a.finish();
+//        }
+//        //杀死该应用进程
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//    }
+
+    private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
+        public void uncaughtException(Thread thread, Throwable ex) {
+//            finishActivity();
+            restartApp();//发生崩溃异常时,重启应用
+        }
+    };
+
+    public void restartApp() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
     }
 }
