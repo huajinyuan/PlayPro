@@ -3,7 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorBlue">#00D7C8</color>
+    <color name="colorBlue">#49C3B8</color>
+    <!--<color name="colorBlue">#00D7C8</color>-->
     <color name="colorbg">#F1F1F1</color>
     <color name="colorwhite">#FFFFFF</color>
     <color name="colorred">#DB2F29</color>
@@ -42,7 +43,8 @@
     <color name="color_grey555">#555</color>
     <color name="color_black_background">#212121</color>
     <!-- 橙色 -->
-    <color name="color_base_orange">#FE9C01</color>
+    <color name="color_base_orange">#73CD1E</color>
+    <!--<color name="color_base_orange">#FE9C01</color>-->
     <!-- 菜单栏黑背景色 -->
     <color name="color_base_black_bg">#21292C</color>
     <color name="color_black">#212121</color>
