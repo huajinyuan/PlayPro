@@ -15,31 +15,37 @@
         android:background="@color/colorBlue">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="45.5dp"
             android:layout_centerInParent="true">
 
-            <Button
+            <TextView
                 android:id="@+id/btn_ranking"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@drawable/shape_orange_indicator"
+                android:gravity="center"
                 android:text="榜单"
                 android:textColor="@color/colorwhite" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_recommented"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/float_transparent"
+                android:gravity="center"
                 android:text="推荐"
                 android:textColor="@color/gray_btn_bg_color" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_follow"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/float_transparent"
+                android:gravity="center"
                 android:text="关注"
                 android:textColor="@color/gray_btn_bg_color" />
         </LinearLayout>

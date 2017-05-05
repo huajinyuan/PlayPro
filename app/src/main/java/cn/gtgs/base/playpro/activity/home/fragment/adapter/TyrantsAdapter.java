@@ -37,6 +37,19 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
     @Override
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
         final UserInfo anchorItem = mData.get(position);
+        if (position == 0) {
+            holder.tvPos.setBackgroundResource(R.mipmap.icon_medal1);
+            holder.tvPos.setText("");
+        } else if (position == 1) {
+            holder.tvPos.setBackgroundResource(R.mipmap.icon_medal2);
+            holder.tvPos.setText("");
+        } else if (position == 2) {
+            holder.tvPos.setBackgroundResource(R.mipmap.icon_medal3);
+            holder.tvPos.setText("");
+        } else {
+            holder.tvPos.setBackgroundResource(R.mipmap.icon_medal_trans);
+            holder.tvPos.setText("NO." + (position + 1));
+        }
 //        holder.tvName.setText(anchorItem.huanxin_username);
 //        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
 //        holder.tvName.setText(anchorItem.name);
@@ -89,11 +102,14 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
     }
 
     class AnchorHotViewHolder extends RecyclerView.ViewHolder {
+
         TextView tvName;
+        TextView tvPos;
 
         public AnchorHotViewHolder(View itemView) {
             super(itemView);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
+            this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
         }
     }
 }

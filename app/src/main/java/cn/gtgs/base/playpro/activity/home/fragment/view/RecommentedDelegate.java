@@ -10,7 +10,6 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.adapter.RecommentedAdapter;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
-import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
 
 /**
  * Created by gtgs on 2017/4/25.
@@ -31,7 +30,7 @@ public class RecommentedDelegate extends AppDelegate {
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         if (null == adapter) {
             mRecContent.setLayoutManager(gridLayoutManager);
-            mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+//            mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
             adapter = new RecommentedAdapter(anchorItems, getActivity());
             mRecContent.setAdapter(adapter);
             mRecContent.setLayoutManager(gridLayoutManager);
