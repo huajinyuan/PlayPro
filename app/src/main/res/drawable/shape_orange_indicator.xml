@@ -11,7 +11,7 @@
     <item
         android:bottom="@dimen/dimen_indicator_line_height">
         <shape>
-            <solid android:color="@color/material_deep_teal_50"/>
+            <solid android:color="@color/colorBlue"/>
 
             <padding
                 android:bottom="@dimen/dimen_indicator_line_height"/>

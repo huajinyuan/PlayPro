@@ -4,7 +4,7 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="@color/color_base_orange"/>
+            <solid android:color="@color/colorBlue"/>
         </shape>
     </item>
     <!-- 主体背景颜色值 -->

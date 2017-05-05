@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.activity.home.fragment.view.TyrantsDelegate;
 import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
+import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import okhttp3.Response;
@@ -31,7 +33,8 @@ public class TyrantsPresenter implements IRecommented {
 
     private void getData() {
 
-        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
+        GetRequest request = OkGo.get(Config.POST_MEMBER_TOP);
+//        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
         HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
@@ -48,7 +51,7 @@ public class TyrantsPresenter implements IRecommented {
 
 //                        F.e(response.body().toString());
                 try {
-                    ArrayList<AnchorItem> list = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
+                    ArrayList<UserInfo> list = (ArrayList<UserInfo>) Parsing.getInstance().ResponseToList3(response, UserInfo.class).dataList;
 //                    HttpBase<ArrayList<AnchorItem>> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
                     delegate.setData(list);
                 } catch (Exception e) {

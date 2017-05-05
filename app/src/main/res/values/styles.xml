@@ -27,4 +27,11 @@
     <style name="DialogTransBackGround" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground" >@color/float_transparent</item>
     </style>
+    <style name="indicator_chat_face">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:background">@drawable/bg_chat_face</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 </resources>

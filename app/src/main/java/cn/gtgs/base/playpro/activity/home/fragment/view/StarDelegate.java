@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.gtgs.base.playpro.R;
-import cn.gtgs.base.playpro.activity.home.fragment.adapter.TyrantsAdapter;
-import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
+import cn.gtgs.base.playpro.activity.home.fragment.adapter.Follow_StarAdapter;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
 
@@ -17,25 +17,31 @@ import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
  */
 
 public class StarDelegate extends AppDelegate {
-    @BindView(R.id.rec_tyrants_content)
+    @BindView(R.id.rec_star_content)
     RecyclerView mRecContent;
-    TyrantsAdapter adapter;
+    Follow_StarAdapter mFollowAdapter;
     LinearLayoutManager manager;
+    ArrayList<Follow> mData = new ArrayList<>();
+
+
     @Override
     public int getRootLayoutId() {
-        return R.layout.fragment_tyrants;
-    }
-    public void setData(ArrayList<AnchorItem> data)
-    {
-        manager = new LinearLayoutManager(getActivity());
-        if (null == adapter) {
-            mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
-            adapter = new TyrantsAdapter(data, getActivity());
-            mRecContent.setAdapter(adapter);
-            mRecContent.setLayoutManager(manager);
-        } else {
-            adapter.notifyDataSetChanged();
 
+        return R.layout.fragment_star;
+    }
+
+    public void setData(ArrayList<Follow> data) {
+        manager = new LinearLayoutManager(getActivity());
+        if (null == mFollowAdapter) {
+            mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+            mRecContent.setLayoutManager(manager);
+            mFollowAdapter = new Follow_StarAdapter(mData, getActivity());
+            mRecContent.setAdapter(mFollowAdapter);
         }
+        mData.clear();
+        mData.addAll(data);
+        mFollowAdapter.notifyDataSetChanged();
+
+
     }
 }

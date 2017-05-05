@@ -20,4 +20,6 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
     protected Class<AnchorApproveDelegate> getDelegateClass() {
         return AnchorApproveDelegate.class;
     }
+
+
 }

@@ -12,7 +12,7 @@
         android:id="@+id/rel_home_tab_top"
         android:layout_width="match_parent"
         android:layout_height="45.5dp"
-        android:background="@color/material_deep_teal_50">
+        android:background="@color/colorBlue">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
             app:srcCompat="@android:drawable/ic_menu_search" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/img_home_top_userinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView3"
@@ -63,7 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginEnd="11dp"
             android:layout_marginRight="11dp"
-            app:srcCompat="@android:drawable/ic_menu_myplaces" />
+            app:srcCompat="@mipmap/icon_center" />
     </RelativeLayout>
 
     <FrameLayout

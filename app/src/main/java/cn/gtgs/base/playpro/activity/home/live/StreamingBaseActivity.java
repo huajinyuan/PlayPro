@@ -30,8 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.gt.okgo.OkGo;
-import com.gt.okgo.request.GetRequest;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
@@ -79,12 +78,9 @@ import java.util.TimerTask;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.http.Config;
-import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.gles.FBO;
-import okhttp3.Response;
-import rx.Subscriber;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -131,10 +127,10 @@ public class StreamingBaseActivity extends Activity implements
     AlertDialog dialogsettings;
     SeekBar seekBarBeauty;
     ImageView iv_live_changecamera, iv_live_booking;
-    LinearLayout ll_live_booking;
+//    LinearLayout ll_live_booking;
     RelativeLayout rl_live_bootombar;
-    ListView lv_live_booking;
-    View view_booking_click;
+//    ListView lv_live_booking;
+//    View view_booking_click;
     ImageView iv_live_close;
     TextView tv_live_id, tv_live_onlinenum;
     LinearLayout ll_live_onlinenum;
@@ -255,21 +251,21 @@ public class StreamingBaseActivity extends Activity implements
         listView = (ListView) findViewById(R.id.listView);
         tv_likes = (TextView) findViewById(R.id.tv_likes);
         iv_gift = (ImageView) findViewById(R.id.iv_gift);
-//        if (EMClient.getInstance().isLoggedInBefore()) {
-//            login();
-//            Log.e("main", "islogged");
-//        } else {
-//            login();
-//            Log.e("main", "logging");
-//        }
-//
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if (!isJoined)
-//                    joinchatroom();
-//            }
-//        }, 5000);
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            login();
+            Log.e("main", "islogged");
+        } else {
+            login();
+            Log.e("main", "logging");
+        }
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!isJoined)
+                    joinchatroom();
+            }
+        }, 5000);
         //-------------------------------------------------------------------
         //-------------------------------------------------------------------
 
@@ -287,7 +283,7 @@ public class StreamingBaseActivity extends Activity implements
 //        String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
 
 
-        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493720528&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:cC6VIRArO2xkJctNTF0zK818Dyw=";
+        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
         Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
 
         mContext = this;
@@ -620,10 +616,10 @@ public class StreamingBaseActivity extends Activity implements
         mStreamStatus = (TextView) findViewById(R.id.stream_status);
         iv_live_changecamera = (ImageView) findViewById(R.id.iv_live_changecamera);
         iv_live_booking = (ImageView) findViewById(R.id.iv_live_booking);
-        ll_live_booking = (LinearLayout) findViewById(R.id.ll_live_booking);
+//        ll_live_booking = (LinearLayout) findViewById(ll_live_booking);
         rl_live_bootombar = (RelativeLayout) findViewById(R.id.rl_live_bootombar);
-        lv_live_booking = (ListView) findViewById(R.id.lv_live_booking);
-        view_booking_click = findViewById(R.id.view_booking_click);
+//        lv_live_booking = (ListView) findViewById(lv_live_booking);
+//        view_booking_click = findViewById(view_booking_click);
         iv_live_close = (ImageView) findViewById(R.id.iv_live_close);
         tv_live_id = (TextView) findViewById(R.id.tv_live_id);
         tv_live_onlinenum = (TextView) findViewById(R.id.tv_live_onlinenum);
@@ -653,42 +649,42 @@ public class StreamingBaseActivity extends Activity implements
         iv_live_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rl_live_bootombar.setVisibility(View.INVISIBLE);
-                ll_live_booking.setVisibility(View.VISIBLE);
+//                rl_live_bootombar.setVisibility(View.INVISIBLE);
+//                ll_live_booking.setVisibility(View.VISIBLE);
 
 //                Request<String> request=NoHttp.createStringRequest(Config.URL_BookingValid);
 //                request.addHeader("Authorization", "Bearer " + loginInfo.token);
 //                requestQueue.add(Int_BookingValid, request, responseListener);
-                GetRequest request = OkGo.get(Config.URL_BookingValid);
-                HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Response response) {
-//                        DingtaiList dingtaiList = JSON.parseObject(response.get(), DingtaiList.class);
-//                        if (dingtaiList != null) {
-//                            ListViewFragmentDTAdapter adapter = new ListViewFragmentDTAdapter(context, dingtaiList.data);
-//                            lv_live_booking.setAdapter(adapter);
-//                        }
-                    }
-                });
+//                GetRequest request = OkGo.get(Config.URL_BookingValid);
+//                HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
+//                    @Override
+//                    public void onCompleted() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Response response) {
+////                        DingtaiList dingtaiList = JSON.parseObject(response.get(), DingtaiList.class);
+////                        if (dingtaiList != null) {
+////                            ListViewFragmentDTAdapter adapter = new ListViewFragmentDTAdapter(context, dingtaiList.data);
+////                            lv_live_booking.setAdapter(adapter);
+////                        }
+//                    }
+//                });
             }
         });
-        view_booking_click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rl_live_bootombar.setVisibility(View.VISIBLE);
-                ll_live_booking.setVisibility(View.INVISIBLE);
-            }
-        });
+//        view_booking_click.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                rl_live_bootombar.setVisibility(View.VISIBLE);
+//                ll_live_booking.setVisibility(View.INVISIBLE);
+//            }
+//        });
 //        checkOnlineNum();
     }
 
@@ -902,33 +898,63 @@ public class StreamingBaseActivity extends Activity implements
     //------------------------------------------------------------------------------
     public void login() {
         Log.e("sdad", "start login...");
-//        EMClient.getInstance().login(loginInfo.huanxin_username, loginInfo.huanxin_password, new EMCallBack() {//回调
-//            @Override
-//            public void onSuccess() {
-//                EMClient.getInstance().groupManager().loadAllGroups();
-//                EMClient.getInstance().chatManager().loadAllConversations();
-//                Log.e("main", "登录聊天服务器成功！");
-//
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        joinchatroom();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onProgress(int progress, String status) {
-//                Log.e("main", "progress" + progress + "");
-//            }
-//
-//            @Override
-//            public void onError(int code, String message) {
-//                Log.e("main", "登录聊天服务器失败！");
-//            }
-//        });
+//        41240285948    xnPPr2xCgR
+        EMClient.getInstance().login("41240285948", "xnPPr2xCgR", new EMCallBack() {//回调
+            @Override
+            public void onSuccess() {
+                EMClient.getInstance().groupManager().loadAllGroups();
+                EMClient.getInstance().chatManager().loadAllConversations();
+                Log.e("main", "登录聊天服务器成功！");
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        joinchatroom();
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                Log.e("main", "progress" + progress + "");
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                Log.e("main", "登录聊天服务器失败！");
+            }
+        });
 
     }
+
+    public void joinchatroom() {
+        Log.e("adad", "startJoinChatRoom..");
+        EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(chatroomid);
+                if (room != null) {
+                    showChatroomToast("已加入聊天室");
+                    isJoined = true;
+                    Log.e("adad", "JoinChatRoom succeed");
+                } else {
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadsomes();
+                        addChatRoomChangeListenr();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e("sdad", "joinchatroom OnError");
+            }
+        });
+    }
+
 
     public void loadsomes() {
 //        EMClient.getInstance().groupManager().loadAllGroups();
@@ -942,16 +968,119 @@ public class StreamingBaseActivity extends Activity implements
         if (msgList.size() > 0)
             listView.setSelection(listView.getCount() - 1);
     }
+    public void addChatRoomChangeListenr() {
+        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
+    }
 
     private Gift mGetGift;
-    EMMessageListener msgListener = new EMMessageListener() {
+
+    EMChatRoomChangeListener chatRoomChangeListener = new EMChatRoomChangeListener() {
 
         @Override
-        public void onMessageReceived(List<EMMessage> messages) {
+        public void onChatRoomDestroyed(String roomId, String roomName) {
+            if (roomId.equals(chatroomid)) {
+                showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
+            }
+        }
+
+        @Override
+        public void onMemberJoined(String roomId, String participant) {
+//                checkOnlineNum();
+
+            EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
+            message.setChatType(EMMessage.ChatType.ChatRoom);
+            message.setFrom("动态");
+            msgList.add(message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                    if (msgList.size() > 0) {
+                        listView.setSelection(listView.getCount() - 1);
+                        Log.e("sad", "setselection");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onMemberExited(String roomId, String roomName, String participant) {
+//                checkOnlineNum();
+
+            EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
+            message.setChatType(EMMessage.ChatType.ChatRoom);
+            message.setFrom("动态");
+            msgList.add(message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                    if (msgList.size() > 0) {
+                        listView.setSelection(listView.getCount() - 1);
+                        Log.e("sad", "setselection");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
+            if (roomId.equals(chatroomid)) {
+                String curUser = EMClient.getInstance().getCurrentUser();
+                if (curUser.equals(participant)) {
+                    EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+                } else {
+                    showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
+                }
+            }
+        }
+
+        @Override
+        public void onMuteListAdded(String chatRoomId, List<String> mutes, long expireTime) {
+
+        }
+
+        @Override
+        public void onMuteListRemoved(String chatRoomId, List<String> mutes) {
+
+        }
+
+        @Override
+        public void onAdminAdded(String chatRoomId, String admin) {
+
+        }
+
+        @Override
+        public void onAdminRemoved(String chatRoomId, String admin) {
+
+        }
+
+        @Override
+        public void onOwnerChanged(String chatRoomId, String newOwner, String oldOwner) {
+
+        }
+
+//        @Override
+//        public void onMemberKicked(String roomId, String roomName, String participant) {
+//            if (roomId.equals(chatroomid)) {
+//                String curUser = EMClient.getInstance().getCurrentUser();
+//                if (curUser.equals(participant)) {
+//                    EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//                } else {
+//                    showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
+//                }
+//            }
+//        }
+
+    };
+
+    EMMessageListener msgListener = new EMMessageListener() {
+        @Override
+        public void onMessageReceived(List<EMMessage> list) {
 
             Log.e("main", "收到消息");
 
-            for (EMMessage message : messages) {
+            for (EMMessage message : list) {
                 String username = null;
                 // 群组消息
                 if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
@@ -1017,121 +1146,25 @@ public class StreamingBaseActivity extends Activity implements
         }
 
         @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            // 收到透传消息
+        public void onCmdMessageReceived(List<EMMessage> list) {
+
         }
 
         @Override
-        public void onMessageReadAckReceived(List<EMMessage> messages) {
-            // 收到已读回执
+        public void onMessageRead(List<EMMessage> messages) {
+
         }
 
         @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-            // 收到已送达回执
+        public void onMessageDelivered(List<EMMessage> messages) {
+
         }
 
         @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            // 消息状态变动
+        public void onMessageChanged(EMMessage emMessage, Object o) {
 
         }
     };
-
-    public void joinchatroom() {
-        Log.e("adad", "startJoinChatRoom..");
-        EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
-            @Override
-            public void onSuccess(EMChatRoom emChatRoom) {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(chatroomid);
-                if (room != null) {
-                    showChatroomToast("已加入聊天室");
-                    isJoined = true;
-                    Log.e("adad", "JoinChatRoom succeed");
-                } else {
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadsomes();
-                        addChatRoomChangeListenr();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.e("sdad", "joinchatroom OnError");
-            }
-        });
-    }
-
-    public void addChatRoomChangeListenr() {
-        EMChatRoomChangeListener chatRoomChangeListener = new EMChatRoomChangeListener() {
-
-            @Override
-            public void onChatRoomDestroyed(String roomId, String roomName) {
-                if (roomId.equals(chatroomid)) {
-                    showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
-                }
-            }
-
-            @Override
-            public void onMemberJoined(String roomId, String participant) {
-//                checkOnlineNum();
-
-                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                            Log.e("sad", "setselection");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onMemberExited(String roomId, String roomName, String participant) {
-//                checkOnlineNum();
-
-                EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                            Log.e("sad", "setselection");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onMemberKicked(String roomId, String roomName, String participant) {
-                if (roomId.equals(chatroomid)) {
-                    String curUser = EMClient.getInstance().getCurrentUser();
-                    if (curUser.equals(participant)) {
-                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
-                    } else {
-                        showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
-                    }
-                }
-            }
-
-        };
-
-        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
-    }
 
     public void showChatroomToast(final String str) {
         runOnUiThread(new Runnable() {

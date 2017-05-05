@@ -9,6 +9,7 @@ import com.gt.okgo.OkGo;
 import com.gt.okgo.cache.CacheEntity;
 import com.gt.okgo.cache.CacheMode;
 import com.gt.okgo.cookie.store.PersistentCookieStore;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
@@ -99,8 +100,8 @@ public class PApplication extends Application {
             e.printStackTrace();
         }
 
-//        EMClient.getInstance().init(applicationContext, initChatOptions());
-//        EMClient.getInstance().setDebugMode(true);
+        EMClient.getInstance().init(applicationContext, initChatOptions());
+        EMClient.getInstance().setDebugMode(true);
         initEmotions();
     }
 

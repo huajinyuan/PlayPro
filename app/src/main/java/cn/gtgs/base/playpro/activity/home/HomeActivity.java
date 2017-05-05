@@ -7,6 +7,7 @@ import android.view.View;
 
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.center.CenterActivity;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentFollow;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentRanking;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentRecommented;
@@ -80,7 +81,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
 
     }
 
-    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow, R.id.img_home_play})
+    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow, R.id.img_home_play, R.id.img_home_top_userinfo})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.btn_ranking:
@@ -95,6 +96,10 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
             case R.id.img_home_play:
                 Intent intent = new Intent(this, HWCodecCameraStreamingActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.img_home_top_userinfo:
+                Intent intent2 = new Intent(this, CenterActivity.class);
+                startActivity(intent2);
                 break;
         }
     }

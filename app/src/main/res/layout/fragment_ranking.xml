@@ -26,7 +26,7 @@
                 android:background="@drawable/shape_orange_indicator_r"
                 android:text="土豪榜"
                 android:layout_weight="1"
-                android:textColor="@color/color_base_orange" />
+                android:textColor="@color/colorBlue" />
 
             <Button
                 android:id="@+id/btn_star"
@@ -43,8 +43,7 @@
 
     <FrameLayout
         android:id="@+id/layout_ranking_content"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

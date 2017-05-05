@@ -25,9 +25,13 @@ public interface Config {
     /**
      * -------------------------------------------------------------------------------------------------------------------------
      */
-//    //在线人数GET
+    /**
+     * 加入聊天室
+     */
+    public static final String URL_JOINCHAT = "https://api.yequtv.cn/v1/chatrooms/anchors/{id}/join";
+    //    //在线人数GET
     public static final String URL_OnlineNum = "https://api.yequtv.cn/v1/chatrooms/anchors/{anchor_id}/online_count?key=z45CasVgh8K3q6300g0d95VkK197291A";
-//    //订台列表
+    //    //订台列表
     public static final String URL_BookingValid = "https://api.yequtv.cn/v1/anchor/bookings/valid?key=z45CasVgh8K3q6300g0d95VkK197291A";
 //    public static final String URL_SMS = "https://api.yequtv.cn/v1/sms";
 //    public static final String URL_LOGIN = "https://api.yequtv.cn/v1/anchors/login";
@@ -65,16 +69,43 @@ public interface Config {
 //    String ADDRESS_ACTION_URL = ADDRESS_URL + "/{id}";
 
 
-    String BASE_URL = "http://www.jsonlan.com:8080/webcast";
+    String BASE_URL = "http://www.jsonlan.com:8080/webcast/api/";
     /**
      * 请求验证码
-     * */
-    String GET_CHECKCODE = BASE_URL + "/api/member/sms";
+     */
+    String GET_CHECKCODE = BASE_URL + "member/sms";
     /**
      * 登录接口
-     * */
-    String POST_LOGIN = BASE_URL + "/api/member/login";
-//    String POST_LOGIN = BASE_URL + "/api/webcast/list";
+     */
+    String POST_LOGIN = BASE_URL + "member/login";
+    /**
+     * 直播列表
+     */
+    String POST_ANCHOR_LIST = BASE_URL + "anchor/list";
+    /**
+     * 在线直播列表
+     */
+    String POST_ANCHOR_LIST_LIVE = BASE_URL + "anchor/listLive";
+    /**
+     * 主播信息
+     */
+    String POST_ANCHOR_GET = BASE_URL + "anchor/get";
+    /**
+     * 土豪榜
+     */
+    String POST_MEMBER_TOP = BASE_URL + "member/top";
+    /**
+     * 明星榜
+     */
+    String POST_ANCHOR_TOP = BASE_URL + "anchor/top";
+    /**
+     * 关注（取消关注）
+     */
+    String POST_ANCHOR_MEMBER_fav = BASE_URL + "member/fav";
+    /**
+     * 关注列表（params: mbId）
+     */
+    String POST_ANCHOR_MEMBER_FAVLIST = BASE_URL + "member/favList";
 
 
 }

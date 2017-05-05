@@ -22,7 +22,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_margin="20dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            app:srcCompat="@drawable/circle_zhubo" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -59,23 +59,31 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:background="@drawable/background_green"
+                    android:drawableLeft="@mipmap/glory_moon"
                     android:gravity="center"
+                    android:maxLength="5"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
                     android:text="01"
-                    android:background="@mipmap/chat_message_state_green_bg_image"
-                    android:textColor="@color/colorwhite"
-                    />
+                    android:textColor="@color/colorwhite" />
+
                 <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="20dp"
-                    android:gravity="center"
-                    android:text="01"
-                    android:background="@mipmap/chat_message_state_orange_bg_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
                     android:layout_marginLeft="8dp"
-                    android:textColor="@color/colorwhite"
-                    />
+                    android:background="@drawable/background_org"
+                    android:drawableLeft="@mipmap/glory_star"
+                    android:gravity="center"
+                    android:maxLength="5"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="01"
+                    android:textColor="@color/colorwhite" />
 
 
             </LinearLayout>
@@ -88,14 +96,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
-                    android:text="ID:" />
+                    android:text="ID:"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
-                    android:text="123456789" />
+                    android:text="123456789"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -107,11 +115,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textSize="12sp"
             android:layout_margin="20dp"
+            android:drawablePadding="3dp"
             android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center_vertical"
-            android:text="编辑资料" />
+            android:text="编辑资料"
+            android:textSize="12sp" />
 
 
     </RelativeLayout>
@@ -123,11 +132,15 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_margin="20dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/shape_rec_org"
         android:gravity="center"
-        android:text="今日收益0钻石" />
+        android:text="今日收益0钻石"
+        android:textColor="@color/colorwhite" />
 
     <View
         android:layout_width="match_parent"
@@ -141,8 +154,9 @@
         android:background="@color/gray_btn_bg_color" />
 
     <RelativeLayout
+        android:id="@+id/rel_center_getcoin"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -157,11 +171,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:textSize="12sp"
+            android:drawablePadding="3dp"
             android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center"
             android:text="充值"
-            android:textColor="@color/color_yellow" />
+            android:textColor="@color/colorBlue"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -172,8 +187,9 @@
         android:background="@color/gray_btn_bg_color" />
 
     <RelativeLayout
+        android:id="@+id/rel_center_approve"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -188,11 +204,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
+            android:drawablePadding="3dp"
             android:drawableRight="@mipmap/icon_home_classify_more"
             android:gravity="center"
-            android:textSize="12sp"
             android:text="未认证"
-            android:textColor="@color/color_yellow" />
+            android:textColor="@color/colorBlue"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -210,7 +227,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -243,7 +260,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -267,6 +284,7 @@
         android:layout_height="0.5dp"
         android:layout_marginTop="10dp"
         android:background="@color/gray_btn_bg_color" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -275,7 +293,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -285,15 +303,15 @@
             android:text="设置" />
 
         <ImageView
+            android:id="@+id/imageView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="19dp"
-            app:srcCompat="@mipmap/icon_home_classify_more"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="19dp"
-            android:id="@+id/imageView8" />
+            android:layout_marginRight="19dp"
+            app:srcCompat="@mipmap/icon_home_classify_more" />
 
     </RelativeLayout>
 

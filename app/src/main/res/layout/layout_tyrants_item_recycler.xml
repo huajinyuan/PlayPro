@@ -17,14 +17,14 @@
         android:maxLines="1"
         android:text="NO.2"
         android:textColor="@color/color_base_orange"
-        android:textSize="@dimen/text_tip_sp_18" />
+        android:textSize="@dimen/sp_16" />
 
     <ImageView
         android:id="@+id/imageView7"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_weight="1"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/circle_zhubo" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -41,7 +41,8 @@
             android:gravity="center_vertical"
             android:maxLength="10"
             android:maxLines="1"
-            android:text="奥斯卡的" />
+            android:text="奥斯卡的"
+            android:textSize="@dimen/sp_12" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,21 +51,31 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:background="@mipmap/chat_message_state_green_bg_image"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@drawable/background_green"
+                android:drawableLeft="@mipmap/glory_moon"
                 android:gravity="center"
-                android:text="01"
-                android:textColor="@color/colorwhite" />
+                android:maxLength="5"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="01123456"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/sp_10" />
 
             <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
                 android:layout_marginLeft="8dp"
-                android:background="@mipmap/chat_message_state_orange_bg_image"
+                android:background="@drawable/background_org"
+                android:drawableLeft="@mipmap/glory_star"
                 android:gravity="center"
-                android:text="01"
-                android:textColor="@color/colorwhite" />
+                android:maxLength="5"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="0482221"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/sp_10" />
 
 
         </LinearLayout>
@@ -76,20 +87,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="奉献黄钻" />
+            android:text="奉献黄钻"
+            android:textSize="@dimen/sp_10" />
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:maxLength="6"
             android:maxLines="1"
             android:text="456132"
-            android:textColor="@color/color_base_orange" />
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/sp_10" />
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        app:srcCompat="@mipmap/praise_photo_button_image" />
 </LinearLayout>

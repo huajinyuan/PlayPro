@@ -41,9 +41,11 @@ public class HttpMethods {
     public HttpHeaders getHeaders() {
         HttpHeaders heads = new HttpHeaders(); //header不支持中文，不允许有特殊字符
         ACache aCache = ACache.get(PApplication.getInstance());
-        LoginInfo  loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
+        LoginInfo loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
 //        Account account = (Account) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        heads.put("Authorization", "Bearer " + loginInfo.token);
+        heads.put("Authorization", "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwianRpIjoiM1Y5MzRaMXg5OGg4b3Y1ZTQ4NUk3bERjNndONDN2NEgifQ.eyJpc3MiOiJodHRwOlwvXC93d3cueWVxdXR2LmNuIiwiYXVkIjoiaHR0cDpcL1wvd3d3LnllcXV0di5jbiIsImp0aSI6IjNWOTM0WjF4OThoOG92NWU0ODVJN2xEYzZ3TjQzdjRIIiwiaWF0IjoxNDkzOTU2MDIyLCJleHAiOjE1MjU0OTIwMjIsInR5cGUiOiJjbGllbnQiLCJpZCI6MX0.");
+
+
         return heads;
     }
 

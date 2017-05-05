@@ -10,18 +10,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
-import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
 /**
  * Created by gtgs on 2016/9/2.
  */
 public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHotViewHolder> {
-    private ArrayList<AnchorItem> mData;
+    private ArrayList<UserInfo> mData;
     private Context mContext;
     private int mWith = 0;
 
-    public TyrantsAdapter(ArrayList<AnchorItem> data, Context context) {
+    public TyrantsAdapter(ArrayList<UserInfo> data, Context context) {
         this.mData = data;
         this.mContext = context;
         this.mWith = PixelUtil.getWidth(mContext);
@@ -36,8 +36,8 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
 
     @Override
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
-        final AnchorItem anchorItem = mData.get(position);
-        holder.tvName.setText(anchorItem.huanxin_username);
+        final UserInfo anchorItem = mData.get(position);
+//        holder.tvName.setText(anchorItem.huanxin_username);
 //        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
 //        holder.tvName.setText(anchorItem.name);
 //        holder.tvSiteName.setText(anchorItem.place);
