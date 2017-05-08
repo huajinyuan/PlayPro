@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.adapter.FollowAdapter;
+import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
@@ -27,11 +28,12 @@ public class FollowDelegate extends AppDelegate {
         return R.layout.fragment_recommented;
     }
 
-    public void setData(ArrayList<Follow> data) {
+    public void setData(ArrayList<Follow> data, IFollowItemListener listener) {
         manager = new LinearLayoutManager(getActivity());
         if (null == adapter) {
             mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
             adapter = new FollowAdapter(data, getActivity());
+            adapter.setListener(listener);
             mRecContent.setAdapter(adapter);
             mRecContent.setLayoutManager(manager);
         } else {

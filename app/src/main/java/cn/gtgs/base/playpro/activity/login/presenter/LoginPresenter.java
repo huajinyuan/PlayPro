@@ -11,8 +11,8 @@ import com.gt.okgo.request.PostRequest;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
-import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.view.LoginDelegate;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
@@ -45,7 +45,12 @@ public class LoginPresenter implements ILoginPresenter {
             HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbPhone", delegate.getPhone());
             params.put("smsAuthCode", code);
+
             if (null != registerInfo) {
+                params.put("mbPhoto", registerInfo.getAvatar_path());
+//                int sex = registerInfo.gender.equals("f")?0:1;
+                params.put("mbSex",registerInfo.gender.equals("f")?0:1);
+                params.put("mbNickname",registerInfo.getName());
 
             }
             final PostRequest request = OkGo.post(Config.POST_LOGIN).params(params);
@@ -62,7 +67,7 @@ public class LoginPresenter implements ILoginPresenter {
 
                 @Override
                 public void onNext(Response response) {
-                    HttpBase<UserInfo> u = Parsing.getInstance().ResponseToObject(response, UserInfo.class);
+                    HttpBase<Follow> u = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     if (u.getCode() == 1) {
                         if (null != listener) {
                             listener.LoginSuccess(u.data);

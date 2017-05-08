@@ -1,15 +1,21 @@
 package cn.gtgs.base.playpro.activity.home.fragment;
 
+import android.content.Intent;
+
+import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
 import cn.gtgs.base.playpro.activity.home.fragment.presenter.TyrantsPresenter;
 import cn.gtgs.base.playpro.activity.home.fragment.view.TyrantsDelegate;
+import cn.gtgs.base.playpro.activity.home.live.PlayActivity;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 
 /**
  * Created by gtgs on 2017/4/26.
  */
 
-public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> {
+public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implements IFollowItemListener {
     TyrantsPresenter presenter;
+
     @Override
     protected Class getDelegateClass() {
         return TyrantsDelegate.class;
@@ -18,9 +24,22 @@ public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> {
     @Override
     public void init() {
         super.init();
-        presenter = new TyrantsPresenter(viewDelegate);
+        presenter = new TyrantsPresenter(viewDelegate, this);
         presenter.initData();
 
     }
 
+    @Override
+    public void itemClick(Follow follow) {
+        Intent intent = new Intent(getActivity(), PlayActivity.class);
+        intent.putExtra("anchoritem", follow);
+        intent.putExtra("IsMember", true);
+        getActivity().startActivity(intent);
+
+    }
+
+    @Override
+    public void ItemFolloClick(Follow follow) {
+
+    }
 }

@@ -19,6 +19,7 @@ public interface Config {
     public static final String VERSION_HINT = "v2.0.1";
 
     public static final String EXTRA_KEY_PUB_URL = "pub_url";
+    public static final String EXTRA_KEY_PUB_FOLLOW = "EXTRA_KEY_PUB_FOLLOW";
 
     public static final String HINT_ENCODING_ORIENTATION_CHANGED =
             "Encoding orientation had been changed. Stop streaming first and restart streaming will take effect";
@@ -68,8 +69,9 @@ public interface Config {
 //     */
 //    String ADDRESS_ACTION_URL = ADDRESS_URL + "/{id}";
 
+    String BASE = "http://www.jsonlan.com:8080/webcast/";
 
-    String BASE_URL = "http://www.jsonlan.com:8080/webcast/api/";
+    String BASE_URL = BASE+"api/";
     /**
      * 请求验证码
      */
@@ -103,9 +105,21 @@ public interface Config {
      */
     String POST_ANCHOR_MEMBER_fav = BASE_URL + "member/fav";
     /**
+     * 开始直播
+     */
+    String POST_ANCHOR_OPEN = BASE_URL + "anchor/open";
+    /**
      * 关注列表（params: mbId）
      */
     String POST_ANCHOR_MEMBER_FAVLIST = BASE_URL + "member/favList";
+    /**
+     * 主播认证（mbId=2&anQq=12345678&anSex&anPhoto）
+     */
+    String POST_ANCHOR_ADD = BASE_URL + "anchor/add";
+    /**
+     * 图片上传（file）
+     */
+    String FileUpload= BASE_URL+"upload";
 
 
 }

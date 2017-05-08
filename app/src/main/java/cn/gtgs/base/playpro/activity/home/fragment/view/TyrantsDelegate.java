@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.adapter.TyrantsAdapter;
-import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
+import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
@@ -26,12 +26,13 @@ public class TyrantsDelegate extends AppDelegate {
     public int getRootLayoutId() {
         return R.layout.fragment_tyrants;
     }
-    public void setData(ArrayList<UserInfo> data)
+    public void setData(ArrayList<UserInfo> data, IFollowItemListener listener)
     {
         manager = new LinearLayoutManager(getActivity());
         if (null == adapter) {
             mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
             adapter = new TyrantsAdapter(data, getActivity());
+            adapter.setListener(listener);
             mRecContent.setAdapter(adapter);
             mRecContent.setLayoutManager(manager);
         } else {

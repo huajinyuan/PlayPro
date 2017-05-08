@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.activity.login.presenter;
 
 
-import cn.gtgs.base.playpro.activity.login.model.UserInfo;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 
 /**
  * Created by gtgs on 2017/2/10.
@@ -12,7 +12,7 @@ public interface ILoginListener {
 
     void PassWordError();
 
-    void LoginSuccess(UserInfo userInfo);
+    void LoginSuccess(Follow userInfo);
 
     void LoginFailed(String msg);
 }

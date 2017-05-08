@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.activity.login;
+package cn.gtgs.base.playpro.activity.login;//package cn.gtgs.base.playpro.activity.login;
 //
 //import android.content.Intent;
 //import android.view.View;

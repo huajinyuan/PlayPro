@@ -6,6 +6,7 @@ import android.view.View;
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginListener;
@@ -78,7 +79,7 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
     }
 
     @Override
-    public void LoginSuccess(UserInfo userInfo) {
+    public void LoginSuccess(Follow userInfo) {
         ToastUtil.showToast("LoginSuccess", this);
         mACache.put(ACacheKey.CURRENT_ACCOUNT, userInfo);
         Intent intent = new Intent(this, HomeActivity.class);

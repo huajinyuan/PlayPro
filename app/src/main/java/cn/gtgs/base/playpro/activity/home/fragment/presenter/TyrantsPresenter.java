@@ -7,7 +7,6 @@ import com.gt.okgo.request.GetRequest;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.activity.home.fragment.view.TyrantsDelegate;
-import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
@@ -21,14 +20,22 @@ import rx.Subscriber;
 
 public class TyrantsPresenter implements IRecommented {
     TyrantsDelegate delegate;
+    IFollowItemListener listener;
 
-    public TyrantsPresenter(TyrantsDelegate delegate) {
+    public TyrantsPresenter(TyrantsDelegate delegate, IFollowItemListener listener) {
         this.delegate = delegate;
+        this.listener = listener;
     }
+
 
     @Override
     public void initData() {
         getData();
+    }
+
+    @Override
+    public void doFollow(String anId) {
+
     }
 
     private void getData() {
@@ -53,7 +60,7 @@ public class TyrantsPresenter implements IRecommented {
                 try {
                     ArrayList<UserInfo> list = (ArrayList<UserInfo>) Parsing.getInstance().ResponseToList3(response, UserInfo.class).dataList;
 //                    HttpBase<ArrayList<AnchorItem>> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-                    delegate.setData(list);
+                    delegate.setData(list, listener);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.activity.login.view;
+package cn.gtgs.base.playpro.activity.login.view;//package cn.gtgs.base.playpro.activity.login.view;
 //
 //import cn.gtgs.base.playpro.R;
 //import cn.gtgs.base.playpro.base.view.AppDelegate;

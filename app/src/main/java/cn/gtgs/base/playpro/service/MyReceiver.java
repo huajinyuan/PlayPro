@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.service;
+package cn.gtgs.base.playpro.service;//package cn.gtgs.base.playpro.service;
 //
 //import android.content.BroadcastReceiver;
 //import android.content.Context;

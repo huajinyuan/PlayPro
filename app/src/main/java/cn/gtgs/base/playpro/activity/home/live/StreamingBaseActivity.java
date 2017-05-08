@@ -77,8 +77,13 @@ import java.util.TimerTask;
 
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.gles.FBO;
 
@@ -96,10 +101,9 @@ public class StreamingBaseActivity extends Activity implements
         CameraPreviewFrameView.Listener,
         StreamingSessionListener,
         StreamingStateChangedListener {
-    Context context;
 
     //-----------以下为环信
-//    ACache aCache;
+
     ListView listView;
     TextView tv_likes;
     String chatroomid = "261649293176209844";
@@ -111,7 +115,8 @@ public class StreamingBaseActivity extends Activity implements
     String message_from, message_content;
     Timer timer_hide = new Timer();
     ImageView iv_gift;
-//    LoginInfo loginInfo;
+    ACache aCache;
+    UserInfo userInfo;
     //--------------------
 
     private static final String TAG = "StreamingBaseActivity";
@@ -127,9 +132,9 @@ public class StreamingBaseActivity extends Activity implements
     AlertDialog dialogsettings;
     SeekBar seekBarBeauty;
     ImageView iv_live_changecamera, iv_live_booking;
-//    LinearLayout ll_live_booking;
+    //    LinearLayout ll_live_booking;
     RelativeLayout rl_live_bootombar;
-//    ListView lv_live_booking;
+    //    ListView lv_live_booking;
 //    View view_booking_click;
     ImageView iv_live_close;
     TextView tv_live_id, tv_live_onlinenum;
@@ -183,6 +188,10 @@ public class StreamingBaseActivity extends Activity implements
 
     private int mCurrentCamFacingIndex;
 
+    public Follow mF;
+
+
+
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -196,6 +205,16 @@ public class StreamingBaseActivity extends Activity implements
                             Log.i(TAG, "res:" + res);
                             if (!res) {
                             }
+
+//                            setShutterButtonEnabled(false);
+//                            boolean res = mMediaStreamingManager.startStreaming();
+//                            mShutterButtonPressed = true;
+//                            Log.i(TAG, "res:" + res);
+//                            if (!res) {
+//                                mShutterButtonPressed = false;
+//                                setShutterButtonEnabled(true);
+//                            }
+//                            setShutterButtonPressed(mShutterButtonPressed);
                         }
                     }).start();
                     break;
@@ -229,9 +248,10 @@ public class StreamingBaseActivity extends Activity implements
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         super.onCreate(savedInstanceState);
-//        aCache = ACache.get(this);
-//        loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
-
+        aCache = ACache.get(this);
+        mF= (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        userInfo = mF.getMember();
+chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -245,7 +265,6 @@ public class StreamingBaseActivity extends Activity implements
 
         //----------------------------------------------------------以下为环信
         //-------------------------------------------------------------------
-        context = this;
 //        aCache = ACache.get(this);
 //        chatroomid = ((LoginInfo) aCache.getAsObject("logininfo")).huanxin_chatroom_id;
         listView = (ListView) findViewById(R.id.listView);
@@ -269,7 +288,7 @@ public class StreamingBaseActivity extends Activity implements
         //-------------------------------------------------------------------
         //-------------------------------------------------------------------
 
-//
+
 //        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
 //                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_AAC,
 //                getApplicationInfo().nativeLibraryDir + "/libpldroid_streaming_aac_encoder_v7a.so");
@@ -280,10 +299,10 @@ public class StreamingBaseActivity extends Activity implements
 //        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
 //                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_H264, "pldroid_streaming_h264_encoder_v7a");
 
-//        String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
+        String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
 
 
-        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
+//        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
         Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
 
         mContext = this;
@@ -293,7 +312,6 @@ public class StreamingBaseActivity extends Activity implements
         StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
 
         mProfile = new StreamingProfile();
-
         if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_URL_PREFIX)) {
             // publish url
             try {
@@ -342,8 +360,135 @@ public class StreamingBaseActivity extends Activity implements
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
         mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
 
+//        mContext = this;
+//
+//        mProfile = new StreamingProfile();
+//
+//        if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_URL_PREFIX)) {
+//            // publish url
+//            try {
+//                mProfile.setPublishUrl(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_URL_PREFIX.length()));
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//        } else if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_JSON_PREFIX)) {
+//            try {
+//                mJSONObject = new JSONObject(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_JSON_PREFIX.length()));
+//                StreamingProfile.Stream stream = new StreamingProfile.Stream(mJSONObject);
+//                mProfile.setStream(stream);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Toast.makeText(this, "Invalid Publish Url", Toast.LENGTH_LONG).show();
+//        }
+//
+//        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
+//        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
+//        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
+//
+//        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_MEDIUM2)
+//                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
+////                .setAVProfile(avProfile)
+////                .setPreferredVideoEncodingSize(960, 544)
+//                .setEncodingSizeLevel(Config.ENCODING_LEVEL)
+//                .setEncoderRCMode(StreamingProfile.EncoderRCModes.BITRATE_PRIORITY)
+//                .setDnsManager(getMyDnsManager())
+//                .setAdaptiveBitrateEnable(true)
+//                .setFpsControllerEnable(true)
+//                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
+////                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
+//                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
+//
+//        CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
+//        mCurrentCamFacingIndex = cameraFacingId.ordinal();
+//        mCameraStreamingSetting = new CameraStreamingSetting();
+//        mCameraStreamingSetting.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK)
+//                .setContinuousFocusModeEnabled(true)
+//                .setRecordingHint(false)
+//                .setCameraFacingId(cameraFacingId)
+////                .setCameraSourceImproved(true)
+//                .setResetTouchFocusDelayInMs(3000)
+////                .setFocusMode(CameraStreamingSetting.FOCUS_MODE_CONTINUOUS_PICTURE)
+//                .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.MEDIUM)
+//                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
+//                .setBuiltInFaceBeautyEnabled(true)
+//                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
+//                .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
+//
+//        mIsNeedFB = true;
+//        mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
+//        mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
+
         initUIs();
+//        getAnchorInfo();
     }
+
+
+//    public void startPush(String publishUrlFromServer)
+//    {
+////        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
+//        Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
+//
+//        mContext = this;
+//
+//        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
+//        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
+//        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
+//
+//        mProfile = new StreamingProfile();
+//        if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_URL_PREFIX)) {
+//            // publish url
+//            try {
+//                mProfile.setPublishUrl(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_URL_PREFIX.length()));
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//        } else if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_JSON_PREFIX)) {
+//            try {
+//                mJSONObject = new JSONObject(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_JSON_PREFIX.length()));
+//                StreamingProfile.Stream stream = new StreamingProfile.Stream(mJSONObject);
+//                mProfile.setStream(stream);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Toast.makeText(this, "Invalid Publish Url", Toast.LENGTH_LONG).show();
+//        }
+//
+//        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
+//                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
+////                .setPreferredVideoEncodingSize(960, 544)
+//                .setEncodingSizeLevel(Config.ENCODING_LEVEL)
+//                .setEncoderRCMode(StreamingProfile.EncoderRCModes.QUALITY_PRIORITY)
+////                .setAVProfile(avProfile)
+//                .setDnsManager(getMyDnsManager())
+//                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
+////                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
+//                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
+//
+//        CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
+//        mCurrentCamFacingIndex = cameraFacingId.ordinal();
+//        mCameraStreamingSetting = new CameraStreamingSetting();
+//        mCameraStreamingSetting.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK)
+//                .setContinuousFocusModeEnabled(true)
+//                .setRecordingHint(false)
+//                .setCameraFacingId(cameraFacingId)
+//                .setBuiltInFaceBeautyEnabled(true)
+//                .setResetTouchFocusDelayInMs(3000)
+////                .setFocusMode(CameraStreamingSetting.FOCUS_MODE_CONTINUOUS_PICTURE)
+//                .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
+//                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
+//                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
+//                .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
+//        mIsNeedFB = true;
+//        mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
+//        mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
+//    }
+
+
+
+
 
     @Override
     protected void onResume() {
@@ -444,17 +589,17 @@ public class StreamingBaseActivity extends Activity implements
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         Log.i(TAG, "view!!!!:" + v);
     }
-
-    @Override
-    public boolean onPreviewFrame(byte[] bytes, int width, int height) {
-//        deal with the yuv data.
-//        long start = System.currentTimeMillis();
-//        for (int i = 0; i < bytes.length; i++) {
-//            bytes[i] = 0x00;
-//        }
-//        Log.i(TAG, "old onPreviewFrame cost :" + (System.currentTimeMillis() - start));
-        return true;
-    }
+//
+//    @Override
+//    public boolean onPreviewFrame(byte[] bytes, int width, int height) {
+////        deal with the yuv data.
+////        long start = System.currentTimeMillis();
+////        for (int i = 0; i < bytes.length; i++) {
+////            bytes[i] = 0x00;
+////        }
+////        Log.i(TAG, "old onPreviewFrame cost :" + (System.currentTimeMillis() - start));
+//        return true;
+//    }
 
     @Override
     public void onSurfaceCreated() {
@@ -824,6 +969,11 @@ public class StreamingBaseActivity extends Activity implements
         }
     }
 
+    @Override
+    public boolean onPreviewFrame(byte[] bytes, int i, int i1, int i2, int i3, long l) {
+        return true;
+    }
+
     private class Switcher implements Runnable {
         @Override
         public void run() {
@@ -899,7 +1049,7 @@ public class StreamingBaseActivity extends Activity implements
     public void login() {
         Log.e("sdad", "start login...");
 //        41240285948    xnPPr2xCgR
-        EMClient.getInstance().login("41240285948", "xnPPr2xCgR", new EMCallBack() {//回调
+        EMClient.getInstance().login(userInfo.getMbId()+"", MD5Util.getMD5("webcast"+userInfo.getMbId()), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
@@ -921,7 +1071,7 @@ public class StreamingBaseActivity extends Activity implements
 
             @Override
             public void onError(int code, String message) {
-                Log.e("main", "登录聊天服务器失败！");
+                Log.e("main", "登录聊天服务器失败！"+ message);
             }
         });
 
@@ -1193,7 +1343,7 @@ public class StreamingBaseActivity extends Activity implements
     }
 
     public void showGifts(String from, Gift gift) {
-        Glide.with(context).load(gift.picture).into(iv_gift);
+        Glide.with(mContext).load(gift.picture).into(iv_gift);
         //开始动画
         ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
         animation.setDuration(800);
@@ -1223,9 +1373,9 @@ public class StreamingBaseActivity extends Activity implements
     }
 
     public void initDialogSettings() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogTransBackGround);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.DialogTransBackGround);
         dialogsettings = builder.create();
-        View view_dialog = LayoutInflater.from(context).inflate(R.layout.item_dialog_livesettings, null);
+        View view_dialog = LayoutInflater.from(mContext).inflate(R.layout.item_dialog_livesettings, null);
         dialogsettings.setCancelable(true);
         dialogsettings.show();
         dialogsettings.setContentView(view_dialog);
@@ -1369,9 +1519,9 @@ public class StreamingBaseActivity extends Activity implements
 
     public void showDialogClose() {
         final AlertDialog mydialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogTransBackGround);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.DialogTransBackGround);
         mydialog = builder.create();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_dialog_releaseagent, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_dialog_releaseagent, null);
         TextView tv_title = (TextView) view.findViewById(R.id.tv_dialog_title);
         TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
         Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);

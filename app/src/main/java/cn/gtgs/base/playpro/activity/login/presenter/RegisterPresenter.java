@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.activity.login.presenter;
+package cn.gtgs.base.playpro.activity.login.presenter;//package cn.gtgs.base.playpro.activity.login.presenter;
 //
 //import cn.gtgs.base.playpro.activity.login.view.RegisterDelegate;
 //

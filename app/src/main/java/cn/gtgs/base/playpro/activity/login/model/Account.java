@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.activity.login.model;
+package cn.gtgs.base.playpro.activity.login.model;//package cn.gtgs.base.playpro.activity.login.model;
 //
 //import java.io.Serializable;
 //

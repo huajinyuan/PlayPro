@@ -17,7 +17,7 @@ import okhttp3.Response;
 public class BitmapConvert implements Converter<Bitmap> {
 
     public static BitmapConvert create() {
-        return BitmapConvert.ConvertHolder.convert;
+        return ConvertHolder.convert;
     }
 
     private static class ConvertHolder {

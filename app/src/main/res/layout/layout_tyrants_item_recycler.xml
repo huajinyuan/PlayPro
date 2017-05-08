@@ -8,19 +8,27 @@
     android:padding="10dp">
 
 
-    <TextView
-        android:id="@+id/tv_tyrants_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="NO.2"
-        android:textColor="@color/color_base_orange"
-        android:textSize="@dimen/sp_16" />
+        <TextView
+            android:id="@+id/tv_tyrants_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="NO.2"
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/sp_16" />
+
+<ImageView
+    android:id="@+id/img_center_num"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scaleType="centerInside"
+    android:layout_weight="1"
+    android:gravity="center"/>
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/img_tyrants_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_weight="1"
@@ -31,18 +39,33 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_tyrants_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="3dp"
-            android:drawableRight="@mipmap/global_male"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:maxLength="10"
-            android:maxLines="1"
-            android:text="奥斯卡的"
-            android:textSize="@dimen/sp_12" />
+            >
+            <TextView
+                android:id="@+id/tv_tyrants_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                android:gravity="center_vertical"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:text="奥斯卡的"
+                android:textSize="@dimen/sp_14" />
+            <ImageView
+                android:id="@+id/img_tyrants_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/global_male"
+                android:layout_marginLeft="3dp"
+                />
+
+        </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -54,12 +77,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:background="@drawable/background_green"
-                android:drawableLeft="@mipmap/glory_moon"
+                android:drawableLeft="@mipmap/icon_diamond"
                 android:gravity="center"
                 android:maxLength="5"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:text="01123456"
+                android:text="LV10"
                 android:textColor="@color/colorwhite"
                 android:textSize="@dimen/sp_10" />
 
@@ -68,12 +91,12 @@
                 android:layout_height="16dp"
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/background_org"
-                android:drawableLeft="@mipmap/glory_star"
+                android:drawableLeft="@mipmap/icon_diamond"
                 android:gravity="center"
                 android:maxLength="5"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:text="0482221"
+                android:text="LV10"
                 android:textColor="@color/colorwhite"
                 android:textSize="@dimen/sp_10" />
 
@@ -97,7 +120,7 @@
             android:textSize="@dimen/sp_10" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_tyrants_sum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
@@ -110,6 +133,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/img_tyrants_follow"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_weight="1"

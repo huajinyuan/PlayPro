@@ -11,7 +11,10 @@ public class UserInfo implements Serializable {
     public String mbPhone;
     public String flag;
     public String mbCode;
+    public String mbNickname ;
+    public String mbPhoto ;
     public int mbAge;
+
     public String mbGoldPay;
     public int mbGold;
     public int MbLevel;
@@ -125,18 +128,36 @@ public class UserInfo implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getMbNickname() {
+        return mbNickname;
+    }
+
+    public void setMbNickname(String mbNickname) {
+        this.mbNickname = mbNickname;
+    }
+
+    public String getMbPhoto() {
+        return mbPhoto;
+    }
+
+    public void setMbPhoto(String mbPhoto) {
+        this.mbPhoto = mbPhoto;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
-                "auditAnchor=" + auditAnchor +
-                ", mbId=" + mbId +
+                "mbId=" + mbId +
                 ", mbPhone='" + mbPhone + '\'' +
                 ", flag='" + flag + '\'' +
                 ", mbCode='" + mbCode + '\'' +
+                ", mbNickname='" + mbNickname + '\'' +
+                ", mbPhoto='" + mbPhoto + '\'' +
                 ", mbAge=" + mbAge +
                 ", mbGoldPay='" + mbGoldPay + '\'' +
                 ", mbGold=" + mbGold +
                 ", MbLevel=" + MbLevel +
+                ", auditAnchor=" + auditAnchor +
                 ", mbSex=" + mbSex +
                 ", auditVideo=" + auditVideo +
                 ", createTime=" + createTime +

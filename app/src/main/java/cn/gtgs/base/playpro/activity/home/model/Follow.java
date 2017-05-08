@@ -11,6 +11,7 @@ import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 public class Follow implements Serializable {
     public String anQq;
     public String isRecommend;
+    public String anRemark;
     public String flag;
     public String mbId;
     public String anId;
@@ -20,6 +21,9 @@ public class Follow implements Serializable {
     public long updateTime;
     public long createTime;
     public String anStatus;
+    public String faCount;
+    public String updateBy;
+    public String chatRoomId;
     public String wcPullAddress;
     public String anSex;
     public String liveCount;
@@ -27,6 +31,7 @@ public class Follow implements Serializable {
     public String anGold;
     public String anGoldGet;
     public String liveStatus;
+    public String anPhoto;
     public UserInfo member;
 
     public String getAnGold() {
@@ -181,12 +186,52 @@ public class Follow implements Serializable {
         this.wcPushAddress = wcPushAddress;
     }
 
+    public String getAnRemark() {
+        return anRemark;
+    }
+
+    public void setAnRemark(String anRemark) {
+        this.anRemark = anRemark;
+    }
+
+    public String getFaCount() {
+        return faCount;
+    }
+
+    public void setFaCount(String faCount) {
+        this.faCount = faCount;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public String getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(String chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
+    public String getAnPhoto() {
+        return anPhoto;
+    }
+
+    public void setAnPhoto(String anPhoto) {
+        this.anPhoto = anPhoto;
+    }
+
     @Override
     public String toString() {
         return "Follow{" +
-                "anGold='" + anGold + '\'' +
-                ", anQq='" + anQq + '\'' +
+                "anQq='" + anQq + '\'' +
                 ", isRecommend='" + isRecommend + '\'' +
+                ", anRemark='" + anRemark + '\'' +
                 ", flag='" + flag + '\'' +
                 ", mbId='" + mbId + '\'' +
                 ", anId='" + anId + '\'' +
@@ -196,12 +241,17 @@ public class Follow implements Serializable {
                 ", updateTime=" + updateTime +
                 ", createTime=" + createTime +
                 ", anStatus='" + anStatus + '\'' +
+                ", faCount='" + faCount + '\'' +
+                ", updateBy='" + updateBy + '\'' +
+                ", chatRoomId='" + chatRoomId + '\'' +
                 ", wcPullAddress='" + wcPullAddress + '\'' +
                 ", anSex='" + anSex + '\'' +
                 ", liveCount='" + liveCount + '\'' +
                 ", faId='" + faId + '\'' +
+                ", anGold='" + anGold + '\'' +
                 ", anGoldGet='" + anGoldGet + '\'' +
                 ", liveStatus='" + liveStatus + '\'' +
+                ", anPhoto='" + anPhoto + '\'' +
                 ", member=" + member +
                 '}';
     }

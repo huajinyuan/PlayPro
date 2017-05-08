@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.base.model;
+package cn.gtgs.base.playpro.base.model;//package cn.gtgs.base.playpro.base.model;
 //
 ///**
 // * Created by gtgs on 2017/2/17.

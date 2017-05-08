@@ -6,4 +6,5 @@ package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 
 public interface IRecommented {
     void initData();
+    void doFollow(String anId);
 }

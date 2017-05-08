@@ -1,4 +1,4 @@
-//package cn.gtgs.base.playpro.activity.home.live;
+package cn.gtgs.base.playpro.activity.home.live;//package cn.gtgs.base.playpro.activity.home.live;
 //
 //import android.app.Activity;
 //import android.content.Intent;

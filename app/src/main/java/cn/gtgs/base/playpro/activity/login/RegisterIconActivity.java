@@ -30,6 +30,14 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.okgo.OkGo;
+import com.gt.okgo.listener.UploadListener;
+import com.gt.okgo.request.PostRequest;
+import com.gt.okgo.upload.UploadInfo;
+import com.gt.okgo.upload.UploadManager;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -38,6 +46,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
+import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.F;
+import okhttp3.Response;
 
 public class RegisterIconActivity extends AppCompatActivity {
     Context context;
@@ -69,11 +80,13 @@ public class RegisterIconActivity extends AppCompatActivity {
     int ZOOM = 2;
     PointF startPoint = new PointF();   //起始点
     float startDis = 0;
-
+    String urlPath;
+    private UploadManager uploadManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_icon);
+        uploadManager = UploadManager.getInstance();
         context = this;
         instance = this;
         ButterKnife.bind(this);
@@ -114,6 +127,12 @@ public class RegisterIconActivity extends AppCompatActivity {
             RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), smallbitmap);
             roundedBitmapDrawable.setCircular(true);
             iv_register_icon.setImageDrawable(roundedBitmapDrawable);//设置头像
+//            OkGo.
+            MyUploadListener listener = new MyUploadListener();
+            listener.setUserTag(avatarPath);
+            PostRequest postRequest = OkGo.post(Config.FileUpload).params("file", new File(avatarPath));
+            uploadManager.addTask(avatarPath, postRequest, listener);
+
 
             iv_icon.setImageBitmap(null);
             rl_cuticon.setVisibility(View.GONE);
@@ -133,11 +152,11 @@ public class RegisterIconActivity extends AppCompatActivity {
         String nickname = et_nickname.getText().toString().trim();
         if (nickname.equals(""))
             Toast.makeText(context, "取一个昵称吧", Toast.LENGTH_SHORT).show();
-        else if (!haveimage)
+        else if (null == urlPath)
             Toast.makeText(context, "设置一个头像吧", Toast.LENGTH_SHORT).show();
         else {
             RegisterInfo info = new RegisterInfo();
-            info.setAvatar_path(avatarPath);
+            info.setAvatar_path(urlPath);
             info.setName(nickname);
 
 //            String sex =rg_sex.getCheckedRadioButtonId() == R.id.rb_register_f ? "f":"m";
@@ -305,6 +324,56 @@ public class RegisterIconActivity extends AppCompatActivity {
         float dx = event.getX(1) - event.getX(0);
         float dy = event.getY(1) - event.getY(0);
         return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
+
+    private class MyUploadListener extends UploadListener<String> {
+
+//        private ViewHolder holder;
+
+        @Override
+        public void onProgress(UploadInfo uploadInfo) {
+            Log.e("MyUploadListener", "onProgress:" + uploadInfo.getTotalLength() + " " + uploadInfo.getUploadLength() + " " + uploadInfo.getProgress());
+//            holder = (ViewHolder) ((View) getUserTag()).getTag();
+//            holder.refresh(uploadInfo);
+        }
+
+        @Override
+        public void onFinish(String s) {
+            Log.e("MyUploadListener", "finish:" + s);
+
+            try
+            {
+                JSONObject json = JSON.parseObject(s);
+                if (json.containsKey("data"))
+                {
+                    JSONObject ob = json.getJSONObject("data");
+                    if (ob.containsKey("filePath"))
+                    {
+                        urlPath = ob.getString("filePath");
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                F.e(e.toString());
+            }
+
+
+//            holder.finish();
+        }
+
+        @Override
+        public void onError(UploadInfo uploadInfo, String errorMsg, Exception e) {
+            Log.e("MyUploadListener", "onError:" + errorMsg);
+        }
+
+        @Override
+        public String parseNetworkResponse(Response response) throws Exception {
+            Log.e("MyUploadListener", "convertSuccess");
+            return response.body().string();
+        }
     }
 
 }

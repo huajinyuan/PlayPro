@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 
 //import cn.gtgs.base.playpro.base.model.BaseError;
@@ -99,6 +100,7 @@ public class Parsing {
         HttpBase<T> tb = new HttpBase<>();
         try {
             String Str = response.body().string();
+            F.e("-----------------" + Str);
             JSONObject ob = JSON.parseObject(Str);
             tb.setCode(ob.getInteger("code"));
             tb.setMsg(ob.getString("msg"));
@@ -121,6 +123,7 @@ public class Parsing {
         try {
             Str = response.body().string();
             JSONObject ob = JSON.parseObject(Str);
+            F.e("-----------------------------" + ob.toJSONString());
             if (ob.containsKey("data")) {
                 JSONObject b = ob.getJSONObject("data");
                 ls.setPage(b.getInteger("page"));

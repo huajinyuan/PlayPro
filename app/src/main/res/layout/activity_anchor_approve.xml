@@ -5,20 +5,25 @@
     android:id="@+id/activity_anchor_approve"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorbg"
     android:orientation="vertical"
-    tools:context="cn.gtgs.base.playpro.activity.center.AnchorApproveActivity">
+    tools:context="cn.gtgs.base.playpro.activity.center.AnchorApproveActivity"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true">
 
     <include layout="@layout/layout_com_topbar" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/colorwhite"
+        android:layout_marginTop="10dp"
 
         >
 
@@ -29,32 +34,37 @@
             android:layout_marginLeft="20dp"
             android:text="QQ号" />
 
-        <TextView
+        <EditText
+            android:id="@+id/edt_approve_qq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="客服将通过QQ对您审核" />
+            android:textSize="14sp"
+            android:background="@null"
+            android:hint="客服将通过QQ对您审核"
+            />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
+        android:background="@color/colorwhite"
+        android:layout_marginTop="10dp"
         >
 
         <TextView
@@ -62,92 +72,106 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="QQ号" />
+            android:text="性别" />
 
         <TextView
+            android:id="@+id/tv_approve_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="客服将通过QQ对您审核" />
+            android:text="不详" />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
+        android:background="@color/colorwhite"
+        android:layout_marginTop="10dp"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="QQ号" />
+            android:text="QQ视频认证"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp" />
 
         <TextView
+            android:id="@+id/tv_approve_isVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="客服将通过QQ对您审核" />
+            android:text="是" />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
+        android:background="@color/colorwhite"
+        android:layout_marginTop="10dp"
         >
 
         <TextView
+            android:id="@+id/tv_approve_introduce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="QQ号" />
+            android:text="个人介绍" />
 
-        <TextView
+        <EditText
+
+            android:id="@+id/edt_approve_introduce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="客服将通过QQ对您审核" />
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:textSize="14sp"
+            android:hint="客服将通过QQ对您审核"
+            android:background="@null"
+            android:layout_toRightOf="@+id/tv_approve_introduce"
+          />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_btn_bg_color" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/gray_btn_bg_color" />-->
 
     <ImageView
         android:layout_width="60dp"
@@ -155,6 +179,7 @@
         app:srcCompat="@mipmap/add_pic_bg"
         android:layout_margin="20dp"
         android:id="@+id/imageView"
+        android:layout_marginTop="10dp"
 
         />
 
@@ -166,5 +191,5 @@
         android:layout_margin="20dp"
         android:textColor="@color/colorwhite"
         android:background="@drawable/shape_rec_org"
-        android:id="@+id/textView" />
+        android:id="@+id/tv_approve_submit" />
 </LinearLayout>

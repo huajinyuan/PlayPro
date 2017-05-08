@@ -31,10 +31,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.damnhandy.uri.template.UriTemplate;
-import com.gt.okgo.OkGo;
-import com.gt.okgo.model.HttpParams;
-import com.gt.okgo.request.PostRequest;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMMessageListener;
@@ -60,27 +56,25 @@ import butterknife.OnClick;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
-import cn.gtgs.base.playpro.activity.home.model.AnchorItem;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.home.mymessage.ChatActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
-import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.widget.AllGiftViewpager;
 import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
 import cn.gtgs.base.playpro.widget.MyViewPagerAdapter;
 import cn.gtgs.base.playpro.widget.OnEmoticoSelectedListener;
 import cn.gtgs.base.playpro.widget.ParentViewPaperAdapter;
-import okhttp3.Response;
-import rx.Subscriber;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class PlayActivity extends AppCompatActivity implements OnEmoticoSelectedListener {
     //-----------以下为环信
     String chatroomid = "261649293176209844";
-    ListView listView;
     String et_huanxin_content;
     private List<EMMessage> msgList = new ArrayList<>();
     MessageChatroomAdapter adapter;
@@ -88,9 +82,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     private boolean isJoined = false;
     String message_content, message_from;
     //--------------------
-    PLVideoView vv_test;
     Context context;
     ArrayList<View> view_giftslist = new ArrayList<>();
+    @BindView(R.id.vv_test)
+    PLVideoView vv_test;
     @BindView(R.id.et_content)
     EditText et_content;
     @BindView(R.id.tv_likes)
@@ -103,25 +98,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     LinearLayout frame_live_chat;
     @BindView(R.id.frame_live_gifts)
     LinearLayout framel_live_gifts;
-    @BindView(R.id.frame_live_booking)
-    RelativeLayout frame_live_booking;
     @BindView(R.id.vp_gifts)
     ViewPager vp_gifts;
     @BindView(R.id.vp_emoji)
     ViewPager vp_emoji;
-
-    @BindView(R.id.iv_live_booking_anchoricon)
-    ImageView iv_booking_anchoricon;
-    @BindView(R.id.tv_booking_currentname)
-    TextView tv_booking_currentname;
-    @BindView((R.id.tv_booking_level))
-    TextView tv_booking_level;
-    @BindView(R.id.iv_booking_sex)
-    ImageView iv_booking_sex;
-    @BindView((R.id.tv_live_booking_anchorid))
-    TextView tv_live_booking_anchorid;
-    @BindView((R.id.tv_live_booking_anchorplace))
-    TextView tv_live_booking_anchorplace;
     @BindView(R.id.tv_live_credits)
     TextView tv_live_credits;
     @BindView(R.id.img_layout_content_icon)
@@ -134,18 +114,23 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvCount;
     @BindView(R.id.img_live_bg)
     ImageView mGb;
-    @BindView(R.id.tv_anchor_info_dingtai_count)
-    TextView mDingtaiCount;
-    @BindView(R.id.tv_anchor_info_followers_count)
-    TextView mGzhCount;
-    @BindView(R.id.tv_anchor_info_shouli_count)
-    TextView mShouliCount;
-    @BindView(R.id.tv_anchor_info_fensi_count)
-    TextView mFensiCount;
+    @BindView(R.id.layout_play_bottom_dialog)
+    View mLayoutBottom;
+    @BindView(R.id.iv_live_booking_anchoricon)
+    ImageView iv_live_booking_anchoricon;
+    @BindView(R.id.iv_booking_sex)
+    ImageView iv_booking_sex;
+    @BindView(R.id.tv_booking_currentname)
+    TextView tv_booking_currentname;
+    @BindView(R.id.tv_live_booking_anchorid)
+    TextView tv_live_booking_anchorid;
+    @BindView(R.id.listView)
+    ListView listView;
+
     Timer timer_hide = new Timer();
-    AnchorItem anchorItem;
-    //    RequestQueue requestQueue = NoHttp.newRequestQueue();
+    Follow anchorItem;
     UserInfo loginInfo;
+    Follow mF;
     ArrayList<Gift> gifts;
     Gift gift = null;
     private final int JOINCHATROOM = 1;
@@ -164,6 +149,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //    public PeriscopeLayout periscopeLayout;
     private int FACE_SIZE;// 表情大小
 
+    boolean isMember = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,41 +165,28 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         context = this;
         ButterKnife.bind(this);
         ACache aCache = ACache.get(context);
-        loginInfo = (UserInfo) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        loginInfo = mF.getMember();
         Intent intent = getIntent();
-        anchorItem = (AnchorItem) (intent.getSerializableExtra("anchoritem"));
-        if (null != anchorItem) {
-            chatroomid = anchorItem.huanxin_chatroom_id;
-            Glide.with(context).load(anchorItem.avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
-                @Override
-                protected void setResource(Bitmap resource) {
-                    RoundedBitmapDrawable circularBitmapDrawable =
-                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    mImgIcon.setImageDrawable(circularBitmapDrawable);
-                }
-            });
-            mTvName.setText(anchorItem.name);
-            mTvLv.setText(anchorItem.level);
-            mTvCount.setText(anchorItem.online_count);
-//            mDingtaiCount.setText(anchorItem.);
-        }
+        anchorItem = (Follow) (intent.getSerializableExtra("anchoritem"));
+        isMember = intent.getBooleanExtra("IsMember", false);
+        FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         initviews();
         initEmoji();
+        if (!isMember) {
+            doPlay();
+            //----------------------------------------------------------以下为环信
+            //-------------------------------------------------------------------
+            login();
+        }
 
-        vv_test = (PLVideoView) findViewById(R.id.vv_test);
+    }
+
+    public void doPlay() {
         vv_test.setOnErrorListener(new PLMediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(PLMediaPlayer plMediaPlayer, int i) {
                 F.e("播放中错误状态===============================" + i);
-//                vv_test.setVideoPath(defautPath);
-//                vv_test.start();
-//                Random r = new Random();
-//                int radom = r.nextInt(3);
-//                ExampleUtil.showToast(VideoPaths[radom], LiveActivity.this);
-//                vv_test.setVideoPath(VideoPaths[radom]);
-//                vv_test.start();
-
                 return false;
             }
         });
@@ -220,15 +194,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onPrepared(PLMediaPlayer plMediaPlayer) {
                 mGb.setVisibility(View.GONE);
-//                mIsStartPlay = true;
-//                mIsPlay = true;
             }
         });
         String MYURL = defautPath2;
-        if (null != anchorItem.stream && null != anchorItem.stream.play) {
-            MYURL = anchorItem.stream.play;
+        if (null != anchorItem.getWcPullAddress()) {
+            MYURL = anchorItem.getWcPullAddress();
         }
-
         AVOptions options = new AVOptions();
         options.setInteger(AVOptions.KEY_MEDIACODEC, 1);
         options.setInteger(AVOptions.KEY_LIVE_STREAMING, 1);
@@ -236,23 +207,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         options.setInteger(AVOptions.KEY_START_ON_PREPARED, 0);
         vv_test.setAVOptions(options);
         vv_test.setVideoPath(MYURL);
-//        vv_test.setVideoPath("http://playback.yequtv.cn/appleplayback2.m3u8");
         vv_test.start();
-        FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
-
-
-        //----------------------------------------------------------以下为环信
-        //-------------------------------------------------------------------
-        listView = (ListView) findViewById(R.id.listView);
-//        et_content = (EditText) findViewById(R.id.et_content);
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            Log.e("main", "islogged");
-            login();
-        } else {
-            Log.e("main", "logging");
-            login();
-        }
     }
+
 
     @Override
     protected void onResume() {
@@ -292,8 +249,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
 
     }
-
-
 
 
     public void sendMsg() {
@@ -351,8 +306,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     private Gift mGetGift;
-
-
 
 
     public void addChatRoomChangeListenr() {
@@ -458,7 +411,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
 
-
     public void getCountOnline() {
 //        String url = UriTemplate.fromTemplate(Config.URL_ANCHOR_ONLINE_COUNT)
 //                .set("ids", anchorItem.id)
@@ -559,7 +511,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     void setbookingclose() {
-        frame_live_booking.setVisibility(View.INVISIBLE);
+        mLayoutBottom.setVisibility(View.INVISIBLE);
+//        m.setVisibility(View.INVISIBLE);
         frame_live_menu.setVisibility(View.VISIBLE);
     }
 
@@ -567,6 +520,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         frame_live_menu.setVisibility(View.VISIBLE);
         frame_live_chat.setVisibility(View.INVISIBLE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
+        mLayoutBottom.setVisibility(View.INVISIBLE);
     }
 
     void setsendgift() {
@@ -580,9 +534,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     void settochat() {
-//        Intent intent = new Intent(context, ChatActivity.class);
-//        intent.putExtra("chatto", anchorItem.huanxin_username);
-//        startActivity(intent);
+        Intent intent = new Intent(context, ChatActivity.class);
+        if (!isMember) {
+            intent.putExtra("chatto", anchorItem.getMbId());
+        } else {
+            intent.putExtra("chatto", anchorItem.getMember().getMbId() + "");
+        }
+        startActivity(intent);
     }
 
     void GetCoin() {
@@ -596,7 +554,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     public void contentAction() {
         hidelayout();
-        frame_live_booking.setVisibility(View.VISIBLE);
+        mLayoutBottom.setVisibility(View.VISIBLE);
     }
 
     public void setBlackAction() {
@@ -646,7 +604,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void hidelayout() {
         frame_live_menu.setVisibility(View.INVISIBLE);
         frame_live_chat.setVisibility(View.INVISIBLE);
-        frame_live_booking.setVisibility(View.INVISIBLE);
+        mLayoutBottom.setVisibility(View.INVISIBLE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
     }
 
@@ -737,24 +695,75 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void initviews() {
+        if (null != anchorItem) {
+            String p = !isMember ? anchorItem.anPhoto : anchorItem.getMember().getMbPhoto();
+            String photo = null != p ? Config.BASE + p : null;
+            F.e("------------------------" + photo);
+            String n = !isMember ? anchorItem.getAnRemark() : anchorItem.getMember().getMbNickname();
+            String phone = !isMember ? anchorItem.getAnId() : anchorItem.getMember().mbPhone;
+            String name = null != n ? n : phone;
+            String sex = !isMember ? anchorItem.getAnSex() : anchorItem.getMember().getMbSex() + "";
+            String mId = !isMember ? anchorItem.mbId : anchorItem.getMember().getMbId() + "";
+            chatroomid = !isMember ? anchorItem.getChatRoomId() : "261649293176209844";
+//            if (!isMember) {
+//                chatroomid = anchorItem.getChatRoomId();
+            Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    mImgIcon.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+            mTvName.setText(name);
+            Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_live_booking_anchoricon) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    iv_live_booking_anchoricon.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+            iv_booking_sex.setImageResource(sex.equals("1") ? R.mipmap.global_male : R.mipmap.global_female);
+            tv_booking_currentname.setText(name);
+            tv_live_booking_anchorid.setText(mId);
+//            } else {
+//                UserInfo info = anchorItem.getMember();
+//                F.e("*********************************" + info.toString());
+////                Glide.with(context).load(null != info.getMbPhone() ? Config.BASE + info.getMbPhone() : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
+////                    @Override
+////                    protected void setResource(Bitmap resource) {
+////                        RoundedBitmapDrawable circularBitmapDrawable =
+////                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+////                        circularBitmapDrawable.setCircular(true);
+////                        mImgIcon.setImageDrawable(circularBitmapDrawable);
+////                    }
+////                });
+////                mTvName.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
+////                Glide.with(context).load(null != info.getMbPhone() ? Config.BASE + info.getMbPhone() : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_live_booking_anchoricon) {
+////                    @Override
+////                    protected void setResource(Bitmap resource) {
+////                        RoundedBitmapDrawable circularBitmapDrawable =
+////                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+////                        circularBitmapDrawable.setCircular(true);
+////                        iv_live_booking_anchoricon.setImageDrawable(circularBitmapDrawable);
+////                    }
+////                });
+////                iv_booking_sex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
+////                tv_booking_currentname.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
+////                tv_live_booking_anchorid.setText(info.getMbId());
+//
+//            }
 
-        Glide.with(context).load(anchorItem.avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_booking_anchoricon) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable circularBitmapDrawable =
-                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                iv_booking_anchoricon.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-//        iv_booking_sex.setImageResource(anchorItem.gender.equals("f") ? R.drawable.icon_sex_f : R.drawable.icon_sex_m);
-        tv_booking_currentname.setText(anchorItem.name);
-        tv_booking_level.setText(anchorItem.level);
-        tv_live_booking_anchorid.setText("ID:" + anchorItem.id);
-        tv_live_booking_anchorplace.setText(anchorItem.place);
+        }
+
+        contentAction();
+
     }
 
-    @OnClick({R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_booking, R.id.iv_live_booking_anchoricon, R.id.bt_live_gifts, R.id.tv_live_booking_close, R.id.view_click, R.id.bt_live_sendgift, R.id.bt_live_booking_tochat, R.id.tv_live_recharge, R.id.layout_live_icon_content, R.id.tv_live_booking_lahei, R.id.lin_anchor_info_action_follow, R.id.tv_live_booking_jubao})
+    @OnClick({R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_booking, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -769,23 +778,25 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.bt_live_chat:
                 setchat();
                 break;
-            case R.id.btn_live_dingtai:
-                booking();
-                break;
+//            case R.id.btn_live_dingtai:
+//                booking();
+//                break;
             case R.id.bt_live_booking:
                 booking();
                 break;
-            case R.id.iv_live_booking_anchoricon:
-                go2Info();
-                break;
+//            case R.id.iv_live_booking_anchoricon:
+//                go2Info();
+//                break;
             case R.id.bt_live_gifts:
                 setgifts();
                 break;
-            case R.id.tv_live_booking_close:
-                setbookingclose();
-                break;
+//            case R.id.tv_live_booking_close:
+//                setbookingclose();
+//                break;
             case R.id.view_click:
-                setviewClick();
+                if (!isMember) {
+                    setviewClick();
+                }
                 break;
             case R.id.bt_live_sendgift:
                 setsendgift();
@@ -798,15 +809,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 break;
             case R.id.layout_live_icon_content:
                 contentAction();
-                break;
-            case R.id.tv_live_booking_lahei:
-                setBlackAction();
-                break;
-            case R.id.lin_anchor_info_action_follow:
-                actionFollow();
-                break;
-            case R.id.tv_live_booking_jubao:
-                showReportDialog();
                 break;
         }
     }
@@ -848,19 +850,22 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void login() {
+
         String userName = "111";
         String password = "111";
         if (null != loginInfo) {
-            userName = "30985095";
-            password = "VU0WjYZnbE5ck1r";
+            userName = loginInfo.getMbId() + "";
+            password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
         }
+
+
         EMClient.getInstance().login(userName, password, new EMCallBack() {//回调
             @Override
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
                 EMClient.getInstance().chatManager().loadAllConversations();
                 Log.e("main", "登录聊天服务器成功！");
-                JoinChatRoom(anchorItem.id);
+                joinchatroom();
             }
 
             @Override
@@ -876,44 +881,45 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
-    public void JoinChatRoom(String anchorId) {
-        String url = UriTemplate.fromTemplate(Config.URL_JOINCHAT)
-                .set("id", anchorId)
-                .expand();
-//        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
-//        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        request.addHeader("Authorization", "Bearer  " + loginInfo.token);
+//    public void JoinChatRoom(String anchorId) {
+//        String url = UriTemplate.fromTemplate(Config.URL_JOINCHAT)
+//                .set("id", anchorId)
+//                .expand();
+////        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
+////        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
+////        request.addHeader("Authorization", "Bearer  " + loginInfo.token);
+////
+////        CallServer.getRequestInstance().add(JOINCHATROOM, request, joinRoomListener);
 //
-//        CallServer.getRequestInstance().add(JOINCHATROOM, request, joinRoomListener);
+//        HttpParams params = new HttpParams();
+//        params.put("key", "z45CasVgh8K3q6300g0d95VkK197291A");
+//        PostRequest request = OkGo.post(url).params(params);
+//        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Response response) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (null != anchorItem) {
+//                            joinchatroom();
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//
+//    }
 
-        HttpParams params = new HttpParams();
-        params.put("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-        PostRequest request = OkGo.post(url).params(params);
-        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Response response) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != anchorItem) {
-                            joinchatroom();
-                        }
-                    }
-                });
-            }
-        });
-
-    }
     public void joinchatroom() {
         Log.e("adad", "startJoinChatRoom..");
         EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
@@ -942,6 +948,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             }
         });
     }
+
     public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
@@ -1040,243 +1047,4 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }
     };
 
-
-
-
-//    CurrentCredits currentCredits;
-//    OnResponseListener<String> responseListener = new OnResponseListener<String>() {
-//        @Override
-//        public void onStart(int what) {
-//
-//        }
-//
-//
-//        @Override
-//        public void onSucceed(int what, Response<String> response) {
-//            if (response.responseCode() == 200) {
-//                switch (what) {
-//                    case 0:
-////                        mIsGetGift = true;
-//                        gifts = (ArrayList<Gift>) JSON.parseArray(response.get(), Gift.class);
-//                        ACache.get(LiveActivity.this).put("Lives_Gifts", gifts, 86400);
-//                        F.e(gifts.toString());
-//                        viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
-//
-//                            @Override
-//                            public void onPageSelected(int arg0) {
-////                                indicatorScroll(arg0);
-//                            }
-//
-//                            @Override
-//                            public void onPageScrolled(int arg0, float arg1, int arg2) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onPageScrollStateChanged(int arg0) {
-//
-//                            }
-//                        });
-////                        mViewpagerList.add(viewpager);
-//                        view_giftslist.add(viewpager);
-//                        vp_gifts.setAdapter(new MyViewPagerAdapter(view_giftslist));
-//                        break;
-//                    case 1:
-//                        currentCredits = JSON.parseObject(response.get(), CurrentCredits.class);
-//                        tv_live_credits.setText("趣味豆: " + currentCredits.current_credits);
-//                        break;
-//                    case 2:
-//                        currentCredits = JSON.parseObject(response.get(), CurrentCredits.class);
-//                        tv_live_credits.setText("趣味豆: " + currentCredits.current_credits);
-//
-//                        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "gift" + gift.id, chatroomid);
-//                        message.setChatType(EMMessage.ChatType.ChatRoom);
-//                        message.setFrom(loginInfo.name);
-//                        message.setAttribute("GiftName", gift.name);
-//                        message.setAttribute("user_name", loginInfo.name);
-//                        message.setAttribute("GiftPicture", gift.picture);
-//                        message.setAttribute("SPOT_KEY", "GIFT");
-//                        message.setAttribute("level", loginInfo.level);
-//                        message.setAttribute("credits", gift.credits);
-//                        message.setAttribute("userID", loginInfo.id);
-//                        message.setAttribute("user_avatar", loginInfo.avatar);
-//                        EMClient.getInstance().chatManager().sendMessage(message);
-//                        showGifts(message.getFrom(), gift);
-//                        break;
-//                }
-//            } else if (response.responseCode() == 402)
-//                Toast.makeText(context, "趣味豆不足", LENGTH_SHORT).show();
-//            else
-//                Toast.makeText(context, "无数据", LENGTH_SHORT).show();
-//        }
-//
-//        @Override
-//        public void onFailed(int what, Response<String> response) {
-//            Toast.makeText(context, "请求失败", LENGTH_SHORT).show();
-//        }
-//
-//        @Override
-//        public void onFinish(int what) {
-//
-//        }
-//    };
-//    private HttpListener<String> joinRoomListener = new HttpListener<String>() {
-//        @Override
-//        public void onSucceed(int what, Response<String> response) {
-//            int responseCode = response.getHeaders().getResponseCode();// 服务器响应码
-//            F.e("加入聊天室==============================" + response.get());
-//            if (responseCode == 200) {
-//                if (RequestMethod.HEAD == response.request().getRequestMethod()) {
-////                    ExampleUtil.showToast("Request is succeed", LiveActivity.this);
-//                }
-//                // 请求方法为HEAD时没有响应内容
-//                else {
-//                    switch (what) {
-//                        case JOINCHATROOM:
-////                            showChatroomToast(" room : " + chatroomid);
-//                            try {
-//                                JSONObject ob = JSON.parseObject(response.get());
-//                                if (ob.containsKey("start_at")) {
-//                                    YequApplication.JointRoomTime = ob.getString("start_at");
-//                                    star_at = ob.getString("start_at");
-//                                }
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        if (null != anchorItem) {
-//                                            joinchatroom();
-//                                        }
-//                                    }
-//                                });
-//
-//                            } catch (Exception e) {
-//                            }
-//                            break;
-//                        case LEAVECHAT:
-//                            star_at = null;
-//                            YequApplication.JointRoomTime = null;
-//                            break;
-//                    }
-//
-//                }
-//            } else {
-//                switch (what) {
-//                    case JOINCHATROOM:
-//                        JSONObject ob = JSON.parseObject(response.get());
-//                        if (ob.containsKey("error")) {
-//                            ExampleUtil.showToast(ob.getString("error"), LiveActivity.this);
-//                        } else {
-//
-//                            ExampleUtil.showToast("当前人数过多，加入聊天室失败", LiveActivity.this);
-//                        }
-//                        LiveActivity.this.finish();
-//                        break;
-//                }
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onFailed(int what, Response<String> response) {
-//
-//        }
-//    };
-//    private HttpListener<String> ActionListener = new HttpListener<String>() {
-//        @Override
-//        public void onSucceed(int what, Response<String> response) {
-//            int responseCode = response.getHeaders().getResponseCode();// 服务器响应码
-//            F.e("action==============================" + response.get());
-//            if (responseCode == 200) {
-//                if (RequestMethod.HEAD == response.request().getRequestMethod()) {
-////                    ExampleUtil.showToast("Request is succeed", LiveActivity.this);
-//                }
-//                // 请求方法为HEAD时没有响应内容
-//                else {
-//                    switch (what) {
-//                        case BLACKACTION:
-//                            ExampleUtil.showToast("操作成功", LiveActivity.this);
-//                            break;
-//                        case REPORTACTION:
-//                            ExampleUtil.showToast("操作成功", LiveActivity.this);
-//                            break;
-//                        case GETONLINECOUNT:
-//                            JSONArray array = JSON.parseArray(response.get());
-//                            String count = array.getJSONObject(0).getString("count");
-//                            mTvCount.setText(count);
-//                            break;
-//                        case FOLLOWINGANCHOR:
-//                            ExampleUtil.showToast("操作成功", LiveActivity.this);
-//                            break;
-//
-//                    }
-//
-//                }
-//            } else {
-//
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onFailed(int what, Response<String> response) {
-//
-//        }
-//    };
-//
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        if (null != mTipDialog && mTipDialog.isShowing()) {
-//            mTipDialog.dismiss();
-//        }
-//        Request<String> request = NoHttp.createStringRequest(Config.URL_ANCHOR_REPORTACTION, RequestMethod.POST);
-//        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        request.add("anchor_id", anchorItem.id);
-//        switch (position) {
-//            case 0:
-//                request.add("type", "ad");
-//                break;
-//            case 1:
-//                request.add("type", "porn");
-//                break;
-//            case 2:
-//                request.add("type", "insult");
-//                break;
-//            case 3:
-//                request.add("type", "politic");
-//                break;
-//            case 4:
-//                request.add("type", "misc");
-//                break;
-//
-//        }
-//
-//        request.addHeader("Authorization", "Bearer " + loginInfo.token);
-//        CallServer.getRequestInstance().add(REPORTACTION, request, ActionListener);
-//    }
-//
-//    private boolean temp = true;
-//
-//    private class MyTimer extends CountDownTimer {
-//
-//        private static final String TAG = "MyTimer";
-//
-//        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
-//        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
-//        public MyTimer(long millisInFuture, long countDownInterval) {
-//            super(millisInFuture, countDownInterval);
-//        }
-//
-//        //每过你规定的时间间隔做的操作
-//        @Override
-//        public void onTick(long millisUntilFinished) {
-//            periscopeLayout.addHeart();
-//            Log.d(TAG, "111");
-//        }
-//
-//        //倒计时结束时做的操作↓↓
-//        @Override
-//        public void onFinish() {
-//            temp = true;
-//        }
-//    }
 }

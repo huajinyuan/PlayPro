@@ -31,14 +31,14 @@ public class AllGiftViewpager extends ViewPager implements OnItemClickListener {
     public Gift mSelectGift;
 
     public AllGiftViewpager(Context context, AttributeSet attrs,
-                            List<Gift> giftList, ViewPager.OnPageChangeListener listener) {
+                            List<Gift> giftList, OnPageChangeListener listener) {
         super(context, attrs);
         this.context = context;
         this.giftList = giftList;
         initData(listener);
     }
 
-    private void initData(ViewPager.OnPageChangeListener listener) {
+    private void initData(OnPageChangeListener listener) {
         viewListpager.clear();
         pagecount = (giftList.size() - 1) / 10 + 1;
         for (int i = 0; i < pagecount; i++) {
@@ -65,7 +65,7 @@ public class AllGiftViewpager extends ViewPager implements OnItemClickListener {
 
 
     public AllGiftViewpager(Context context, List<Gift> giftList,
-                            ViewPager.OnPageChangeListener listener) {
+                            OnPageChangeListener listener) {
         super(context);
         this.context = context;
         this.giftList = giftList;
