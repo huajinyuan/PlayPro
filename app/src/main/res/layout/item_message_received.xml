@@ -3,67 +3,68 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
         android:id="@+id/timestamp"
-        android:visibility="gone"
         style="@style/chat_text_date_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/iv_userhead"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/circle_zhubo"
-            android:padding="1px"
-            android:background="@drawable/shape_circle_pink"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:scaleType="fitXY" />
+            android:background="@drawable/shape_circle_pink"
+            android:padding="1px"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_zhubo" />
 
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="54455"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/iv_userhead"
-            android:layout_marginLeft="20dp"/>
-       <!--<EmoticonsTextView-->
-           <cn.gtgs.base.playpro.widget.EmoticonsTextView
-           android:maxWidth="225.0dip"
-           android:id="@+id/tv_chatcontent"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginLeft="5dp"
-           android:layout_toRightOf="@id/iv_userhead"
-           android:layout_below="@id/tv_username"
-           android:background="@drawable/icon_chatbg_from9"
-           android:autoLink="web"
-           android:clickable="true"
-           android:focusable="true"
-           android:gravity="left|center"
-           android:lineSpacingExtra="2dp"
-           android:minHeight="40dp"
-           android:textColor="#ff000000"
-           android:textSize="15sp" />
+            android:text="54455" />
+        <!--<EmoticonsTextView-->
+        <cn.gtgs.base.playpro.widget.EmoticonsTextView
+            android:id="@+id/tv_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_username"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:autoLink="web"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="left|center"
+            android:lineSpacingExtra="2dp"
+            android:maxHeight="40dp"
+            android:maxWidth="225.0dip"
+            android:textColor="#ff000000"
+            android:textSize="15sp" />
+        <!--android:background="@drawable/icon_chatbg_from9"-->
         <TextView
             android:id="@+id/tv_userid"
             style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
-            android:layout_below="@id/iv_userhead"/>
+            android:layout_below="@id/iv_userhead"
+            android:layout_toLeftOf="@id/tv_chatcontent" />
     </RelativeLayout>
 
 </LinearLayout>

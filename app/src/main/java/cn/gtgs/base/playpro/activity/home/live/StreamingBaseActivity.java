@@ -75,6 +75,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
@@ -248,6 +249,7 @@ public class StreamingBaseActivity extends Activity implements
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         super.onCreate(savedInstanceState);
+        PApplication.getInstance().mActiviyts.add(this);
         aCache = ACache.get(this);
         mF= (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         userInfo = mF.getMember();

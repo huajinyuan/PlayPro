@@ -23,6 +23,7 @@ import android.view.Menu;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.base.view.IDelegate;
 import cn.gtgs.base.playpro.utils.ACache;
 
@@ -52,7 +53,7 @@ public abstract class ActivityPresenter<T extends IDelegate> extends AppCompatAc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        .getInstance().activities.add(this);
+        PApplication.getInstance().mActiviyts.add(this);
         viewDelegate.create(getLayoutInflater(), null, savedInstanceState);
         setContentView(viewDelegate.getRootView());
         initToolbar();

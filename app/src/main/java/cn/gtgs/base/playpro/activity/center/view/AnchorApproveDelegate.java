@@ -20,6 +20,13 @@ public class AnchorApproveDelegate extends AppDelegate {
     public TextView mTvVideoStatus;
     @BindView(R.id.edt_approve_introduce)
     public EditText mEdtIntroduce;
+
+    @BindView(R.id.tv_topbar_title)
+    TextView mTvTitle;
+    public void setmTvTitle(String title)
+    {
+        mTvTitle.setText(title);
+    }
     @Override
     public int getRootLayoutId() {
         return R.layout.activity_anchor_approve;

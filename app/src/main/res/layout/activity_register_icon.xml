@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_black_background"
+        android:background="@color/colorbg"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -84,14 +84,14 @@
             android:layout_margin="15dp"
             android:background="@drawable/selector_button_pink"
             android:text="下一步"
-            android:textColor="@color/color_black_background" />
+            android:textColor="@color/colorwhite" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_cuticon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_black_background"
+        android:background="@color/colorbg"
         android:visibility="invisible">
 
         <RelativeLayout

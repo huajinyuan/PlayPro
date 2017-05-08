@@ -18,7 +18,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <!-- <permission -->
     <!-- android:name=".permission.JPUSH_MESSAGE" -->
@@ -75,13 +77,14 @@
         <activity
             android:name=".activity.home.live.PlayActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activity.center.GetCoinActivity"/>
-        <activity android:name=".activity.home.mymessage.ChatActivity"/>
-        <activity android:name=".activity.home.mymessage.MessageListActivity"/>
+        <activity android:name=".activity.center.GetCoinActivity" />
+        <activity android:name=".activity.home.mymessage.ChatActivity" />
+        <activity android:name=".activity.home.mymessage.MessageListActivity" />
 
-        <!--<activity-->
-        <!--android:name="com.qiniu.pili.droid.streaming.screen.ScreenCaptureRequestActivity"-->
-        <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
+        <!-- <activity -->
+        <!-- android:name="com.qiniu.pili.droid.streaming.screen.ScreenCaptureRequestActivity" -->
+        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar"/> -->
+        <activity android:name=".activity.center.SettingActivity"></activity>
     </application>
 
 </manifest>

@@ -142,7 +142,7 @@
             android:id="@+id/vp_emoji"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -150,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_230"
         android:layout_alignParentBottom="true"
-        android:background="#d000"
+        android:background="#9921272b"
         android:orientation="vertical"
         android:visibility="invisible">
 
@@ -160,7 +160,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_gifts"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_180"
+            android:layout_height="@dimen/dp_190"
             android:layout_marginBottom="@dimen/dp_5" />
 
         <!--<ImageView-->
@@ -206,12 +206,11 @@
 
     <include
         android:id="@+id/layout_play_bottom_dialog"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         layout="@layout/layout_dialog_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <View
         android:id="@+id/view_click"
@@ -228,12 +227,12 @@
         android:layout_marginTop="@dimen/dp_50" />
 
     <!--<com.foru.yequtvplay.widget.PeriscopeLayout-->
-        <!--android:id="@+id/periscope"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_marginTop="@dimen/dp_50"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginBottom="70dp" />-->
+    <!--android:id="@+id/periscope"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_marginTop="@dimen/dp_50"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_marginBottom="70dp" />-->
 
 </RelativeLayout>

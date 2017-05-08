@@ -10,14 +10,13 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
  * Created by gtgs on 2017/4/25.
  */
 
-public class GetCoinDelegate extends AppDelegate {
-    @Override
-    public int getRootLayoutId() {
-        return R.layout.activity_get_coin;
-    }
-
+public class SettingDelegate extends AppDelegate {
     @BindView(R.id.tv_topbar_title)
     TextView mTvTitle;
+    @Override
+    public int getRootLayoutId() {
+        return R.layout.activity_setting;
+    }
     public void setmTvTitle(String title)
     {
         mTvTitle.setText(title);

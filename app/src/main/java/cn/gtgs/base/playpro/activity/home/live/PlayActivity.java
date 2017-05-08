@@ -29,8 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.gt.okgo.OkGo;
+import com.gt.okgo.model.HttpParams;
+import com.gt.okgo.request.PostRequest;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMMessageListener;
@@ -60,15 +65,19 @@ import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.mymessage.ChatActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import cn.gtgs.base.playpro.widget.AllGiftViewpager;
 import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
 import cn.gtgs.base.playpro.widget.MyViewPagerAdapter;
 import cn.gtgs.base.playpro.widget.OnEmoticoSelectedListener;
 import cn.gtgs.base.playpro.widget.ParentViewPaperAdapter;
+import okhttp3.Response;
+import rx.Subscriber;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -154,6 +163,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PApplication.getInstance().mActiviyts.add(this);
         if (Build.VERSION.SDK_INT >= 19) {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -462,14 +472,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //        gifts = (ArrayList<Gift>) ACache.get(this).getAsObject("Lives_Gifts");
 
         if (gifts.isEmpty()) {
-            for (int i = 1; i <= 10; i++) {
-                Gift g = new Gift();
-                g.id = i + "";
-                int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
-                g.picture = emoticonsId;
-                gifts.add(g);
-            }
-
+//            for (int i = 1; i <= 10; i++) {
+//                Gift g = new Gift();
+//                g.id = i + "";
+//                int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
+//                g.picture = emoticonsId;
+//                gifts.add(g);
+//            }
+            gifts = PApplication.getInstance().getGift();
+            F.e("----------------------"+gifts.toString());
         }
 //        if (null != gifts && !gifts.isEmpty()) {
         viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
@@ -524,13 +535,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     void setsendgift() {
-//        gift = viewpager.getmSelectGift();
-//        if (null != gift) {
-//            sendGift(gift.id);
-//        } else {
-//            Toast.makeText(context, "选一个礼物吧", LENGTH_SHORT).show();
-//
-//        }
+        gift = viewpager.getmSelectGift();
+        if (null != gift) {
+            sendGift(gift.id);
+        } else {
+            Toast.makeText(context, "选一个礼物吧", LENGTH_SHORT).show();
+
+        }
     }
 
     void settochat() {
@@ -642,7 +653,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }, 1500);
     }
 
-    public void sendGift(String giftid) {
+    public void sendGift(String num) {
 //        String sendUrl = UriTemplate.fromTemplate(Config.URL_SEND_GIFT)
 //                .set("anchor_id", anchorItem.id)
 //                .expand();
@@ -653,19 +664,67 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //        request.add("quantity", "1");
 //        request.add("anchor_id", anchorItem.id);
 //        requestQueue.add(2, request, responseListener);
+        HttpParams params = new HttpParams();
+        params.put("mbId", loginInfo.getMbId());
+        params.put("anId", anchorItem.getAnId());
+        params.put("num", num);
+        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+                try {
+                    String Str = response.body().string();
+                    JSONObject ob = JSON.parseObject(Str);
+                    if (ob.containsKey("code")) {
+                        int code = ob.getInteger("code");
+                        if (code == 1) {
+                            giftPost();
+
+                        } else {
+                            ToastUtil.showToast(ob.getString("msg"), context);
+                        }
+                    }
+                } catch (Exception e) {
+                    F.e(e.toString());
+                }
+
+            }
+        });
+
+
+    }
+
+    public void giftPost() {
+        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "Gift" + gift.id, chatroomid);
+        message.setChatType(EMMessage.ChatType.ChatRoom);
+        message.setFrom(loginInfo.getMbNickname());
+        message.setAttribute("level", "LV" + loginInfo.getMbLevel());
+        message.setAttribute("user_name", loginInfo.getMbNickname());
+        message.setAttribute("user_url", loginInfo.getMbPhoto());
+        EMClient.getInstance().chatManager().sendMessage(message);
+        showGifts(message.getFrom(), gift);
     }
 
     public void showGifts(String from, Gift gift) {
-        Glide.with(context).load(gift.picture).into(iv_gift);
+        Glide.with(context).load(Config.BASE + gift.picture).into(iv_gift);
         //开始动画
         ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
         animation.setDuration(800);
         iv_gift.startAnimation(animation);
-//        if (from.equals(loginInfo.name)) {
+//        if (from.equals(loginInfo.getMbNickname())) {
 //            tv_likes.setText("你 给主播送了一个" + gift.name);
 //        } else {
 //            tv_likes.setText("用户 " + from + " 给主播送了一个" + gift.name);
-//
 //        }
 
         iv_gift.setVisibility(View.VISIBLE);
@@ -975,8 +1034,20 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 message_content = txtBody.getMessage();
                 Map<String, Object> map = message.ext();
                 String spotType = null;
-                if (map.containsKey("SPOT_KEY")) {
-                    spotType = (String) map.get("SPOT_KEY");
+                if (map.containsKey("Gift")) {
+//                    spotType = (String) map.get("SPOT_KEY");
+//                    mGetGift = new Gift();
+//                    mGetGift.id = (String) map.get("Gift");
+                    mGetGift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
+//                        mGetGift.picture = (String) map.get("GiftPicture");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showGifts(message_from, mGetGift);
+//                                showGifts(message_from, message_content.substring(message_content.length() - 2));
+                        }
+                    });
+
                 }
                 if (null != spotType) {
                     if (spotType.equals("FJZY_SPOT")) {

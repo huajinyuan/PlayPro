@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.home.fragment;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
 import cn.gtgs.base.playpro.activity.home.fragment.presenter.TyrantsPresenter;
@@ -13,7 +14,7 @@ import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
  * Created by gtgs on 2017/4/26.
  */
 
-public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implements IFollowItemListener {
+public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implements IFollowItemListener, SwipeRefreshLayout.OnRefreshListener {
     TyrantsPresenter presenter;
 
     @Override
@@ -26,6 +27,7 @@ public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implemen
         super.init();
         presenter = new TyrantsPresenter(viewDelegate, this);
         presenter.initData();
+        viewDelegate.getmSwp().setOnRefreshListener(this);
 
     }
 
@@ -41,5 +43,10 @@ public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implemen
     @Override
     public void ItemFolloClick(Follow follow) {
 
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.initData();
     }
 }

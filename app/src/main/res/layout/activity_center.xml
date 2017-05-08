@@ -14,8 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorwhite"
-        >
+        android:background="@color/colorwhite">
 
         <ImageView
             android:id="@+id/img_center_icon"
@@ -129,15 +128,15 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorwhite"
         android:layout_marginTop="0.5dp"
-        >
+        android:background="@color/colorwhite">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -152,24 +151,23 @@
     </LinearLayout>
 
 
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:id="@+id/rel_center_getcoin"
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
+        android:layout_height="45dp"
         android:layout_marginTop="0.5dp"
-        android:layout_height="45dp">
+        android:background="@color/colorwhite">
 
         <TextView
             android:layout_width="wrap_content"
@@ -193,21 +191,21 @@
 
     </RelativeLayout>
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:id="@+id/rel_center_approve"
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
+        android:layout_height="45dp"
         android:layout_marginTop="0.5dp"
-        android:layout_height="45dp">
+        android:background="@color/colorwhite">
 
         <TextView
             android:layout_width="wrap_content"
@@ -232,22 +230,22 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
+        android:layout_height="45dp"
         android:layout_marginTop="0.5dp"
-        android:layout_height="45dp">
+        android:background="@color/colorwhite">
 
         <TextView
             android:layout_width="wrap_content"
@@ -267,22 +265,22 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
+        android:layout_height="45dp"
         android:layout_marginTop="0.5dp"
-        android:layout_height="45dp">
+        android:background="@color/colorwhite">
 
         <TextView
             android:layout_width="wrap_content"
@@ -302,22 +300,23 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
+        android:id="@+id/rel_center_setting"
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
+        android:layout_height="45dp"
         android:layout_marginTop="0.5dp"
-        android:layout_height="45dp">
+        android:background="@color/colorwhite">
 
         <TextView
             android:layout_width="wrap_content"
@@ -340,8 +339,8 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 </LinearLayout>

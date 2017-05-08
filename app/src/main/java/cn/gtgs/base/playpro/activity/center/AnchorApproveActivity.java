@@ -19,7 +19,7 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
 
     @Override
     protected void initData() {
-
+        viewDelegate.setmTvTitle("主播认证");
     }
 
     @Override
@@ -27,11 +27,14 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
         return AnchorApproveDelegate.class;
     }
 
-    @OnClick({R.id.tv_approve_submit})
+    @OnClick({R.id.tv_approve_submit, R.id.img_topbar_back})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.tv_approve_submit:
                 presenter.Submit();
+                break;
+            case R.id.img_topbar_back:
+                this.finish();
                 break;
         }
     }

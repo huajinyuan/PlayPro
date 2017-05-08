@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
+import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 
 /**
  * Created by gtgs on 2017/4/26.
@@ -34,7 +36,7 @@ public class PApplication extends Application {
     public static Context applicationContext;
     public static String Phone;
     public static String JPushID;
-//    public ArrayList<Activity> mActiviyts = new ArrayList<>();
+    public ArrayList<Activity> mActiviyts = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -133,43 +135,17 @@ public class PApplication extends Application {
         // set if you need delivery ack
         options.setRequireDeliveryAck(false);
 
-        //you need apply & set your own id if you want to use google cloud messaging.
-//        options.setGCMNumber("324169311137");
-        //you need apply & set your own id if you want to use Mi push notification
-//        options.setMipushConfig("2882303761517426801", "5381742660801");
-        //you need apply & set your own id if you want to use Huawei push notification
-//        options.setHuaweiPushAppId("10492024");
-
-//		options.allowChatroomOwnerLeave(getModel().isChatroomOwnerLeaveAllowed());
-//		options.setDeleteMessagesAsExitGroup(getModel().isDeleteMessagesAsExitGroup());
-//		options.setAutoAcceptGroupInvitation(getModel().isAutoAcceptGroupInvitation());
-
         return options;
     }
 
-//    public static String getJPushID() {
-//        return JPushID;
-//    }
-//
-//    public static void setJPushID(String JPushID) {
-//        PApplication.JPushID = JPushID;
-//    }
 
-    public static String getPhone() {
-        return Phone;
+    public void finishActivity() {
+        for (Activity a : mActiviyts) {
+            a.finish();
+        }
+        //杀死该应用进程
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
-
-    public static void setPhone(String phone) {
-        Phone = phone + "_anchor";
-    }
-
-//    public void finishActivity() {
-//        for (Activity a : mActiviyts) {
-//            a.finish();
-//        }
-//        //杀死该应用进程
-//        android.os.Process.killProcess(android.os.Process.myPid());
-//    }
 
     private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
         public void uncaughtException(Thread thread, Throwable ex) {
@@ -183,5 +159,27 @@ public class PApplication extends Application {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
+    }
+
+    public ArrayList<Gift> getGift() {
+        ArrayList<Gift> gifts = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            Gift g = new Gift();
+            g.setId(i + "");
+            g.setCredits(i + "");
+            int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
+            g.setPicture(emoticonsId);
+            gifts.add(g);
+        }
+        return gifts;
+    }
+
+    public Gift getGiftObject(String id) {
+        for (Gift g : getGift()) {
+            if (g.id.equals(id)) {
+                return g;
+            }
+        }
+        return null;
     }
 }

@@ -16,7 +16,7 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
 
     @Override
     protected void initData() {
-
+        viewDelegate.setmTvTitle("个人中心");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
         return CenterDelegate.class;
     }
 
-    @OnClick({R.id.rel_center_approve, R.id.rel_center_getcoin})
+    @OnClick({R.id.rel_center_approve, R.id.rel_center_getcoin, R.id.rel_center_setting, R.id.img_topbar_back})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.rel_center_approve:
@@ -34,6 +34,13 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
             case R.id.rel_center_getcoin:
                 Intent intent2 = new Intent(this, GetCoinActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.rel_center_setting:
+                Intent intent3 = new Intent(this, SettingActivity.class);
+                startActivity(intent3);
+                break;
+            case R.id.img_topbar_back:
+                this.finish();
                 break;
         }
     }

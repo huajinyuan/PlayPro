@@ -65,6 +65,7 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PApplication.getInstance().mActiviyts.add(this);
         setContentView(R.layout.activity_chat);
         context = this;
         ButterKnife.bind(this);

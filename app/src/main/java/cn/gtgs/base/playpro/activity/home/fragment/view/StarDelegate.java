@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro.activity.home.fragment.view;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -17,21 +18,24 @@ import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
  * Created by gtgs on 2017/4/25.
  */
 
-public class StarDelegate extends AppDelegate{
+public class StarDelegate extends AppDelegate {
     @BindView(R.id.rec_star_content)
     RecyclerView mRecContent;
+    @BindView(R.id.swipe_refresh_widget)
+    SwipeRefreshLayout mSwp;
     Follow_StarAdapter mFollowAdapter;
     LinearLayoutManager manager;
     ArrayList<Follow> mData = new ArrayList<>();
 
-
     @Override
     public int getRootLayoutId() {
-
         return R.layout.fragment_star;
     }
 
-    public void setData(ArrayList<Follow> data,IFollowItemListener listener) {
+    public void setData(ArrayList<Follow> data, IFollowItemListener listener) {
+        if (mSwp.isRefreshing()) {
+            mSwp.setRefreshing(false);
+        }
         manager = new LinearLayoutManager(getActivity());
         if (null == mFollowAdapter) {
             mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
@@ -43,8 +47,10 @@ public class StarDelegate extends AppDelegate{
         mData.clear();
         mData.addAll(data);
         mFollowAdapter.notifyDataSetChanged();
+    }
 
-
+    public SwipeRefreshLayout getmSwp() {
+        return mSwp;
     }
 
 }

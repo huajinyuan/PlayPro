@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.widget.EmoticonsTextView;
 
 /**
@@ -92,7 +93,7 @@ public class MessageAdapter extends BaseAdapter {
         holder.tv_username.setText(username != null ? username : message.getFrom());
         if (avatar != null) {
             final ImageView iv_icon = holder.iv_avatar;
-            Glide.with(context).load(avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon){
+            Glide.with(context).load(null != avatar ? Config.BASE + avatar : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =

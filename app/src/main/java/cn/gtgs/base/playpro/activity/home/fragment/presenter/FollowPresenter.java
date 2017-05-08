@@ -1,9 +1,12 @@
 package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.model.HttpParams;
 import com.gt.okgo.request.GetRequest;
+import com.gt.okgo.request.PostRequest;
 
 import java.util.ArrayList;
 
@@ -15,6 +18,8 @@ import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -42,11 +47,54 @@ public class FollowPresenter implements IFollow {
         getData();
     }
 
+    @Override
+    public void unFollow(Follow follow) {
+        HttpParams params = new HttpParams();
+        params.put("mbId", info.getMbId());
+        params.put("anId", follow.getAnId());
+        PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+//                HttpBase base = Parsing.getInstance().ResponseToObject(response)
+                try {
+                    String Str = response.body().string();
+                    F.e("-----------------" + Str);
+                    JSONObject ob = JSON.parseObject(Str);
+
+//                    org.json.JSONObject ob = new org.json.JSONObject()
+//                    JSONObject object = JSON.parseObject(response.body().toString());
+                    if (ob.containsKey("code")) {
+                        int i = ob.getIntValue("code");
+                        if (i == 1) {
+                            ToastUtil.showToast("操作成功", delegate.getActivity());
+                            getData();
+                        }
+                    }
+                } catch (Exception e) {
+                    F.e(e.toString());
+                }
+            }
+        });
+    }
+
     private void getData() {
 
         if (null != info) {
             HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbId", info.getMbId());
+            params.put("page", "1");
+            params.put("count", "100");
             GetRequest request = OkGo.get(Config.POST_ANCHOR_MEMBER_FAVLIST).params(params);
             HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
                 @Override
@@ -65,6 +113,8 @@ public class FollowPresenter implements IFollow {
                     try {
                         ArrayList<Follow> lists = (ArrayList<Follow>) Parsing.getInstance().ResponseToList2(response, Follow.class).dataList;
                         delegate.setData(lists, listener);
+                        F.e("--------------------------" + lists.size());
+                        F.e("--------------------------" + lists.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -77,5 +127,6 @@ public class FollowPresenter implements IFollow {
 
 
     }
+
 
 }

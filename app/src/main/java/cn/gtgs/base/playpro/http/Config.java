@@ -71,7 +71,7 @@ public interface Config {
 
     String BASE = "http://www.jsonlan.com:8080/webcast/";
 
-    String BASE_URL = BASE+"api/";
+    String BASE_URL = BASE + "api/";
     /**
      * 请求验证码
      */
@@ -116,10 +116,14 @@ public interface Config {
      * 主播认证（mbId=2&anQq=12345678&anSex&anPhoto）
      */
     String POST_ANCHOR_ADD = BASE_URL + "anchor/add";
+
+    /**
+     * 礼物赠送(mbId&anId&num)
+     */
+    String POST_MEMBER_SEND = BASE_URL + "member/send";
     /**
      * 图片上传（file）
      */
-    String FileUpload= BASE_URL+"upload";
-
+    String FileUpload = BASE_URL + "upload";
 
 }

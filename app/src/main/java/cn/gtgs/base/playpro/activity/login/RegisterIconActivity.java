@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -44,6 +45,7 @@ import java.io.FileOutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
 import cn.gtgs.base.playpro.http.Config;
@@ -64,6 +66,8 @@ public class RegisterIconActivity extends AppCompatActivity {
     EditText et_nickname;
     @BindView(R.id.rg_register_sex)
     RadioGroup rg_sex;
+    @BindView(R.id.tv_topbar_title)
+    TextView mTitle;
 
     AlertDialog mydialog;
     String mPhotoPath;
@@ -82,16 +86,18 @@ public class RegisterIconActivity extends AppCompatActivity {
     float startDis = 0;
     String urlPath;
     private UploadManager uploadManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PApplication.getInstance().mActiviyts.add(this);
         setContentView(R.layout.activity_register_icon);
         uploadManager = UploadManager.getInstance();
         context = this;
         instance = this;
         ButterKnife.bind(this);
         avatarPath = getFilesDir().getPath() + "/icon.png";
-
+        mTitle.setText("信息完善");
     }
 
     @OnClick(R.id.iv_register_icon)
@@ -342,21 +348,16 @@ public class RegisterIconActivity extends AppCompatActivity {
         public void onFinish(String s) {
             Log.e("MyUploadListener", "finish:" + s);
 
-            try
-            {
+            try {
                 JSONObject json = JSON.parseObject(s);
-                if (json.containsKey("data"))
-                {
+                if (json.containsKey("data")) {
                     JSONObject ob = json.getJSONObject("data");
-                    if (ob.containsKey("filePath"))
-                    {
+                    if (ob.containsKey("filePath")) {
                         urlPath = ob.getString("filePath");
                     }
 
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 F.e(e.toString());
             }
 

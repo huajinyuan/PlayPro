@@ -47,8 +47,8 @@ public class RecommentedPresenter implements IRecommented {
         params.put("count","100");
         params.put("isRecommend","1");
 
-        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST).params(params);
-//        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST_LIVE).params(params);
+//        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST).params(params);
+        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST_LIVE).params(params);
         HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
