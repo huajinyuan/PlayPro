@@ -178,7 +178,7 @@
         android:layout_height="60dp"
         app:srcCompat="@mipmap/add_pic_bg"
         android:layout_margin="20dp"
-        android:id="@+id/imageView"
+        android:id="@+id/img_approve_icon"
         android:layout_marginTop="10dp"
 
         />

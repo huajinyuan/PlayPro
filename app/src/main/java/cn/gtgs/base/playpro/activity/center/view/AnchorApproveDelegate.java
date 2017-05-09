@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.center.view;
 
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -20,31 +21,38 @@ public class AnchorApproveDelegate extends AppDelegate {
     public TextView mTvVideoStatus;
     @BindView(R.id.edt_approve_introduce)
     public EditText mEdtIntroduce;
+    @BindView(R.id.img_approve_icon)
+    ImageView Icon;
 
     @BindView(R.id.tv_topbar_title)
     TextView mTvTitle;
-    public void setmTvTitle(String title)
-    {
+
+    public void setmTvTitle(String title) {
         mTvTitle.setText(title);
     }
+
     @Override
     public int getRootLayoutId() {
         return R.layout.activity_anchor_approve;
     }
-    public String getQQ()
-    {
+
+    public String getQQ() {
         return mEdtQQ.getText().toString().trim();
     }
-    public String getSex()
-    {
+
+    public String getSex() {
         return mTvSex.getText().toString().trim();
     }
-    public String getStatus()
-    {
+
+    public String getStatus() {
         return mTvVideoStatus.getText().toString().trim();
     }
-    public String getIntroduce()
-    {
+
+    public String getIntroduce() {
         return mEdtIntroduce.getText().toString().trim();
+    }
+
+    public ImageView getIcon() {
+        return Icon;
     }
 }

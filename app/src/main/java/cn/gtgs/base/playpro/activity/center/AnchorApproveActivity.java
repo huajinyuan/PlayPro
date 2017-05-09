@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +21,8 @@ import android.view.WindowManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.listener.UploadListener;
 import com.gt.okgo.request.PostRequest;
@@ -66,7 +71,7 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
         return AnchorApproveDelegate.class;
     }
 
-    @OnClick({R.id.tv_approve_submit, R.id.img_topbar_back})
+    @OnClick({R.id.tv_approve_submit, R.id.img_topbar_back, R.id.img_approve_icon})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.tv_approve_submit:
@@ -74,6 +79,9 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
                 break;
             case R.id.img_topbar_back:
                 this.finish();
+                break;
+            case R.id.img_approve_icon:
+                showPhotodialog();
                 break;
         }
     }
@@ -189,15 +197,15 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
                     JSONObject ob = json.getJSONObject("data");
                     if (ob.containsKey("filePath")) {
                         urlPath = ob.getString("filePath");
-//                        Glide.with(context).load(Config.BASE + urlPath).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_register_icon) {
-//                            @Override
-//                            protected void setResource(Bitmap resource) {
-//                                RoundedBitmapDrawable circularBitmapDrawable =
-//                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-//                                circularBitmapDrawable.setCircular(true);
-//                                iv_register_icon.setImageDrawable(circularBitmapDrawable);
-//                            }
-//                        });
+                        Glide.with(context).load(Config.BASE + urlPath).asBitmap().centerCrop().into(new BitmapImageViewTarget(viewDelegate.getIcon()) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                viewDelegate.getIcon().setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
                         try {
                             if (mPhotoFile.exists())
                                 mPhotoFile.delete();
