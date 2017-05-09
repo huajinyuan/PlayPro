@@ -271,10 +271,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
             EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatroomid);
             //如果是群聊，设置chattype，默认是单聊
-            message.setFrom("Prof. Elaina McCullough V");
+            message.setFrom(loginInfo.getMbNickname());
             message.setChatType(EMMessage.ChatType.ChatRoom);
-            message.setAttribute("user_name", "Prof. Elaina McCullough V");
-            message.setAttribute("level", "lv20");
+            message.setAttribute("user_name", loginInfo.getMbNickname());
+            message.setAttribute("level", loginInfo.getMbLevel());
             //发送消息
             EMClient.getInstance().chatManager().sendMessage(message);
 
@@ -822,7 +822,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
-    @OnClick({R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_booking, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
+    @OnClick({R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat,  R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -840,9 +840,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //            case R.id.btn_live_dingtai:
 //                booking();
 //                break;
-            case R.id.bt_live_booking:
-                booking();
-                break;
+//            case R.id.bt_live_booking:
+//                booking();
+//                break;
 //            case R.id.iv_live_booking_anchoricon:
 //                go2Info();
 //                break;

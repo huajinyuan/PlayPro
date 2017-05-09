@@ -10,6 +10,7 @@ import com.gt.okgo.request.PostRequest;
 
 import java.util.ArrayList;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.fragment.view.FollowDelegate;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
@@ -19,7 +20,6 @@ import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
-import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -31,11 +31,12 @@ public class FollowPresenter implements IFollow {
     FollowDelegate delegate;
     IFollowItemListener listener;
     UserInfo info;
+    ACache aCache;
 
     public FollowPresenter(FollowDelegate delegate, IFollowItemListener listener) {
         this.delegate = delegate;
         this.listener = listener;
-        ACache aCache = ACache.get(delegate.getActivity());
+        aCache = ACache.get(delegate.getActivity());
         Follow fl = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = fl.getMember();
         this.delegate = delegate;
@@ -48,7 +49,7 @@ public class FollowPresenter implements IFollow {
     }
 
     @Override
-    public void unFollow(Follow follow) {
+    public void unFollow(final Follow follow) {
         HttpParams params = new HttpParams();
         params.put("mbId", info.getMbId());
         params.put("anId", follow.getAnId());
@@ -71,13 +72,19 @@ public class FollowPresenter implements IFollow {
                     String Str = response.body().string();
                     F.e("-----------------" + Str);
                     JSONObject ob = JSON.parseObject(Str);
-
-//                    org.json.JSONObject ob = new org.json.JSONObject()
-//                    JSONObject object = JSON.parseObject(response.body().toString());
                     if (ob.containsKey("code")) {
                         int i = ob.getIntValue("code");
                         if (i == 1) {
-                            ToastUtil.showToast("操作成功", delegate.getActivity());
+                            int a = ob.getInteger("data");
+                            ArrayList<String> gs = PApplication.getInstance().getmFList();
+                            if (a == 1) {
+                                gs.add(follow.getAnId());
+
+                            } else {
+                                gs.remove(follow.getAnId());
+                            }
+                            String str = JSON.toJSONString(gs);
+                            aCache.put(ACacheKey.CURRENT_FOLLOW, str);
                             getData();
                         }
                     }

@@ -87,52 +87,52 @@
             android:textColor="@color/colorwhite" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_cuticon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorbg"
-        android:visibility="invisible">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_cuticon"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorbg"-->
+        <!--android:visibility="invisible">-->
 
-        <RelativeLayout
-            android:id="@+id/rl_top"
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/rl_top"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp">-->
 
-            <ImageView
-                android:id="@+id/iv_cancel"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/icon_cancel" />
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_cancel"-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:src="@drawable/icon_cancel" />-->
 
-            <ImageView
-                android:id="@+id/iv_ok"
-                android:layout_width="25dp"
-                android:layout_height="17dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_ok" />
-        </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_ok"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="17dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:src="@drawable/icon_ok" />-->
+        <!--</RelativeLayout>-->
 
 
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="720px"
-            android:layout_height="720px"
-            android:layout_below="@id/rl_top"
-            android:layout_centerHorizontal="true"
-            android:scaleType="matrix" />
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_icon"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@id/rl_top"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:scaleType="matrix" />-->
 
-        <ImageView
-            android:id="@+id/iv_cover"
-            android:layout_width="720px"
-            android:layout_height="720px"
-            android:layout_below="@id/rl_top"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/icon_cover" />
-    </RelativeLayout>
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_cover"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@id/rl_top"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:src="@drawable/icon_cover" />-->
+    <!--</RelativeLayout>-->
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.cache.CacheEntity;
 import com.gt.okgo.cache.CacheMode;
@@ -23,6 +24,9 @@ import java.util.logging.Level;
 
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.F;
 
 /**
  * Created by gtgs on 2017/4/26.
@@ -37,7 +41,7 @@ public class PApplication extends Application {
     public static String Phone;
     public static String JPushID;
     public ArrayList<Activity> mActiviyts = new ArrayList<>();
-
+    public ArrayList<String> mF = new ArrayList<>();
     @Override
     public void onCreate() {
         super.onCreate();
@@ -181,5 +185,35 @@ public class PApplication extends Application {
             }
         }
         return null;
+    }
+    public void getMF()
+    {
+
+        try {
+            String s = ACache.get(this).getAsString(ACacheKey.CURRENT_FOLLOW);
+            if (null!=s)
+            {
+                ArrayList<String> ss = (ArrayList<String>) JSON.parseArray(s,String.class);
+
+                if (null != ss)
+                {
+                    mF.clear();
+                    mF.addAll(ss);
+                }
+                F.e(ss.toString());
+            }
+
+        }catch (Exception e)
+        {
+            F.e(e.toString());
+        }
+
+
+    }
+
+    public ArrayList<String> getmFList()
+    {
+        getMF();
+        return mF;
     }
 }

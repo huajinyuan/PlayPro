@@ -10,6 +10,7 @@ import com.gt.okgo.request.PostRequest;
 
 import java.util.ArrayList;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.fragment.view.StarDelegate;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
@@ -19,7 +20,6 @@ import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
-import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -31,11 +31,12 @@ public class StarPresenter implements IRecommented {
     StarDelegate delegate;
     IFollowItemListener listener;
     UserInfo info;
+    ACache aCache;
 
     public StarPresenter(StarDelegate delegate, IFollowItemListener listener) {
         this.delegate = delegate;
         this.listener = listener;
-        ACache aCache = ACache.get(delegate.getActivity());
+        aCache = ACache.get(delegate.getActivity());
         Follow f = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = f.getMember();
 
@@ -47,12 +48,12 @@ public class StarPresenter implements IRecommented {
     }
 
     @Override
-    public void doFollow(String anId) {
+    public void doFollow(final String anId) {
         HttpParams params = new HttpParams();
-        params.put("mbId",info.getMbId());
-        params.put("anId",anId);
+        params.put("mbId", info.getMbId());
+        params.put("anId", anId);
         PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
-        HttpMethods.getInstance().doPost(request,false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -66,25 +67,31 @@ public class StarPresenter implements IRecommented {
             @Override
             public void onNext(Response response) {
 //                HttpBase base = Parsing.getInstance().ResponseToObject(response)
-                try
-                {
+                try {
                     String Str = response.body().string();
-                    F.e("-----------------"+Str);
+                    F.e("-----------------" + Str);
                     JSONObject ob = JSON.parseObject(Str);
 
 //                    org.json.JSONObject ob = new org.json.JSONObject()
 //                    JSONObject object = JSON.parseObject(response.body().toString());
-                    if (ob.containsKey("code"))
-                    {
+                    if (ob.containsKey("code")) {
                         int i = ob.getIntValue("code");
-                        if (i == 1)
-                        {
-                            ToastUtil.showToast("操作成功",delegate.getActivity());
+                        if (i == 1) {
+                            int a = ob.getInteger("data");
+                            ArrayList<String> gs = PApplication.getInstance().getmFList();
+                            if (a == 1) {
+                                gs.add(anId);
+
+                            } else {
+                                gs.remove(anId);
+                            }
+                            String str = JSON.toJSONString(gs);
+                            aCache.put(ACacheKey.CURRENT_FOLLOW, str);
+//                            ToastUtil.showToast("操作成功",delegate.getActivity());
+                            delegate.AddapterChange();
                         }
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     F.e(e.toString());
                 }
 
@@ -114,7 +121,7 @@ public class StarPresenter implements IRecommented {
                 try {
                     F.e(response.body().toString());
                     ArrayList<Follow> lists = (ArrayList<Follow>) Parsing.getInstance().ResponseToList3(response, Follow.class).dataList;
-                    delegate.setData(lists,listener);
+                    delegate.setData(lists, listener);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -81,6 +81,10 @@ public interface Config {
      */
     String POST_LOGIN = BASE_URL + "member/login";
     /**
+     * 注册接口
+     */
+    String POST_REG = BASE_URL + "member/reg";
+    /**
      * 直播列表
      */
     String POST_ANCHOR_LIST = BASE_URL + "anchor/list";
@@ -121,6 +125,10 @@ public interface Config {
      * 礼物赠送(mbId&anId&num)
      */
     String POST_MEMBER_SEND = BASE_URL + "member/send";
+    /**
+     * 搜索
+     */
+    String POST_SEARCH = BASE_URL + "anchor/search";
     /**
      * 图片上传（file）
      */

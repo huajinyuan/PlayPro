@@ -14,28 +14,29 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
 public class LoginDelegate extends AppDelegate {
     @BindView(R.id.et_phone)
     EditText mEdtPhone;
-    @BindView(R.id.et_code)
-    EditText mEdtCode;
-    @BindView(R.id.tv_login_sms)
-    TextView mTvSms;
+    @BindView(R.id.et_pwd)
+    EditText mEdtPwd;
     @BindView(R.id.bt_login)
     TextView mBtnLogin;
+    @BindView(R.id.tv_topbar_title)
+    TextView mTvTitle;
 
     @Override
     public int getRootLayoutId() {
         return R.layout.activity_login;
     }
 
-    public TextView getSmsView() {
-        return mTvSms;
-    }
 
     public String getPhone() {
         return mEdtPhone.getText().toString();
     }
 
-    public String getCode() {
-        return mEdtCode.getText().toString();
+    public String getPwd() {
+        return mEdtPwd.getText().toString();
     }
 
+    public void setTitle()
+    {
+        mTvTitle.setText("登录");
+    }
 }

@@ -17,6 +17,7 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
     @Override
     protected void initData() {
         viewDelegate.setmTvTitle("个人中心");
+        viewDelegate.init();
     }
 
     @Override

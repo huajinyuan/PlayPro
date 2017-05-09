@@ -66,6 +66,7 @@
         </activity>
         <activity android:name=".activity.login.LoginActivity" />
         <activity android:name=".activity.login.RegisterIconActivity" />
+        <activity android:name=".activity.login.RegisterActivity" />
         <activity android:name=".activity.home.HomeActivity" />
         <activity android:name=".activity.center.CenterActivity" />
         <activity android:name=".activity.center.AnchorApproveActivity" />
@@ -84,7 +85,8 @@
         <!-- <activity -->
         <!-- android:name="com.qiniu.pili.droid.streaming.screen.ScreenCaptureRequestActivity" -->
         <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar"/> -->
-        <activity android:name=".activity.center.SettingActivity"></activity>
+        <activity android:name=".activity.center.SettingActivity" />
+        <activity android:name=".activity.home.search.SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -28,11 +28,12 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
     private Context mContext;
     private int mWith = 0;
     public IFollowItemListener iFollowItemListener;
-
-    public Follow_StarAdapter(ArrayList<Follow> data, Context context) {
+    public ArrayList<String> mFollowIf;
+    public Follow_StarAdapter(ArrayList<Follow> data,ArrayList<String> mFollowIf, Context context) {
         this.mData = data;
         this.mContext = context;
         this.mWith = PixelUtil.getWidth(mContext);
+        this.mFollowIf = mFollowIf;
     }
 
     public void setiFollowItemListener(IFollowItemListener listener) {
@@ -103,6 +104,15 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
                 }
             }
         });
+
+        if (!mFollowIf.isEmpty()&&mFollowIf.contains(follow.getAnId()))
+        {
+            holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
+
+        }else
+        {
+            holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image);
+        }
 //        holder.tvName.setText(follow.huanxin_username);
 //        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
 //        holder.tvName.setText(anchorItem.name);

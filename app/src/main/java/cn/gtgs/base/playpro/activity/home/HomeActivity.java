@@ -17,6 +17,9 @@ import cn.gtgs.base.playpro.activity.home.fragment.FragmentRanking;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentRecommented;
 import cn.gtgs.base.playpro.activity.home.live.HWCodecCameraStreamingActivity;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.home.presenter.HomePresenter;
+import cn.gtgs.base.playpro.activity.home.presenter.IHome;
+import cn.gtgs.base.playpro.activity.home.search.SearchActivity;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 import cn.gtgs.base.playpro.http.Config;
@@ -37,6 +40,8 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
     FragmentRecommented mRecommented;
     ACache aCache;
     Follow userInfo;
+    IHome presenter;
+
     @Override
     protected void onInitPresenters() {
         if (null == mRanking) {
@@ -51,6 +56,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
         }
         aCache = ACache.get(this);
         userInfo = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        presenter = new HomePresenter(viewDelegate);
     }
 
     @Override
@@ -64,6 +70,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
         fragmentTransaction.hide(mFollow);
         fragmentTransaction.show(mRanking);
         fragmentTransaction.commit();
+        presenter.initData();
     }
 
     @Override
@@ -98,7 +105,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
 
     }
 
-    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow, R.id.img_home_play, R.id.img_home_top_userinfo})
+    @OnClick({R.id.btn_ranking, R.id.btn_recommented, R.id.btn_follow, R.id.img_home_play, R.id.img_home_top_userinfo, R.id.img_home_search})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.btn_ranking:
@@ -119,17 +126,19 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
                 Intent intent2 = new Intent(this, CenterActivity.class);
                 startActivity(intent2);
                 break;
+            case R.id.img_home_search:
+                Intent intent3 = new Intent(this, SearchActivity.class);
+                startActivity(intent3);
+                break;
         }
     }
 
-    public void getAnchorInfo()
-    {
+    public void getAnchorInfo() {
         HttpParams params = new HttpParams();
-        if (null != userInfo && null != userInfo.getAnId())
-        {
-            params.put("anId",userInfo.getAnId());
+        if (null != userInfo && null != userInfo.getAnId()) {
+            params.put("anId", userInfo.getAnId());
             PostRequest request = OkGo.post(Config.POST_ANCHOR_OPEN).params(params);
-            HttpMethods.getInstance().doPost(request,false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -143,12 +152,12 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
                 @Override
                 public void onNext(Response response) {
 
-                    HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response,Follow.class);
+                    HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     Follow follow = baseF.getData();
-                    F.e("--------------"+follow.getWcPushAddress());
+                    F.e("--------------" + follow.getWcPushAddress());
                     Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
-                    intent.putExtra(Config.EXTRA_KEY_PUB_URL,Config.EXTRA_PUBLISH_URL_PREFIX+follow.getWcPushAddress());
-                    intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW,follow.chatRoomId);
+                    intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + follow.getWcPushAddress());
+                    intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
                     startActivity(intent);
 //                startPush("URL:"+follow.getWcPullAddress());
                 }

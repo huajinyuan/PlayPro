@@ -8,7 +8,6 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
-import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginListener;
 import cn.gtgs.base.playpro.activity.login.presenter.ILoginPresenter;
 import cn.gtgs.base.playpro.activity.login.presenter.LoginPresenter;
@@ -30,19 +29,19 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
         return LoginDelegate.class;
     }
 
-    @OnClick({R.id.bt_login, R.id.btn_register, R.id.tv_login_sms})
+    @OnClick({R.id.bt_login, R.id.btn_register, R.id.img_topbar_back})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-                mLoginPresenter.login(registerInfo);
+                mLoginPresenter.login();
                 break;
             case R.id.btn_register:
                 Intent intent = new Intent(this, RegisterIconActivity.class);
-//                startActivity(intent);
-                startActivityForResult(intent, 999);
+                startActivity(intent);
+//                startActivityForResult(intent, 999);
                 break;
-            case R.id.tv_login_sms:
-                mLoginPresenter.getCode();
+            case R.id.img_topbar_back:
+                this.finish();
                 break;
         }
     }
@@ -55,12 +54,13 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
     @Override
     protected void initData() {
 
-        UserInfo info = (UserInfo) mACache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        if (null != info) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-            this.finish();
-        }
+        viewDelegate.setTitle();
+//        UserInfo info = (UserInfo) mACache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+//        if (null != info) {
+//            Intent intent = new Intent(this, HomeActivity.class);
+//            startActivity(intent);
+//            this.finish();
+//        }
     }
 
     @Override

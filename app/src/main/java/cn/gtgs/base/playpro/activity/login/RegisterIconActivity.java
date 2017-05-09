@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -27,12 +25,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.listener.UploadListener;
 import com.gt.okgo.request.PostRequest;
@@ -40,7 +39,6 @@ import com.gt.okgo.upload.UploadInfo;
 import com.gt.okgo.upload.UploadManager;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +47,7 @@ import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.login.model.RegisterInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.BitmapUtil;
 import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 
@@ -58,10 +57,10 @@ public class RegisterIconActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_register_icon)
     ImageView iv_register_icon;
-    @BindView(R.id.rl_cuticon)
-    RelativeLayout rl_cuticon;
-    @BindView(R.id.iv_icon)
-    ImageView iv_icon;
+    //    @BindView(R.id.rl_cuticon)
+//    RelativeLayout rl_cuticon;
+//    @BindView(R.id.iv_icon)
+//    ImageView iv_icon;
     @BindView(R.id.et_register_nickname)
     EditText et_nickname;
     @BindView(R.id.rg_register_sex)
@@ -110,48 +109,48 @@ public class RegisterIconActivity extends AppCompatActivity {
         finish();
     }
 
-    @OnClick(R.id.iv_cancel)
-    void setcancel() {
-        finish();
-    }
+//    @OnClick(R.id.iv_cancel)
+//    void setcancel() {
+//        finish();
+//    }
 
-    @OnClick(R.id.iv_ok)
+//    @OnClick(R.id.iv_ok)
 //确定裁剪
-    void setok() {
-        haveimage = true;
-        matrix.postTranslate(-113, -86);//选中中心位置
-        matrix.postScale(0.5f, 0.5f);
-        try {
-            Bitmap smallbitmap = Bitmap.createBitmap(250, 250, Bitmap.Config.RGB_565);//裁剪250*250
-            Canvas canvas = new Canvas(smallbitmap);
-            canvas.drawBitmap(bitmap_normal, matrix, null);
-            FileOutputStream os = new FileOutputStream(avatarPath);
-            smallbitmap.compress(Bitmap.CompressFormat.PNG, 80, os);
-            os.close();
-            matrix.reset();//清空matrix
-
-            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), smallbitmap);
-            roundedBitmapDrawable.setCircular(true);
-            iv_register_icon.setImageDrawable(roundedBitmapDrawable);//设置头像
-//            OkGo.
-            MyUploadListener listener = new MyUploadListener();
-            listener.setUserTag(avatarPath);
-            PostRequest postRequest = OkGo.post(Config.FileUpload).params("file", new File(avatarPath));
-            uploadManager.addTask(avatarPath, postRequest, listener);
-
-
-            iv_icon.setImageBitmap(null);
-            rl_cuticon.setVisibility(View.GONE);
-            if ((bitmap_normal != null) && (bitmap_normal.isRecycled() == false)) {//释放bitmap_normal
-                Log.e("sda", "clear bitmap_normal");
-                bitmap_normal.recycle();
-                bitmap_normal = null;
-            }
-
-        } catch (Exception e) {
-            Log.e("dda", "wrong at line 103");
-        }
-    }
+//    void setok() {
+//        haveimage = true;
+//        matrix.postTranslate(-113, -86);//选中中心位置
+//        matrix.postScale(0.5f, 0.5f);
+//        try {
+//            Bitmap smallbitmap = Bitmap.createBitmap(PixelUtil.getWidth(this), PixelUtil.getHeight(this), Bitmap.Config.RGB_565);//裁剪250*250
+//            Canvas canvas = new Canvas(smallbitmap);
+//            canvas.drawBitmap(bitmap_normal, matrix, null);
+//            FileOutputStream os = new FileOutputStream(avatarPath);
+//            smallbitmap.compress(Bitmap.CompressFormat.PNG, 80, os);
+//            os.close();
+//            matrix.reset();//清空matrix
+//
+//            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), smallbitmap);
+//            roundedBitmapDrawable.setCircular(true);
+//            iv_register_icon.setImageDrawable(roundedBitmapDrawable);//设置头像
+////            OkGo.
+//            MyUploadListener listener = new MyUploadListener();
+//            listener.setUserTag(avatarPath);
+//            PostRequest postRequest = OkGo.post(Config.FileUpload).params("file", new File(avatarPath));
+//            uploadManager.addTask(avatarPath, postRequest, listener);
+//
+//
+//            iv_icon.setImageBitmap(null);
+//            rl_cuticon.setVisibility(View.GONE);
+//            if ((bitmap_normal != null) && (bitmap_normal.isRecycled() == false)) {//释放bitmap_normal
+//                Log.e("sda", "clear bitmap_normal");
+//                bitmap_normal.recycle();
+//                bitmap_normal = null;
+//            }
+//
+//        } catch (Exception e) {
+//            Log.e("dda", "wrong at line 103");
+//        }
+//    }
 
     @OnClick(R.id.bt_next)
     void setnext() {
@@ -173,10 +172,11 @@ public class RegisterIconActivity extends AppCompatActivity {
 //            startActivity(new Intent(context, LoginActivity.class));
 
 
-            Intent intent = new Intent();
+            Intent intent = new Intent(this, RegisterActivity.class);
             // 获取用户计算后的结果
             intent.putExtra("RegisterInfo", info);
-            setResult(2, intent);
+//            setResult(2, intent);
+            startActivity(intent);
 
             finish();
         }
@@ -240,78 +240,87 @@ public class RegisterIconActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            rl_cuticon.setVisibility(View.VISIBLE);
+//            rl_cuticon.setVisibility(View.VISIBLE);
+            String pathurl = null;
             if (requestCode == 1) {
-                bitmap_normal = BitmapFactory.decodeFile(mPhotoPath);
+                pathurl = mPhotoPath;
+//                bitmap_normal = BitmapFactory.decodeFile(mPhotoPath);
             } else {
                 Uri uri = data.getData();
-                String path;
+//                String path;
                 if (!TextUtils.isEmpty(uri.getAuthority())) {
-                    path = getPathFromUri(uri);
+//                    path = getPathFromUri(uri);
+                    pathurl = getPathFromUri(uri);
                 } else {
-                    path = uri.getPath();
+//                    path = uri.getPath();
+                    pathurl = uri.getPath();
                 }
-
-
-                bitmap_normal = BitmapFactory.decodeFile(path);
-            }
-            iv_icon.setImageBitmap(bitmap_normal);
-
-            int oldwidth = bitmap_normal.getWidth();
-            int oldheight = bitmap_normal.getHeight();
-
-            float scale = oldwidth >= oldheight ? 720f / oldheight : 720f / oldwidth;
-            matrix.postScale(scale, scale);
-            iv_icon.setImageMatrix(matrix);
-
-            iv_icon.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_DOWN:
-                            Log.e("sds", "ACTION_DOWN");
-                            mode = DRAG;
-                            startPoint.set(event.getX(), event.getY());
-                            break;
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            Log.e("sds", "ACTION_POINTER_DOWN");
-                            mode = ZOOM;
-                            startDis = distance(event);
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            Log.e("dsad", mode + "");
-                            if (mode == DRAG) {
-                                float dx = event.getX() - startPoint.x;
-                                float dy = event.getY() - startPoint.y;
-                                matrix.postTranslate(dx, dy);
-                                startPoint.set(event.getX(), event.getY());
-                                iv_icon.setImageMatrix(matrix);
-                            } else if (mode == ZOOM) {
-                                float endDis = distance(event);
-                                float mscale = endDis / startDis;
-                                matrix.postScale(mscale, mscale);
-                                iv_icon.setImageMatrix(matrix);
-                                startDis = endDis;
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            Log.e("dw", "ACTION_UP");
-                            mode = 0;
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                            Log.e("dw", "ACTION_POINTER_UP");
-                            mode = 0;
-                            break;
-                    }
-                    return true;
-                }
-            });
-            try {
-                if (mPhotoFile.exists())
-                    mPhotoFile.delete();
-            } catch (Exception e) {
+//                bitmap_normal = BitmapFactory.decodeFile(path);
 
             }
+            BitmapUtil.saveBitmap(BitmapUtil.getBitmap(pathurl), new File(avatarPath));
+            MyUploadListener listener = new MyUploadListener();
+            listener.setUserTag(avatarPath);
+            PostRequest postRequest = OkGo.post(Config.FileUpload).params("file", new File(avatarPath));
+            uploadManager.addTask(avatarPath, postRequest, listener);
+
+//            iv_icon.setImageBitmap(bitmap_normal);
+
+//            int oldwidth = bitmap_normal.getWidth();
+//            int oldheight = bitmap_normal.getHeight();
+
+//            float scale = oldwidth >= oldheight ? 720f / oldheight : 720f / oldwidth;
+//            matrix.postScale(PixelUtil.getWidth(RegisterIconActivity.this), PixelUtil.getHeight(RegisterIconActivity.this));
+//            iv_icon.setImageMatrix(matrix);
+//
+//            iv_icon.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View view, MotionEvent event) {
+//                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//                        case MotionEvent.ACTION_DOWN:
+//                            Log.e("sds", "ACTION_DOWN");
+//                            mode = DRAG;
+//                            startPoint.set(event.getX(), event.getY());
+//                            break;
+//                        case MotionEvent.ACTION_POINTER_DOWN:
+//                            Log.e("sds", "ACTION_POINTER_DOWN");
+//                            mode = ZOOM;
+//                            startDis = distance(event);
+//                            break;
+//                        case MotionEvent.ACTION_MOVE:
+//                            Log.e("dsad", mode + "");
+//                            if (mode == DRAG) {
+//                                float dx = event.getX() - startPoint.x;
+//                                float dy = event.getY() - startPoint.y;
+//                                matrix.postTranslate(dx, dy);
+//                                startPoint.set(event.getX(), event.getY());
+//                                iv_icon.setImageMatrix(matrix);
+//                            } else if (mode == ZOOM) {
+//                                float endDis = distance(event);
+//                                float mscale = endDis / startDis;
+//                                matrix.postScale(mscale, mscale);
+//                                iv_icon.setImageMatrix(matrix);
+//                                startDis = endDis;
+//                            }
+//                            break;
+//                        case MotionEvent.ACTION_UP:
+//                            Log.e("dw", "ACTION_UP");
+//                            mode = 0;
+//                            break;
+//                        case MotionEvent.ACTION_POINTER_UP:
+//                            Log.e("dw", "ACTION_POINTER_UP");
+//                            mode = 0;
+//                            break;
+//                    }
+//                    return true;
+//                }
+//            });
+//            try {
+//                if (mPhotoFile.exists())
+//                    mPhotoFile.delete();
+//            } catch (Exception e) {
+//
+//            }
 
         }
     }
@@ -354,6 +363,22 @@ public class RegisterIconActivity extends AppCompatActivity {
                     JSONObject ob = json.getJSONObject("data");
                     if (ob.containsKey("filePath")) {
                         urlPath = ob.getString("filePath");
+                        Glide.with(context).load(Config.BASE + urlPath).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_register_icon) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                iv_register_icon.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
+                        try {
+                            if (mPhotoFile.exists())
+                                mPhotoFile.delete();
+                        } catch (Exception e) {
+
+                        }
+
                     }
 
                 }

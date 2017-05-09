@@ -192,7 +192,6 @@ public class StreamingBaseActivity extends Activity implements
     public Follow mF;
 
 
-
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -251,9 +250,9 @@ public class StreamingBaseActivity extends Activity implements
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
         aCache = ACache.get(this);
-        mF= (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         userInfo = mF.getMember();
-chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
+        chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -362,134 +361,8 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
         mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
 
-//        mContext = this;
-//
-//        mProfile = new StreamingProfile();
-//
-//        if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_URL_PREFIX)) {
-//            // publish url
-//            try {
-//                mProfile.setPublishUrl(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_URL_PREFIX.length()));
-//            } catch (URISyntaxException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_JSON_PREFIX)) {
-//            try {
-//                mJSONObject = new JSONObject(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_JSON_PREFIX.length()));
-//                StreamingProfile.Stream stream = new StreamingProfile.Stream(mJSONObject);
-//                mProfile.setStream(stream);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            Toast.makeText(this, "Invalid Publish Url", Toast.LENGTH_LONG).show();
-//        }
-//
-//        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
-//        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
-//        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
-//
-//        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_MEDIUM2)
-//                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
-////                .setAVProfile(avProfile)
-////                .setPreferredVideoEncodingSize(960, 544)
-//                .setEncodingSizeLevel(Config.ENCODING_LEVEL)
-//                .setEncoderRCMode(StreamingProfile.EncoderRCModes.BITRATE_PRIORITY)
-//                .setDnsManager(getMyDnsManager())
-//                .setAdaptiveBitrateEnable(true)
-//                .setFpsControllerEnable(true)
-//                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
-////                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
-//                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
-//
-//        CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
-//        mCurrentCamFacingIndex = cameraFacingId.ordinal();
-//        mCameraStreamingSetting = new CameraStreamingSetting();
-//        mCameraStreamingSetting.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK)
-//                .setContinuousFocusModeEnabled(true)
-//                .setRecordingHint(false)
-//                .setCameraFacingId(cameraFacingId)
-////                .setCameraSourceImproved(true)
-//                .setResetTouchFocusDelayInMs(3000)
-////                .setFocusMode(CameraStreamingSetting.FOCUS_MODE_CONTINUOUS_PICTURE)
-//                .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.MEDIUM)
-//                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
-//                .setBuiltInFaceBeautyEnabled(true)
-//                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
-//                .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
-//
-//        mIsNeedFB = true;
-//        mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
-//        mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
-
         initUIs();
-//        getAnchorInfo();
     }
-
-
-//    public void startPush(String publishUrlFromServer)
-//    {
-////        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
-//        Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
-//
-//        mContext = this;
-//
-//        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
-//        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
-//        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
-//
-//        mProfile = new StreamingProfile();
-//        if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_URL_PREFIX)) {
-//            // publish url
-//            try {
-//                mProfile.setPublishUrl(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_URL_PREFIX.length()));
-//            } catch (URISyntaxException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (publishUrlFromServer.startsWith(Config.EXTRA_PUBLISH_JSON_PREFIX)) {
-//            try {
-//                mJSONObject = new JSONObject(publishUrlFromServer.substring(Config.EXTRA_PUBLISH_JSON_PREFIX.length()));
-//                StreamingProfile.Stream stream = new StreamingProfile.Stream(mJSONObject);
-//                mProfile.setStream(stream);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            Toast.makeText(this, "Invalid Publish Url", Toast.LENGTH_LONG).show();
-//        }
-//
-//        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3)
-//                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
-////                .setPreferredVideoEncodingSize(960, 544)
-//                .setEncodingSizeLevel(Config.ENCODING_LEVEL)
-//                .setEncoderRCMode(StreamingProfile.EncoderRCModes.QUALITY_PRIORITY)
-////                .setAVProfile(avProfile)
-//                .setDnsManager(getMyDnsManager())
-//                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
-////                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
-//                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
-//
-//        CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
-//        mCurrentCamFacingIndex = cameraFacingId.ordinal();
-//        mCameraStreamingSetting = new CameraStreamingSetting();
-//        mCameraStreamingSetting.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK)
-//                .setContinuousFocusModeEnabled(true)
-//                .setRecordingHint(false)
-//                .setCameraFacingId(cameraFacingId)
-//                .setBuiltInFaceBeautyEnabled(true)
-//                .setResetTouchFocusDelayInMs(3000)
-////                .setFocusMode(CameraStreamingSetting.FOCUS_MODE_CONTINUOUS_PICTURE)
-//                .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.SMALL)
-//                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
-//                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
-//                .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
-//        mIsNeedFB = true;
-//        mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
-//        mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
-//    }
-
-
-
 
 
     @Override
@@ -513,8 +386,8 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
         mMediaStreamingManager.destroy();
 
         //-----------------------------------以下为环信
-//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-//        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
 
 //        Request<String> request = NoHttp.createStringRequest(Config.URL_StopStreaming, RequestMethod.DELETE);
 //        request.addHeader("Authorization","Bearer "+loginInfo.token);
@@ -835,48 +708,6 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
 //        checkOnlineNum();
     }
 
-//    void checkOnlineNum() {
-//        String uri = UriTemplate.fromTemplate(Config.URL_OnlineNum).set("anchor_id", loginInfo.id).expand();
-////        Request<String> request = NoHttp.createStringRequest(uri);
-////        requestQueue.add(Int_OnlineNum, request, responseListener);
-//
-//        GetRequest request = OkGo.get(uri);
-//        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(Response response) {
-//                try {
-//                    ArrayList<OnlineNum> onlineNums = Parsing.getInstance().ResponseToList(response, OnlineNum.class);
-////                    HttpBase< ArrayList<OnlineNum>> onlineNums = Parsing.getInstance().ResponseToList(response,OnlineNum.class);
-//                    if (onlineNums != null) {
-//                        tv_live_onlinenum.setText(onlineNums.get(0).count);
-//                        Log.e("aaa", onlineNums.get(0).count);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-////                ArrayList<OnlineNum> onlineNums = (ArrayList<OnlineNum>) JSON.parseArray(response.body().toString(), OnlineNum.class);
-////                if (onlineNums != null) {
-////                    tv_live_onlinenum.setText(onlineNums.get(0).count);
-////                    Log.e("aaa", onlineNums.get(0).count);
-////                }
-////                        F.e(response.body().toString());
-////                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-////                delegate.setData(lists);
-//            }
-//        });
-//
-//    }
 
     private void initButtonText() {
         updateFBButtonText();
@@ -1051,7 +882,7 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
     public void login() {
         Log.e("sdad", "start login...");
 //        41240285948    xnPPr2xCgR
-        EMClient.getInstance().login(userInfo.getMbId()+"", MD5Util.getMD5("webcast"+userInfo.getMbId()), new EMCallBack() {//回调
+        EMClient.getInstance().login(userInfo.getMbId() + "", MD5Util.getMD5("webcast" + userInfo.getMbId()), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
@@ -1073,7 +904,7 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
 
             @Override
             public void onError(int code, String message) {
-                Log.e("main", "登录聊天服务器失败！"+ message);
+                Log.e("main", "登录聊天服务器失败！" + message);
             }
         });
 
@@ -1120,6 +951,7 @@ chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
         if (msgList.size() > 0)
             listView.setSelection(listView.getCount() - 1);
     }
+
     public void addChatRoomChangeListenr() {
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
     }

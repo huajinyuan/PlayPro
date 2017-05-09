@@ -1,36 +1,50 @@
-package cn.gtgs.base.playpro.activity.login.view;//package cn.gtgs.base.playpro.activity.login.view;
-//
-//import cn.gtgs.base.playpro.R;
-//import cn.gtgs.base.playpro.base.view.AppDelegate;
-//
-///**
-// * Created by gtgs on 2017/1/13.
-// */
-//
-//public class RegisterDelegate extends AppDelegate {
-////    @BindView(R.id.edt_register_userName)
-////    EditText mEdtAccount;
-////    @BindView(R.id.edt_register_password)
-////    EditText mEdtPassword;
-////    @BindView(R.id.edt_register_password2)
-////    EditText mEdtPassword2;
-//
-//    @Override
-//    public int getRootLayoutId() {
-//        return R.layout.activity_register;
-//    }
-//
-////    public String getAccount()
-////    {
-////        return mEdtAccount.getText().toString();
-////    }
-////    public String getPassWord()
-////    {
-////        return mEdtPassword.getText().toString();
-////    }
-////    public String getPassWords()
-////    {
-////        return mEdtPassword2.getText().toString();
-////    }
-//
-//}
+package cn.gtgs.base.playpro.activity.login.view;
+
+import android.widget.EditText;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.base.view.AppDelegate;
+
+/**
+ * Created by gtgs on 2017/1/13.
+ */
+
+public class RegisterDelegate extends AppDelegate {
+    @BindView(R.id.et_phone)
+    EditText mEdtPhone;
+    @BindView(R.id.et_code)
+    EditText mEdtCode;
+    @BindView(R.id.et_pwd)
+    EditText mEdtPwd;
+    @BindView(R.id.tv_login_sms)
+    TextView mTvSms;
+    @BindView(R.id.tv_topbar_title)
+    TextView mTvtitle;
+
+    @Override
+    public int getRootLayoutId() {
+        return R.layout.activity_register;
+    }
+
+    public TextView getSmsView() {
+        return mTvSms;
+    }
+
+    public String getPhone() {
+        return mEdtPhone.getText().toString();
+    }
+
+    public String getCode() {
+        return mEdtCode.getText().toString();
+    }
+
+    public String getPwd() {
+        return mEdtPwd.getText().toString();
+    }
+
+    public void setTitle() {
+        mTvtitle.setText("注册");
+    }
+}

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.adapter.Follow_StarAdapter;
 import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
@@ -26,6 +27,7 @@ public class StarDelegate extends AppDelegate {
     Follow_StarAdapter mFollowAdapter;
     LinearLayoutManager manager;
     ArrayList<Follow> mData = new ArrayList<>();
+    ArrayList<String> mF = new ArrayList<>();
 
     @Override
     public int getRootLayoutId() {
@@ -36,11 +38,15 @@ public class StarDelegate extends AppDelegate {
         if (mSwp.isRefreshing()) {
             mSwp.setRefreshing(false);
         }
+        if (null != PApplication.getInstance().getmFList()) {
+            mF.clear();
+            mF.addAll(PApplication.getInstance().getmFList());
+        }
         manager = new LinearLayoutManager(getActivity());
         if (null == mFollowAdapter) {
             mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
             mRecContent.setLayoutManager(manager);
-            mFollowAdapter = new Follow_StarAdapter(mData, getActivity());
+            mFollowAdapter = new Follow_StarAdapter(mData, mF, getActivity());
             mFollowAdapter.setiFollowItemListener(listener);
             mRecContent.setAdapter(mFollowAdapter);
         }
@@ -51,6 +57,14 @@ public class StarDelegate extends AppDelegate {
 
     public SwipeRefreshLayout getmSwp() {
         return mSwp;
+    }
+
+    public void AddapterChange() {
+        if (null != PApplication.getInstance().getmFList()) {
+            mF.clear();
+            mF.addAll(PApplication.getInstance().getmFList());
+        }
+        mFollowAdapter.notifyDataSetChanged();
     }
 
 }

@@ -1,4 +1,4 @@
-package cn.gtgs.base.playpro.activity.home.fragment.adapter;
+package cn.gtgs.base.playpro.activity.home.search.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
-import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.home.search.presenter.ISearchItemListenser;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.GlideCircleTransform;
@@ -23,20 +23,22 @@ import cn.gtgs.base.playpro.utils.PixelUtil;
 /**
  * Created by gtgs on 2016/9/2.
  */
-public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.AnchorHotViewHolder> {
     private ArrayList<Follow> mData;
     private Context mContext;
     private int mWith = 0;
-    public IFollowItemListener iFollowItemListener;
-    public FollowAdapter(ArrayList<Follow> data, Context context) {
+    ISearchItemListenser listener;
+
+    public SearchAdapter(ArrayList<Follow> data, Context context) {
         this.mData = data;
         this.mContext = context;
         this.mWith = PixelUtil.getWidth(mContext);
     }
-    public void setListener(IFollowItemListener listener)
-    {
-        this.iFollowItemListener = listener;
+
+    public void setListener(ISearchItemListenser listener) {
+        this.listener = listener;
     }
+
     @Override
     public AnchorHotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_tyrants_item_recycler,
@@ -47,46 +49,43 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
     @Override
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
         final Follow follow = mData.get(position);
-
-
-        UserInfo anchorItem = follow.getMember();
-        holder.tvPos.setVisibility(View.GONE);
-        holder.img_center_num.setVisibility(View.GONE);
-        if(null != anchorItem.getMbNickname())
-        {
-            holder.tvName.setText(anchorItem.getMbNickname());
+        final UserInfo anchorItem = follow.getMember();
+        if (position == 0) {
+            holder.img_center_num.setVisibility(View.VISIBLE);
+            holder.tvPos.setVisibility(View.GONE);
+            holder.img_center_num.setImageResource(R.mipmap.icon_medal1);
+        } else if (position == 1) {
+            holder.img_center_num.setVisibility(View.VISIBLE);
+            holder.tvPos.setVisibility(View.GONE);
+            holder.img_center_num.setImageResource(R.mipmap.icon_medal2);
+        } else if (position == 2) {
+            holder.img_center_num.setVisibility(View.VISIBLE);
+            holder.tvPos.setVisibility(View.GONE);
+            holder.img_center_num.setImageResource(R.mipmap.icon_medal3);
+        } else {
+            holder.img_center_num.setVisibility(View.GONE);
+            holder.tvPos.setVisibility(View.VISIBLE);
+            holder.tvPos.setText("NO." + (position + 1));
         }
-        else {
+        if (null != anchorItem.getMbNickname()) {
+            holder.tvName.setText(anchorItem.getMbNickname());
+        } else {
             holder.tvName.setText(anchorItem.getMbPhone());
         }
-        holder.img_tyrants_sex.setImageResource(anchorItem.getMbSex()==0?R.mipmap.global_male:R.mipmap.global_female);
-        if (null != anchorItem.getMbPhoto())
-        {
-            Glide.with(mContext).load(Config.BASE+anchorItem.getMbPhoto()).transform(new GlideCircleTransform(mContext)).into(holder.img_tyrants_icon);
+        holder.img_tyrants_sex.setImageResource(anchorItem.getMbSex() == 0 ? R.mipmap.global_male : R.mipmap.global_female);
+        if (null != anchorItem.getMbPhoto()) {
+            Glide.with(mContext).load(Config.BASE + anchorItem.getMbPhoto()).transform(new GlideCircleTransform(mContext)).into(holder.img_tyrants_icon);
         }
 
-        holder.img_tyrants_follow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != iFollowItemListener)
-                {
-                    iFollowItemListener.ItemFolloClick(follow);
-                }
-
-            }
-        });
-
+        holder.img_tyrants_follow.setVisibility(View.GONE);
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != iFollowItemListener)
-                {
-                    iFollowItemListener.itemClick(follow);
+                if (null != listener) {
+                    listener.itemClick(follow);
                 }
-
             }
         });
-        holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
 
     }
 
@@ -101,6 +100,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
     }
 
     class AnchorHotViewHolder extends RecyclerView.ViewHolder {
+
         TextView tvName;
         TextView tvPos;
         TextView tv_tyrants_sum;
@@ -108,7 +108,6 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         ImageView img_tyrants_sex;
         ImageView img_center_num;
         ImageView img_tyrants_follow;
-
         View item;
 
         public AnchorHotViewHolder(View itemView) {
