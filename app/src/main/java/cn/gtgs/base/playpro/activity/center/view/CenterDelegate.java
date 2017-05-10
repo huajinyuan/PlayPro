@@ -3,6 +3,7 @@ package cn.gtgs.base.playpro.activity.center.view;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,12 @@ public class CenterDelegate extends AppDelegate {
     TextView mTvId;
     @BindView(R.id.tv_center_gole)
     TextView mGole;
+    @BindView(R.id.tv_center_level)
+    TextView tvLe;
+    @BindView(R.id.tv_center_g)
+    TextView tvg;
+    @BindView(R.id.swp_center)
+    SwipeRefreshLayout mSwp;
     UserInfo info;
 
     @Override
@@ -62,6 +69,13 @@ public class CenterDelegate extends AppDelegate {
                 mIcon.setImageDrawable(circularBitmapDrawable);
             }
         });
+        tvLe.setText("LV" + info.getMbLevel());
+        tvg.setText(info.getMbGold() + "");
+        mGole.setText(info.getMbGold() + "");
         mImgSex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
+    }
+
+    public SwipeRefreshLayout getmSwp() {
+        return mSwp;
     }
 }

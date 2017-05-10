@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
@@ -19,8 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +34,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.model.HttpParams;
 import com.gt.okgo.request.PostRequest;
@@ -45,6 +50,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.opendanmaku.DanmakuItem;
+import com.opendanmaku.DanmakuView;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoView;
@@ -76,6 +83,7 @@ import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
 import cn.gtgs.base.playpro.widget.MyViewPagerAdapter;
 import cn.gtgs.base.playpro.widget.OnEmoticoSelectedListener;
 import cn.gtgs.base.playpro.widget.ParentViewPaperAdapter;
+import cn.gtgs.base.playpro.widget.PeriscopeLayout;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -159,6 +167,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     private int FACE_SIZE;// 表情大小
 
     boolean isMember = false;
+    @BindView(R.id.danmakuView)
+    DanmakuView mDanmakuView;
+    @BindView(R.id.checkbox_danmu)
+    CheckBox mCheckBox;
+    @BindView(R.id.periscope)
+    public PeriscopeLayout periscopeLayout;
+    @BindView(R.id.img_anchor_info_follow)
+    ImageView mImgFollow;
+    ACache aCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,10 +188,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(R.layout.activity_play);
+
         gifts = new ArrayList<>();
         context = this;
         ButterKnife.bind(this);
-        ACache aCache = ACache.get(context);
+        aCache = ACache.get(context);
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         loginInfo = mF.getMember();
         Intent intent = getIntent();
@@ -264,6 +282,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void sendMsg() {
         vp_emoji.setVisibility(View.GONE);
         et_huanxin_content = et_content.getText().toString().trim();
+
         F.e("------------------------" + et_huanxin_content);
         if (et_huanxin_content.isEmpty()) {
             Log.e("main", "isempty");
@@ -275,6 +294,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             message.setChatType(EMMessage.ChatType.ChatRoom);
             message.setAttribute("user_name", loginInfo.getMbNickname());
             message.setAttribute("level", loginInfo.getMbLevel());
+            if (mCheckBox.isChecked()) {
+                message.setAttribute("Danmu", loginInfo.getMbLevel());
+                doDanmu(et_huanxin_content);
+            }
             //发送消息
             EMClient.getInstance().chatManager().sendMessage(message);
 
@@ -298,19 +321,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void bt_likes(View v) {
-        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "likes", chatroomid);
+        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "DianZan", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
-        message.setFrom("");
-        message.setAttribute("user_name", "Prof. Elaina McCullough V");
-        message.setAttribute("SPOT_KEY", "FJZY_SPOT");
-        message.setAttribute("level", "lv20");
+        message.setFrom(loginInfo.getMbNickname());
+        message.setAttribute("user_name", loginInfo.getMbNickname());
+        message.setAttribute("DianZan", "DianZan");
+        message.setAttribute("level", loginInfo.getMbLevel());
         EMClient.getInstance().chatManager().sendMessage(message);
         Map<String, Object> map = message.ext();
-        showLikes(message.getFrom());
-//        if (temp) {
-//            new MyTimer(2000, 300).start();
-//            temp = false;
-//        }
+//        showLikes(message.getFrom());
+        if (temp) {
+            new MyTimer(2000, 300).start();
+            temp = false;
+        }
 
 
     }
@@ -465,67 +488,46 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //        startActivity(intent);
     }
 
+    boolean IsAdd = false;
 
     void setgifts() {
         hidelayout();
         framel_live_gifts.setVisibility(View.VISIBLE);
-//        gifts = (ArrayList<Gift>) ACache.get(this).getAsObject("Lives_Gifts");
+        if (!IsAdd) {
+            IsAdd = true;
+            if (gifts.isEmpty()) {
+                gifts = PApplication.getInstance().getGift();
+                F.e("----------------------" + gifts.toString());
+            }
+            viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
 
-        if (gifts.isEmpty()) {
-//            for (int i = 1; i <= 10; i++) {
-//                Gift g = new Gift();
-//                g.id = i + "";
-//                int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
-//                g.picture = emoticonsId;
-//                gifts.add(g);
-//            }
-            gifts = PApplication.getInstance().getGift();
-            F.e("----------------------"+gifts.toString());
-        }
-//        if (null != gifts && !gifts.isEmpty()) {
-        viewpager = new AllGiftViewpager(context, gifts, new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int arg0) {
+                @Override
+                public void onPageSelected(int arg0) {
 //                                indicatorScroll(arg0);
-            }
+                }
 
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
+                @Override
+                public void onPageScrolled(int arg0, float arg1, int arg2) {
 
-            }
+                }
 
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
+                @Override
+                public void onPageScrollStateChanged(int arg0) {
 
-            }
-        });
-        view_giftslist.add(viewpager);
-        vp_gifts.setAdapter(new MyViewPagerAdapter(view_giftslist));
-//        } else {
-//            Request<String> request = NoHttp.createStringRequest(Config.URL_Gifts);
-//            request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//            requestQueue.add(0, request, responseListener);
-//        }
-////        if (!mIsGetGift) {
-//        Request<String> request_current_credits = NoHttp.createStringRequest(Config.URL_Current_Credits);
-//        request_current_credits.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        request_current_credits.addHeader("Authorization", "Bearer " + loginInfo.token);
-//        requestQueue.add(1, request_current_credits, responseListener);
-////        }
-////        else
-////        {
-////
-////        }
+                }
+            });
+            view_giftslist.add(viewpager);
+            vp_gifts.setAdapter(new MyViewPagerAdapter(view_giftslist));
+        }
 
 
     }
 
-    void setbookingclose() {
-        mLayoutBottom.setVisibility(View.INVISIBLE);
-//        m.setVisibility(View.INVISIBLE);
-        frame_live_menu.setVisibility(View.VISIBLE);
-    }
+//    void setbookingclose() {
+//        mLayoutBottom.setVisibility(View.INVISIBLE);
+////        m.setVisibility(View.INVISIBLE);
+//        frame_live_menu.setVisibility(View.VISIBLE);
+//    }
 
     void setviewClick() {
         frame_live_menu.setVisibility(View.VISIBLE);
@@ -566,6 +568,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void contentAction() {
         hidelayout();
         mLayoutBottom.setVisibility(View.VISIBLE);
+        ArrayList<String> gs = PApplication.getInstance().getmFList();
+        if (null != anchorItem.getAnId()) {
+
+            if (gs.contains(anchorItem.getAnId())) {
+                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
+            } else {
+                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
+            }
+        }
+
+
     }
 
     public void setBlackAction() {
@@ -631,13 +644,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void showLikes(String from) {
-//        if (from.equals(loginInfo.name)) {
-//            tv_likes.setText("你 给主播点了赞");
-//
-//        } else {
-//            tv_likes.setText(from + " 给主播点了赞");
-//
-//        }
+        if (from.equals(loginInfo.getMbNickname())) {
+            tv_likes.setText("你 给主播点了赞");
+
+        } else {
+            tv_likes.setText(from + " 给主播点了赞");
+
+        }
         tv_likes.setVisibility(View.VISIBLE);
         timer_hide.schedule(new TimerTask() {
             @Override
@@ -654,16 +667,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void sendGift(String num) {
-//        String sendUrl = UriTemplate.fromTemplate(Config.URL_SEND_GIFT)
-//                .set("anchor_id", anchorItem.id)
-//                .expand();
-//        Request<String> request = NoHttp.createStringRequest(sendUrl, RequestMethod.POST);
-//        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        request.addHeader("Authorization", "Bearer " + loginInfo.token);
-//        request.add("item_id", giftid);
-//        request.add("quantity", "1");
-//        request.add("anchor_id", anchorItem.id);
-//        requestQueue.add(2, request, responseListener);
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
@@ -708,6 +711,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         EMMessage message = EMMessage.createTxtSendMessage("[key]" + "Gift" + gift.id, chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(loginInfo.getMbNickname());
+        message.setAttribute("Gift", gift.getId());
         message.setAttribute("level", "LV" + loginInfo.getMbLevel());
         message.setAttribute("user_name", loginInfo.getMbNickname());
         message.setAttribute("user_url", loginInfo.getMbPhoto());
@@ -715,33 +719,117 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         showGifts(message.getFrom(), gift);
     }
 
+    @BindView(R.id.tv_play_gift_count)
+    TextView mTvGiftCount;
+
+    long GETGIFTTIME = 0;
+    int GiftCount = 1;
+    String giftId = "";
+
     public void showGifts(String from, Gift gift) {
-        Glide.with(context).load(Config.BASE + gift.picture).into(iv_gift);
+        if (System.currentTimeMillis() - GETGIFTTIME < 1000) {
+            if (giftId.equals(gift.getId())) {
+                GiftCount++;
+            } else {
+                GiftCount = 1;
+            }
+        } else {
+            GiftCount = 1;
+        }
+        giftId = gift.getId();
+        GETGIFTTIME = System.currentTimeMillis();
+        Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig);
+//        Glide.with(context).load(gift.picture).animate(R.anim.scalebig).into(iv_gift);
+//        iv_gift.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                iv_gift.clearAnimation();
+//                iv_gift.setVisibility(View.GONE);
+//            }
+//        }, 1000);
+        iv_gift.setVisibility(View.VISIBLE);
+        Glide.with(context).load(gift.picture).into(new GlideDrawableImageViewTarget(iv_gift) {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                super.onResourceReady(resource, animation);
+                Animation b = AnimationUtils.loadAnimation(context, R.anim.scalebig);
+                iv_gift.setAnimation(b);
+                b.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        iv_gift.clearAnimation();
+                        iv_gift.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+            }
+        });
+        mTvGiftCount.setVisibility(View.VISIBLE);
+        mTvGiftCount.setText("X" + GiftCount);
+        a.setFillAfter(true);
+        mTvGiftCount.startAnimation(a);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mTvGiftCount.getVisibility() == View.VISIBLE) {
+                            F.e("---------------------------------mTvGiftCount GONE");
+                            mTvGiftCount.clearAnimation();
+                            mTvGiftCount.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         //开始动画
-        ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-        animation.setDuration(800);
-        iv_gift.startAnimation(animation);
+//        ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
+//        animation.setDuration(800);
+//        iv_gift.startAnimation(animation);
+
+
 //        if (from.equals(loginInfo.getMbNickname())) {
 //            tv_likes.setText("你 给主播送了一个" + gift.name);
 //        } else {
 //            tv_likes.setText("用户 " + from + " 给主播送了一个" + gift.name);
 //        }
 
-        iv_gift.setVisibility(View.VISIBLE);
-        tv_likes.setVisibility(View.VISIBLE);
-        timer_hide.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tv_likes.setText("");
-                        tv_likes.setVisibility(View.INVISIBLE);
-                        iv_gift.setVisibility(View.INVISIBLE);
-                    }
-                });
-            }
-        }, 1800);
+//        iv_gift.setVisibility(View.VISIBLE);
+//        tv_likes.setVisibility(View.VISIBLE);
+//        timer_hide.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tv_likes.setText("");
+//                        tv_likes.setVisibility(View.INVISIBLE);
+//                        iv_gift.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+//            }
+//        }, 1800);
     }
 
     public void showChatroomToast(final String str) {
@@ -788,6 +876,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             iv_booking_sex.setImageResource(sex.equals("1") ? R.mipmap.global_male : R.mipmap.global_female);
             tv_booking_currentname.setText(name);
             tv_live_booking_anchorid.setText(mId);
+
 //            } else {
 //                UserInfo info = anchorItem.getMember();
 //                F.e("*********************************" + info.toString());
@@ -822,7 +911,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
-    @OnClick({R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat,  R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_anchor_info_action_follow, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -849,9 +938,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.bt_live_gifts:
                 setgifts();
                 break;
-//            case R.id.tv_live_booking_close:
-//                setbookingclose();
-//                break;
+            case R.id.lin_anchor_info_action_follow://关注
+                follow();
+                break;
             case R.id.view_click:
                 if (!isMember) {
                     setviewClick();
@@ -871,6 +960,67 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 break;
         }
     }
+
+
+    public void follow() {
+        if (null != anchorItem.getAnId()) {
+            HttpParams params = new HttpParams();
+            params.put("mbId", loginInfo.getMbId());
+            params.put("anId", anchorItem.getAnId());
+            PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
+            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Response response) {
+//                HttpBase base = Parsing.getInstance().ResponseToObject(response)
+                    try {
+                        String Str = response.body().string();
+                        F.e("-----------------" + Str);
+                        JSONObject ob = JSON.parseObject(Str);
+
+//                    org.json.JSONObject ob = new org.json.JSONObject()
+//                    JSONObject object = JSON.parseObject(response.body().toString());
+                        if (ob.containsKey("code")) {
+                            int i = ob.getIntValue("code");
+                            if (i == 1) {
+                                int a = ob.getInteger("data");
+                                ArrayList<String> gs = PApplication.getInstance().getmFList();
+                                if (a == 1) {
+                                    gs.add(anchorItem.getAnId());
+                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
+                                } else {
+                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
+                                    gs.remove(anchorItem.getAnId());
+                                }
+                                String str = JSON.toJSONString(gs);
+                                aCache.put(ACacheKey.CURRENT_FOLLOW, str);
+
+
+//                            ToastUtil.showToast("操作成功",delegate.getActivity());
+                            }
+                        }
+                    } catch (Exception e) {
+                        F.e(e.toString());
+                    }
+
+
+                }
+            });
+        } else {
+//            ToastUtil.showToast("不能");
+        }
+
+    }
+
 
     @Override
     public void onEmoticoSelected(String key) {
@@ -1048,39 +1198,27 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         }
                     });
 
-                }
-                if (null != spotType) {
-                    if (spotType.equals("FJZY_SPOT")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showLikes(message_from);
-                            }
-                        });
-                    } else if (spotType.equals("GIFT")) {
-                        mGetGift = new Gift();
-                        mGetGift.name = (String) map.get("GiftName");
-//                        mGetGift.picture = (String) map.get("GiftPicture");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showGifts(message_from, mGetGift);
-//                                showGifts(message_from, message_content.substring(message_content.length() - 2));
-                            }
-                        });
-                    } else {
-                        msgList.add(message);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                                if (msgList.size() > 0) {
-                                    listView.setSelection(listView.getCount() - 1);
-                                    Log.e("sad", "setselection");
-                                }
-                            }
-                        });
+                } else if (map.containsKey("DianZan")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showLikes(message_from);
+                        }
+                    });
+                } else if (map.containsKey("Recharge")) {
+                    // TODO 收费
+                    if (temp2) {
+                        new MyTimer2(999999999, 60000, (String) map.get("Recharge")).start();
+                        temp2 = false;
                     }
+                } else if (map.containsKey("DanMu")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            doDanmu(message_content);
+                        }
+                    });
+
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {
@@ -1094,6 +1232,52 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         }
                     });
                 }
+
+//                if (null != spotType) {
+//                    if (spotType.equals("FJZY_SPOT")) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showLikes(message_from);
+//                            }
+//                        });
+//                    } else if (spotType.equals("GIFT")) {
+//                        mGetGift = new Gift();
+//                        mGetGift.name = (String) map.get("GiftName");
+////                        mGetGift.picture = (String) map.get("GiftPicture");
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showGifts(message_from, mGetGift);
+////                                showGifts(message_from, message_content.substring(message_content.length() - 2));
+//                            }
+//                        });
+//                    } else {
+//                        msgList.add(message);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adapter.notifyDataSetChanged();
+//                                if (msgList.size() > 0) {
+//                                    listView.setSelection(listView.getCount() - 1);
+//                                    Log.e("sad", "setselection");
+//                                }
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    msgList.add(message);
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.notifyDataSetChanged();
+//                            if (msgList.size() > 0) {
+//                                listView.setSelection(listView.getCount() - 1);
+//                                Log.e("sad", "setselection");
+//                            }
+//                        }
+//                    });
+//                }
 
             }
             // 收到消息
@@ -1117,5 +1301,108 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
         }
     };
+
+    public void doDanmu(String message) {
+        mDanmakuView.addItem(new DanmakuItem(this, message, mDanmakuView.getWidth()));
+        mDanmakuView.setVisibility(View.VISIBLE);
+        mDanmakuView.show();
+    }
+
+    private boolean temp = true;
+
+    private class MyTimer extends CountDownTimer {
+
+        private static final String TAG = "MyTimer";
+
+        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+        public MyTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        //每过你规定的时间间隔做的操作
+        @Override
+        public void onTick(long millisUntilFinished) {
+            periscopeLayout.addHeart();
+            Log.d(TAG, "111");
+        }
+
+        //倒计时结束时做的操作↓↓
+        @Override
+        public void onFinish() {
+            temp = true;
+        }
+    }
+
+    private boolean temp2 = true;
+
+    public class MyTimer2 extends CountDownTimer {
+
+        String sum;
+        private static final String TAG = "MyTimer";
+
+        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+        public MyTimer2(long millisInFuture, long countDownInterval, String sum) {
+            super(millisInFuture, countDownInterval);
+            this.sum = sum;
+        }
+
+        //每过你规定的时间间隔做的操作
+        @Override
+        public void onTick(long millisUntilFinished) {
+//            periscopeLayout.addHeart();
+            sendGift2(sum);
+        }
+
+        //倒计时结束时做的操作↓↓
+        @Override
+        public void onFinish() {
+            temp2 = true;
+        }
+    }
+
+
+    public void sendGift2(String num) {
+        HttpParams params = new HttpParams();
+        params.put("mbId", loginInfo.getMbId());
+        params.put("anId", anchorItem.getAnId());
+        params.put("num", num);
+        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+                try {
+                    String Str = response.body().string();
+                    JSONObject ob = JSON.parseObject(Str);
+                    if (ob.containsKey("code")) {
+                        int code = ob.getInteger("code");
+                        if (code == 1) {
+                            giftPost();
+
+                        } else {
+                            ToastUtil.showToast(ob.getString("msg"), context);
+                            PlayActivity.this.finish();
+                        }
+                    }
+                } catch (Exception e) {
+                    F.e(e.toString());
+                }
+
+            }
+        });
+
+
+    }
 
 }

@@ -14,10 +14,10 @@
     <include layout="@layout/layout_com_topbar" />
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,16 +49,16 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,28 +74,50 @@
             android:layout_marginLeft="20dp"
             android:text="性别" />
 
-        <TextView
-            android:id="@+id/tv_approve_sex"
+        <!--<TextView-->
+        <!--android:id="@+id/tv_approve_sex"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:text="不详" />-->
+        <RadioGroup
+            android:id="@+id/rg_approve_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:text="不详" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_approve_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男" />
+
+            <RadioButton
+                android:id="@+id/rb_approve_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="女" />
+        </RadioGroup>
 
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -114,27 +136,50 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp" />
 
-        <TextView
-            android:id="@+id/tv_approve_isVideo"
+        <!--<TextView-->
+        <!--android:id="@+id/tv_approve_isVideo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:text="是" />-->
+        <RadioGroup
+            android:id="@+id/rg_approve_video_app"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:text="是" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_approve_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="是" />
+
+            <RadioButton
+                android:id="@+id/rb_approve_n"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="否" />
+        </RadioGroup>
 
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -163,15 +208,15 @@
             android:hint="客服将通过QQ对您审核"
             android:background="@null"
             android:layout_toRightOf="@+id/tv_approve_introduce"
-          />
+            />
 
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/gray_btn_bg_color" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@color/gray_btn_bg_color" />-->
 
     <ImageView
         android:layout_width="60dp"

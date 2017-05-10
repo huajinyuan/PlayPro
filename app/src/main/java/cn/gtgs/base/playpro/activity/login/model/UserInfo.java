@@ -11,12 +11,12 @@ public class UserInfo implements Serializable {
     public String mbPhone;
     public String flag;
     public String mbCode;
-    public String mbNickname ;
-    public String mbPhoto ;
+    public String mbNickname;
+    public String mbPhoto;
     public int mbAge;
 
     public String mbGoldPay;
-    public int mbGold;
+    public int mbGold = 0;
     public int MbLevel;
     public int auditAnchor;
     public int mbSex;

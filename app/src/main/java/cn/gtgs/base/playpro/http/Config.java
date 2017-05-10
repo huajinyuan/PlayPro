@@ -97,6 +97,10 @@ public interface Config {
      */
     String POST_ANCHOR_GET = BASE_URL + "anchor/get";
     /**
+     * 个人信息
+     */
+    String POST_MEMBER_GET = BASE_URL + "member/get";
+    /**
      * 土豪榜
      */
     String POST_MEMBER_TOP = BASE_URL + "member/top";
@@ -133,5 +137,9 @@ public interface Config {
      * 图片上传（file）
      */
     String FileUpload = BASE_URL + "upload";
+    /**
+     * 广告
+     */
+    String GET_ADVERTS = BASE_URL + "common/adverts";
 
 }

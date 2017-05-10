@@ -18,7 +18,7 @@ import cn.gtgs.base.playpro.activity.home.fragment.FragmentRecommented;
 import cn.gtgs.base.playpro.activity.home.live.HWCodecCameraStreamingActivity;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.presenter.HomePresenter;
-import cn.gtgs.base.playpro.activity.home.presenter.IHome;
+import cn.gtgs.base.playpro.activity.home.presenter.IHomeRefreshListener;
 import cn.gtgs.base.playpro.activity.home.search.SearchActivity;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
@@ -32,7 +32,7 @@ import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 import rx.Subscriber;
 
-public class HomeActivity extends ActivityPresenter<HomeDelegate> {
+public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHomeRefreshListener {
     private FragmentManager fragmentManager;
     FragmentRanking mRanking;
     FragmentFollow mFollow;
@@ -40,7 +40,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
     FragmentRecommented mRecommented;
     ACache aCache;
     Follow userInfo;
-    IHome presenter;
+    HomePresenter presenter;
 
     @Override
     protected void onInitPresenters() {
@@ -56,7 +56,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
         }
         aCache = ACache.get(this);
         userInfo = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        presenter = new HomePresenter(viewDelegate);
+        presenter = new HomePresenter(viewDelegate, this);
     }
 
     @Override
@@ -169,4 +169,14 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getInfo();
+    }
+
+    @Override
+    public void Refresh(Follow follow) {
+        userInfo = follow;
+    }
 }

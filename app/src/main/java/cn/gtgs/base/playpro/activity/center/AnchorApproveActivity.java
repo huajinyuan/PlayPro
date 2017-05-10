@@ -34,7 +34,6 @@ import java.io.File;
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.center.presenter.ApprovePresenter;
-import cn.gtgs.base.playpro.activity.center.presenter.IApprove;
 import cn.gtgs.base.playpro.activity.center.view.AnchorApproveDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 import cn.gtgs.base.playpro.http.Config;
@@ -43,7 +42,7 @@ import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 
 public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelegate> {
-    IApprove presenter;
+    ApprovePresenter presenter;
     AlertDialog mydialog;
     String mPhotoPath;
     File mPhotoFile;
@@ -197,6 +196,7 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
                     JSONObject ob = json.getJSONObject("data");
                     if (ob.containsKey("filePath")) {
                         urlPath = ob.getString("filePath");
+                        presenter.setPath(urlPath);
                         Glide.with(context).load(Config.BASE + urlPath).asBitmap().centerCrop().into(new BitmapImageViewTarget(viewDelegate.getIcon()) {
                             @Override
                             protected void setResource(Bitmap resource) {

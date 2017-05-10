@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -44,6 +45,16 @@
         android:layout_above="@id/tv_likes"
         android:adjustViewBounds="true" />
 
+    <TextView
+        android:id="@+id/tv_play_gift_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_gift"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/iv_gift"
+        android:textColor="@color/colorBlue"
+        android:textSize="16sp" />
+
     <RelativeLayout
         android:id="@+id/frame_live_menu"
         android:layout_width="match_parent"
@@ -59,11 +70,11 @@
             android:background="@drawable/selector_button_live_chat" />
 
         <!--<Button-->
-            <!--android:id="@+id/bt_live_booking"-->
-            <!--android:layout_width="60dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:background="@drawable/selector_button_live_booking" />-->
+        <!--android:id="@+id/bt_live_booking"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@drawable/selector_button_live_booking" />-->
 
         <Button
             android:id="@+id/bt_live_like"
@@ -111,12 +122,21 @@
                 android:textColor="#fff"
                 android:textSize="16sp" />
 
+            <CheckBox
+                android:id="@+id/checkbox_danmu"
+                style="@style/CustomCheckboxTheme"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:text="" />
+
             <Button
                 android:id="@+id/bt_openemoji"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/checkbox_danmu"
                 android:background="@drawable/emoji" />
 
             <EditText
@@ -201,6 +221,8 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/selector_button_pink_noradius"
                 android:text="发送" />
+
+
         </RelativeLayout>
     </LinearLayout>
 
@@ -234,5 +256,26 @@
     <!--android:layout_alignParentRight="true"-->
     <!--android:layout_alignParentTop="true"-->
     <!--android:layout_marginBottom="70dp" />-->
+
+    <com.opendanmaku.DanmakuView
+        android:id="@+id/danmakuView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        app:end_Y_offset="0.8"
+        app:max_row="4"
+        app:max_running_per_row="2"
+        app:pick_interval="1000"
+        app:show_debug="false"
+        app:start_Y_offset="0.2" />
+
+    <cn.gtgs.base.playpro.widget.PeriscopeLayout
+        android:id="@+id/periscope"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginTop="@dimen/dp_50" />
 
 </RelativeLayout>

@@ -26,7 +26,7 @@ public class ApprovePresenter implements IApprove
     AnchorApproveDelegate delegate;
     UserInfo info ;
     ACache aCache;
-
+    public String path;
     public ApprovePresenter(AnchorApproveDelegate delegate) {
         this.delegate = delegate;
         aCache = ACache.get(delegate.getActivity());
@@ -34,15 +34,26 @@ public class ApprovePresenter implements IApprove
         info = follow.getMember();
     }
 
+    public void setPath(String path)
+    {
+        this.path = path;
+    }
     @Override
     public void Submit() {
         HttpParams params = new HttpParams();
         if (null != info)
         {
+            if (null == path)
+            {
+                ToastUtil.showToast("请设置头像",delegate.getActivity());
+                return;
+            }
             params.put("mbId",info.getMbId());
             params.put("anQq",delegate.getQQ());
+            params.put("anSex",delegate.getSex());
+            params.put("anQq",delegate.getVideoStatus());
 //            params.put("anSex","");
-//            params.put("anPhoto","");
+            params.put("anPhoto",path);
             PostRequest request = OkGo.post(Config.POST_ANCHOR_ADD).params(params);
             HttpMethods.getInstance().doPost(request,false).subscribe(new Subscriber<Response>() {
                 @Override

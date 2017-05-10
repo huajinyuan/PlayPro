@@ -42,6 +42,7 @@ public class PApplication extends Application {
     public static String JPushID;
     public ArrayList<Activity> mActiviyts = new ArrayList<>();
     public ArrayList<String> mF = new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -167,11 +168,12 @@ public class PApplication extends Application {
 
     public ArrayList<Gift> getGift() {
         ArrayList<Gift> gifts = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 0; i <= 9; i++) {
             Gift g = new Gift();
             g.setId(i + "");
-            g.setCredits(i + "");
-            int emoticonsId = getResources().getIdentifier("icon_" + i, "mipmap", getPackageName());
+            int b = i + 1;
+            g.setCredits(b + "");
+            int emoticonsId = getResources().getIdentifier("icon_" + b, "mipmap", getPackageName());
             g.setPicture(emoticonsId);
             gifts.add(g);
         }
@@ -186,33 +188,29 @@ public class PApplication extends Application {
         }
         return null;
     }
-    public void getMF()
-    {
+
+    public void getMF() {
 
         try {
             String s = ACache.get(this).getAsString(ACacheKey.CURRENT_FOLLOW);
-            if (null!=s)
-            {
-                ArrayList<String> ss = (ArrayList<String>) JSON.parseArray(s,String.class);
+            if (null != s) {
+                ArrayList<String> ss = (ArrayList<String>) JSON.parseArray(s, String.class);
 
-                if (null != ss)
-                {
+                if (null != ss) {
                     mF.clear();
                     mF.addAll(ss);
                 }
                 F.e(ss.toString());
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             F.e(e.toString());
         }
 
 
     }
 
-    public ArrayList<String> getmFList()
-    {
+    public ArrayList<String> getmFList() {
         getMF();
         return mF;
     }

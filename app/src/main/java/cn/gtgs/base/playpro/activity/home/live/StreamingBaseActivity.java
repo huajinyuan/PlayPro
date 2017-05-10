@@ -3,6 +3,7 @@ package cn.gtgs.base.playpro.activity.home.live;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -39,6 +40,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.opendanmaku.DanmakuItem;
+import com.opendanmaku.DanmakuView;
 import com.qiniu.android.dns.DnsManager;
 import com.qiniu.android.dns.IResolver;
 import com.qiniu.android.dns.NetworkInfo;
@@ -75,6 +78,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
@@ -83,9 +87,9 @@ import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
-import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.widget.RotateLayout;
+import cn.gtgs.base.playpro.widget.WheelView;
 import cn.gtgs.base.playpro.widget.gles.FBO;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -191,7 +195,8 @@ public class StreamingBaseActivity extends Activity implements
 
     public Follow mF;
 
-
+    @BindView(R.id.danmakuView)
+    DanmakuView mDanmakuView;
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -624,9 +629,14 @@ public class StreamingBaseActivity extends Activity implements
         });
     }
 
+    private ArrayList<String> PLANETS = new ArrayList<>();
+
     private void initUIs() {
         mRootView = findViewById(R.id.content);
         mRootView.addOnLayoutChangeListener(this);
+        for (int i = 5; i <= 25; i++) {
+            PLANETS.add(i + "");
+        }
 
         initDialogSettings();
         iv_live_option = (ImageView) findViewById(R.id.iv_live_option);
@@ -669,34 +679,41 @@ public class StreamingBaseActivity extends Activity implements
         iv_live_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                rl_live_bootombar.setVisibility(View.INVISIBLE);
-//                ll_live_booking.setVisibility(View.VISIBLE);
+                // 构建弹出框View
+                View outerView = LayoutInflater.from(mContext)
+                        .inflate(R.layout.wheel_view, null);
 
-//                Request<String> request=NoHttp.createStringRequest(Config.URL_BookingValid);
-//                request.addHeader("Authorization", "Bearer " + loginInfo.token);
-//                requestQueue.add(Int_BookingValid, request, responseListener);
-//                GetRequest request = OkGo.get(Config.URL_BookingValid);
-//                HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Response response) {
-////                        DingtaiList dingtaiList = JSON.parseObject(response.get(), DingtaiList.class);
-////                        if (dingtaiList != null) {
-////                            ListViewFragmentDTAdapter adapter = new ListViewFragmentDTAdapter(context, dingtaiList.data);
-////                            lv_live_booking.setAdapter(adapter);
-////                        }
-//                    }
-//                });
+                final WheelView wv = (WheelView) outerView
+                        .findViewById(R.id.wheel_view_wv);
+                // wv.setOffset(0);// 偏移量
+                wv.setOffset(2);
+                wv.setItems(PLANETS);// 实际内容
+                wv.setSeletion(0);// 设置默认被选中的项目
+                // wv.setSeletion(3);
+                wv.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
+                    @Override
+                    public void onSelected(int selectedIndex, String item) {
+                        // 选中后的处理事件
+                        Log.d(TAG, "[Dialog]selectedIndex: " + selectedIndex
+                                + ", item: " + item);
+                    }
+                });
+
+                // 展示弹出框
+                new AlertDialog.Builder(mContext)
+                        .setTitle("设置收费单价(?金币/分钟)").setView(outerView)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String s = wv.getSeletedItem();
+                                Shoufei(s);
+                            }
+                        })
+                        .show();
+
             }
+
+
         });
 //        view_booking_click.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -708,6 +725,18 @@ public class StreamingBaseActivity extends Activity implements
 //        checkOnlineNum();
     }
 
+    public void Shoufei(String price) {
+        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "Recharge", chatroomid);
+        message.setChatType(EMMessage.ChatType.ChatRoom);
+        message.setFrom(userInfo.getMbNickname());
+        message.setAttribute("user_name", userInfo.getMbNickname());
+        message.setAttribute("Recharge", price);
+        message.setAttribute("level", userInfo.getMbLevel());
+        EMClient.getInstance().chatManager().sendMessage(message);
+//        showLikes(message.getFrom());
+
+
+    }
 
     private void initButtonText() {
         updateFBButtonText();
@@ -1075,43 +1104,31 @@ public class StreamingBaseActivity extends Activity implements
                 EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
                 message_content = txtBody.getMessage();
                 Map<String, Object> map = message.ext();
-                String spotType = null;
-                if (map.containsKey("SPOT_KEY")) {
-                    spotType = (String) map.get("SPOT_KEY");
-                    F.e(spotType);
-                }
-                if (null != spotType) {
-                    if (spotType.equals("FJZY_SPOT")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showLikes(message_from);
-                            }
-                        });
-                    } else if (spotType.equals("GIFT")) {
-                        mGetGift = new Gift();
-                        mGetGift.name = (String) map.get("GiftName");
+                if (map.containsKey("Gift")) {
+                    mGetGift = new Gift();
+                    mGetGift.name = (String) map.get("GiftName");
 //                        mGetGift.picture = (String) map.get("GiftPicture");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showGifts(message_from, mGetGift);
-                            }
-                        });
-                    } else {
-                        msgList.add(message);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                                if (msgList.size() > 0) {
-                                    listView.setSelection(listView.getCount() - 1);
-                                    Log.e("sad", "setselection");
-                                }
-                            }
-                        });
-                    }
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showGifts(message_from, mGetGift);
+                        }
+                    });
+                } else if (map.containsKey("DianZan")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showLikes(message_from);
+                        }
+                    });
+                } else if (map.containsKey("DanMu")) {
+                    //TODO 弹幕
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            doDanmu(message_content);
+                        }
+                    });
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {
@@ -1125,6 +1142,58 @@ public class StreamingBaseActivity extends Activity implements
                         }
                     });
                 }
+
+
+//                String spotType = null;
+//                if (map.containsKey("SPOT_KEY")) {
+//                    spotType = (String) map.get("SPOT_KEY");
+//                    F.e(spotType);
+//                }
+//                if (null != spotType) {
+//                    if (spotType.equals("FJZY_SPOT")) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showLikes(message_from);
+//                            }
+//                        });
+//                    } else if (spotType.equals("GIFT")) {
+//                        mGetGift = new Gift();
+//                        mGetGift.name = (String) map.get("GiftName");
+////                        mGetGift.picture = (String) map.get("GiftPicture");
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showGifts(message_from, mGetGift);
+//                            }
+//                        });
+//                    } else {
+//                        msgList.add(message);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adapter.notifyDataSetChanged();
+//                                if (msgList.size() > 0) {
+//                                    listView.setSelection(listView.getCount() - 1);
+//                                    Log.e("sad", "setselection");
+//                                }
+//                            }
+//                        });
+//                    }
+//
+//                } else {
+//                    msgList.add(message);
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.notifyDataSetChanged();
+//                            if (msgList.size() > 0) {
+//                                listView.setSelection(listView.getCount() - 1);
+//                                Log.e("sad", "setselection");
+//                            }
+//                        }
+//                    });
+//                }
 
             }
         }
@@ -1381,5 +1450,11 @@ public class StreamingBaseActivity extends Activity implements
                 mydialog.dismiss();
             }
         });
+    }
+
+    public void doDanmu(String message) {
+        mDanmakuView.addItem(new DanmakuItem(this, message, mDanmakuView.getWidth()));
+        mDanmakuView.setVisibility(View.VISIBLE);
+        mDanmakuView.show();
     }
 }

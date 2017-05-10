@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.center;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import butterknife.OnClick;
@@ -8,7 +9,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.center.view.CenterDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 
-public class CenterActivity extends ActivityPresenter<CenterDelegate> {
+public class CenterActivity extends ActivityPresenter<CenterDelegate> implements SwipeRefreshLayout.OnRefreshListener {
     @Override
     protected void onInitPresenters() {
 
@@ -18,6 +19,7 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
     protected void initData() {
         viewDelegate.setmTvTitle("个人中心");
         viewDelegate.init();
+        viewDelegate.getmSwp().setOnRefreshListener(this);
     }
 
     @Override
@@ -44,5 +46,10 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> {
                 this.finish();
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

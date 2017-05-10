@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
-import cn.gtgs.base.playpro.activity.login.model.UserInfo;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation arg0) {
                 F.e("启动页面动画执行完毕...");
                 ACache aCache = ACache.get(SplashActivity.this);
-                UserInfo info = (UserInfo) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
                 Intent intent;
                 if (null != info) {
                     SplashActivity.this.finish();
