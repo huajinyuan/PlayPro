@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoView;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -216,6 +218,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (!isMember) {
             getAnChorInfo(anchorItem.getAnId());
             initviews();
+
+
 //            doPlay();
             //----------------------------------------------------------以下为环信
             //-------------------------------------------------------------------
@@ -262,7 +266,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     protected void onResume() {
         super.onResume();
         if (!isMember) {
-            vv_test.setVideoPath(anchorItem.getWcPullAddress());
+            try {
+                vv_test.setVideoPath(new DESUtil().decrypt(anchorItem.getWcPullAddress()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             vv_test.start();
         }
     }
@@ -287,6 +295,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         //-----------------------------------以下为环信
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+        if (null != timer2) {
+            timer2.cancel();
+        }
 
 //        if (StringUtils.isNotEmpty(star_at)) {
 //            String url = UriTemplate.fromTemplate(Config.URL_LEAVECHAT)
@@ -316,24 +327,24 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             message.setFrom(loginInfo.getMbNickname());
             message.setChatType(EMMessage.ChatType.ChatRoom);
             message.setAttribute("user_name", loginInfo.getMbNickname());
-            message.setAttribute("level", loginInfo.getMbLevel());
+            message.setAttribute("level", "lv" + loginInfo.getMbLevel());
             if (mCheckBox.isChecked()) {
                 message.setAttribute("DanMu", loginInfo.getMbLevel());
                 doDanmu(et_huanxin_content);
             }
             //发送消息
             EMClient.getInstance().chatManager().sendMessage(message);
-            if (!mCheckBox.isChecked()) {
-                et_content.setText("");
-                frame_live_chat.setVisibility(View.INVISIBLE);
-                frame_live_menu.setVisibility(View.VISIBLE);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
-//                if (isOpen) {
-//                    ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(PlayActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//                }
-            } else {
+            et_content.setText("");
+            if (mCheckBox.isChecked()) {
                 mCheckBox.setChecked(false);
+            } else {
+                msgList.add(message);
+                if (null != adapter) {
+                    adapter.notifyDataSetChanged();
+                }
+                if (msgList.size() > 0) {
+                    listView.setSelection(listView.getCount() - 1);
+                }
             }
 
         }
@@ -558,7 +569,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     void setsendgift() {
         gift = viewpager.getmSelectGift();
         if (null != gift) {
-            sendGift(gift.id);
+            sendGift(gift.getCredits());
         } else {
             Toast.makeText(context, "选一个礼物吧", LENGTH_SHORT).show();
 
@@ -747,7 +758,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             if (ob.containsKey("data")) {
                                 int gold = ob.getIntValue("data");
                                 loginInfo.setMbGold(gold);
-                                tv_live_credits.setText("趣味币:" + loginInfo.getMbGold());
+                                tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
                                 mF.setMember(loginInfo);
                                 aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
                             }
@@ -931,9 +942,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             tv_live_booking_anchorid.setText(mId);
             mTvLevel.setText(AppUtil.getDJ(anchorItem.getMember().getMbGold()) + "");
             mTvGold.setText(AppUtil.getDJ(anchorItem.getMember().getMbGoldPay()) + "");
-            if (null != anchorItem.getFaCount()) {
-                mTvCount.setText(anchorItem.getFaCount());
-            }
+
         }
         tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
         contentAction();
@@ -1220,7 +1229,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
                 EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
                 message_content = txtBody.getMessage();
-                Map<String, Object> map = message.ext();
+                final Map<String, Object> map = message.ext();
                 String spotType = null;
                 if (map.containsKey("Gift")) {
 //                    spotType = (String) map.get("SPOT_KEY");
@@ -1245,49 +1254,56 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     });
                 } else if (map.containsKey("Recharge")) {
                     // TODO 收费
-                    Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
-                    mTvToast.setVisibility(View.VISIBLE);
-                    mTvToast.setText("主播开启收费模式：" + (String) map.get("Recharge") + "钻石/分钟");
-                    a.setFillAfter(true);
-                    mTvToast.startAnimation(a);
-                    a.setAnimationListener(new Animation.AnimationListener() {
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            runOnUiThread(new Runnable() {
+                        public void run() {
+                            Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
+                            mTvToast.setVisibility(View.VISIBLE);
+                            mTvToast.setText("主播开启收费模式：" + (String) map.get("Recharge") + "钻石/分钟");
+                            a.setFillAfter(true);
+                            mTvToast.startAnimation(a);
+                            a.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
-                                public void run() {
-                                    if (mTvToast.getVisibility() == View.VISIBLE) {
-                                        F.e("---------------------------------mTvGiftCount GONE");
-                                        mTvToast.clearAnimation();
-                                        mTvToast.setVisibility(View.GONE);
-                                    }
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mTvToast.getVisibility() == View.VISIBLE) {
+                                                F.e("---------------------------------mTvGiftCount GONE");
+                                                mTvToast.clearAnimation();
+                                                mTvToast.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
                                 }
                             });
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
+                            if (null != timer2) {
+                                timer2.cancel();
+                                timer2 = null;
+                                timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
+                                temp2 = true;
+                            } else {
+                                timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
+                                temp2 = true;
+                            }
+                            if (temp2) {
+                                timer2.start();
+                                temp2 = false;
+                            }
                         }
                     });
-                    if (null != timer2) {
-                        timer2.cancel();
-                        timer2 = null;
-                        timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
-                        temp2 = true;
-                    } else {
-                        timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
-                        temp2 = false;
-                    }
-                    if (temp2) {
-                        timer2.start();
-                        temp2 = false;
-                    }
+
+
                 } else if (map.containsKey("DanMu")) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1333,7 +1349,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     };
 
     public void doDanmu(String message) {
-        mDanmakuView.addItem(new DanmakuItem(this, message, mDanmakuView.getWidth()));
+        DanmakuItem dm = new DanmakuItem(this, message, mDanmakuView.getWidth());
+        dm.setTextColor(Color.parseColor("#49C3B8"));
+        mDanmakuView.addItem(dm);
         mDanmakuView.setVisibility(View.VISIBLE);
         mDanmakuView.show();
     }
@@ -1422,12 +1440,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             if (ob.containsKey("data")) {
                                 int gold = ob.getIntValue("data");
                                 loginInfo.setMbGold(gold);
-                                tv_live_credits.setText("趣味币:" + loginInfo.getMbGold());
+                                tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
                                 mF.setMember(loginInfo);
                                 aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
                             }
 
-                            giftPost();
 
                         } else {
                             ToastUtil.showToast(ob.getString("msg"), context);
@@ -1464,6 +1481,24 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
 
+                if (null != bf.getData().getFaCount()) {
+                    mTvCount.setText(bf.getData().getFaCount());
+                }
+                if (anchorItem.getLiveStatus().equals("3") && anchorItem.getAnPrice() != 0) {
+                    if (null != timer2) {
+                        timer2.cancel();
+                        timer2 = null;
+                        timer2 = new MyTimer2(999999999, 60000, anchorItem.getAnPrice() + "");
+                        temp2 = true;
+                    } else {
+                        timer2 = new MyTimer2(999999999, 60000, anchorItem.getAnPrice() + "");
+                        temp2 = true;
+                    }
+                    if (temp2) {
+                        timer2.start();
+                        temp2 = false;
+                    }
+                }
                 doPlay();
                 //----------------------------------------------------------以下为环信
                 //-------------------------------------------------------------------
@@ -1471,7 +1506,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             }
         });
-
     }
 
 }

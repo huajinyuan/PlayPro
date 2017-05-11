@@ -12,7 +12,6 @@ import cn.gtgs.base.playpro.activity.home.search.presenter.ISearchItemListenser;
 import cn.gtgs.base.playpro.activity.home.search.presenter.SearchPresenter;
 import cn.gtgs.base.playpro.activity.home.search.view.SearchDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
-import cn.gtgs.base.playpro.utils.StringUtils;
 
 public class SearchActivity extends ActivityPresenter<SearchDelegate> implements ISearchItemListenser {
 
@@ -49,12 +48,7 @@ public class SearchActivity extends ActivityPresenter<SearchDelegate> implements
     public void itemClick(Follow follow) {
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("anchoritem", follow);
-        if (StringUtils.isEmpty(follow.getAnId())) {
-            intent.putExtra("IsMember", true);
-        } else {
-
-            intent.putExtra("IsMember", false);
-        }
+        intent.putExtra("IsMember", true);
         startActivity(intent);
         this.finish();
     }

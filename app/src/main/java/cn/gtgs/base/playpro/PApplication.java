@@ -172,10 +172,53 @@ public class PApplication extends Application {
             Gift g = new Gift();
             g.setId(i + "");
             int b = i + 1;
-            g.setCredits(b + "");
+            switch (i) {
+                case 0:
+                    g.setCredits("5");
+                    g.setName("丝瓜");
+                    break;
+                case 1:
+                    g.setName("抱抱");
+                    g.setCredits("20");
+                    break;
+                case 2:
+                    g.setName("玫瑰");
+                    g.setCredits("40");
+                    break;
+                case 3:
+                    g.setName("飞吻");
+                    g.setCredits("88");
+                    break;
+                case 4:
+                    g.setName("钻戒");
+                    g.setCredits("188");
+                    break;
+                case 5:
+                    g.setName("干杯");
+                    g.setCredits("558");
+                    break;
+                case 6:
+                    g.setName("跑车");
+                    g.setCredits("666");
+                    break;
+                case 7:
+                    g.setName("丘比特");
+                    g.setCredits("888");
+                    break;
+                case 8:
+                    g.setName("飞机");
+                    g.setCredits("1600");
+                    break;
+                case 9:
+                    g.setName("游艇");
+                    g.setCredits("8888");
+                    break;
+            }
+
             int emoticonsId = getResources().getIdentifier("icon_" + b, "mipmap", getPackageName());
             g.setPicture(emoticonsId);
             gifts.add(g);
+
         }
         return gifts;
     }

@@ -45,8 +45,6 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
         params.height = mWith / 2;
         holder.pic.setLayoutParams(params);
-
-
         final Follow anchorItem = mData.get(position);
         Glide.with(mContext).load(null != anchorItem.getAnPhoto() ? Config.BASE + anchorItem.getAnPhoto() : R.drawable.circle_zhubo).into(holder.pic);
         holder.tvName.setText(anchorItem.getAnRemark());
@@ -54,11 +52,19 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, PlayActivity.class);
-                intent.putExtra("anchoritem", mData.get(position));
+                intent.putExtra("anchoritem", anchorItem);
                 intent.putExtra("IsMember", false);
                 mContext.startActivity(intent);
             }
         });
+        if (anchorItem.getLiveStatus().equals("2")) {
+            holder.tvStatus.setText("直播");
+            holder.tvStatus.setBackgroundResource(R.drawable.timestampe_bg);
+        } else if (anchorItem.getLiveStatus().equals("3")) {
+            holder.tvStatus.setText("开车");
+            holder.tvStatus.setBackgroundResource(R.drawable.background_green);
+
+        }
 
     }
 
@@ -76,11 +82,13 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         ImageView pic;
         TextView tvName;
         TextView tvCount;
+        TextView tvStatus;
 
         public AnchorHotViewHolder(View itemView) {
             super(itemView);
             this.pic = (ImageView) itemView.findViewById(R.id.img_layout_hotanchor_item_pic);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_layout_hotanchor_item_name);
+            this.tvStatus = (TextView) itemView.findViewById(R.id.tv_status);
             this.tvCount = (TextView) itemView.findViewById(R.id.tv_layout_hotanchor_item_count);
         }
     }

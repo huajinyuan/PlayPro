@@ -138,6 +138,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         HttpParams params = new HttpParams();
         if (null != userInfo && null != userInfo.getAnId()) {
             params.put("anId", userInfo.getAnId());
+
             PostRequest request = OkGo.post(Config.POST_ANCHOR_OPEN).params(params);
             HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override
@@ -161,7 +162,9 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 //                        .decode(follow.getWcPushAddress(), Des3.secretKey)
                         intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
                         intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
+                        intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
                         startActivity(intent);
+                        Updatestatus();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -173,6 +176,32 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 //        PostRequest request = OkGo.post(Config.POST_ANCHOR_GET).params(params);
 
 
+    }
+
+    public void Updatestatus() {
+
+        HttpParams params = new HttpParams();
+        if (null != userInfo && null != userInfo.getAnId()) {
+            params.put("anId", userInfo.getAnId());
+            params.put("status", "2");
+            PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
+            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Response response) {
+
+                }
+            });
+        }
     }
 
     @Override

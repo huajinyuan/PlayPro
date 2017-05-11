@@ -116,10 +116,12 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
         ImageView img_center_num;
         ImageView img_tyrants_follow;
         View item;
+        View left;
 
         public AnchorHotViewHolder(View itemView) {
             super(itemView);
             this.item = itemView;
+            this.left = itemView.findViewById(R.id.view_left);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
             this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);

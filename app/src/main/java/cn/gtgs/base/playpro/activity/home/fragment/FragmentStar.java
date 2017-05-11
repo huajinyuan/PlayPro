@@ -35,7 +35,7 @@ public class FragmentStar extends FragmentPresenter<StarDelegate> implements IFo
     public void itemClick(Follow follow) {
         Intent intent = new Intent(getActivity(), PlayActivity.class);
         intent.putExtra("anchoritem", follow);
-        intent.putExtra("IsMember", false);
+        intent.putExtra("IsMember", true);
         getActivity().startActivity(intent);
 
     }

@@ -146,5 +146,6 @@ public interface Config {
      * userName=1&friendName=2
      * */
     String MEMBER_ADDFRIEND = BASE_URL + "member/addFriend";
+    String MEMBER_LIVESTATUS = BASE_URL + "anchor/liveStatus";
 
 }

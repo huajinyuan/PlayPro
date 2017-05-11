@@ -127,7 +127,7 @@ public class AllGiftViewpager extends ViewPager implements OnItemClickListener {
             }
             Gift newGiftBean = viewList.get(position);
             Glide.with(context).load(newGiftBean.picture).into(holder.img);
-//            holder.name.setText(newGiftBean.name);
+            holder.name.setText(newGiftBean.name);
             holder.values.setText(newGiftBean.credits);
             return view;
         }

@@ -45,19 +45,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:background="@null"
+                android:textColor="@color/colorBlue"
                 android:textSize="15sp" />
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/dp_10"
             android:background="@drawable/timestampe_bg"
             android:padding="5dp"
+            android:textSize="@dimen/sp_12"
             android:text="在线"
             android:textColor="@color/colorwhite" />
     </RelativeLayout>

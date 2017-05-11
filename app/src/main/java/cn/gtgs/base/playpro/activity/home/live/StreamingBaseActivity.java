@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.gt.okgo.OkGo;
+import com.gt.okgo.model.HttpParams;
+import com.gt.okgo.request.PostRequest;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMMessageListener;
@@ -86,12 +93,16 @@ import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.WheelView;
 import cn.gtgs.base.playpro.widget.gles.FBO;
+import okhttp3.Response;
+import rx.Subscriber;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -246,6 +257,8 @@ public class StreamingBaseActivity extends Activity implements
         }
     };
 
+    Follow mAnchor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -258,8 +271,8 @@ public class StreamingBaseActivity extends Activity implements
         aCache = ACache.get(this);
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         userInfo = mF.getMember();
-        chatroomid = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_FOLLOW);
-
+        mAnchor = (Follow) getIntent().getSerializableExtra(Config.EXTRA_KEY_PUB_FOLLOW);
+        chatroomid = mAnchor.getChatRoomId();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (Config.SCREEN_ORIENTATION == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
@@ -391,7 +404,7 @@ public class StreamingBaseActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         mMediaStreamingManager.destroy();
-
+        Updatestatus("1");
         //-----------------------------------以下为环信
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
@@ -399,6 +412,31 @@ public class StreamingBaseActivity extends Activity implements
 //        Request<String> request = NoHttp.createStringRequest(Config.URL_StopStreaming, RequestMethod.DELETE);
 //        request.addHeader("Authorization","Bearer "+loginInfo.token);
 //        requestQueue.add(Int_StopStreaming, request, responseListener);
+    }
+
+
+    public void Updatestatus(String status) {
+
+        HttpParams params = new HttpParams();
+        params.put("anId", mAnchor.getAnId());
+        params.put("status", status);
+        PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+
+            }
+        });
     }
 
     protected void startStreaming() {
@@ -710,6 +748,7 @@ public class StreamingBaseActivity extends Activity implements
                             public void onClick(DialogInterface dialog, int which) {
                                 String s = wv.getSeletedItem();
                                 Shoufei(s);
+                                Updatestatus("3");
                             }
                         })
                         .show();
@@ -1101,7 +1140,7 @@ public class StreamingBaseActivity extends Activity implements
                 Map<String, Object> map = message.ext();
                 if (map.containsKey("Gift")) {
                     mGetGift = new Gift();
-                    mGetGift.name = (String) map.get("GiftName");
+                    mGetGift =PApplication.getInstance().getGiftObject((String) map.get("Gift"));
 //                        mGetGift.picture = (String) map.get("GiftPicture");
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1240,12 +1279,19 @@ public class StreamingBaseActivity extends Activity implements
         }, 1500);
     }
 
+
+    @BindView(R.id.tv_play_gift_count)
+    TextView mTvGiftCount;
+    long GETGIFTTIME = 0;
+    int GiftCount = 1;
+    String giftId = "";
+
     public void showGifts(String from, Gift gift) {
-        Glide.with(mContext).load(gift.picture).into(iv_gift);
-        //开始动画
-        ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-        animation.setDuration(800);
-        iv_gift.startAnimation(animation);
+//        Glide.with(mContext).load(gift.picture).into(iv_gift);
+//        //开始动画
+//        ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
+//        animation.setDuration(800);
+//        iv_gift.startAnimation(animation);
 //        if (from.equals(loginInfo.name)) {
 //            tv_likes.setText("你 给主播送了一个" + gift.name);
 //        } else {
@@ -1253,21 +1299,93 @@ public class StreamingBaseActivity extends Activity implements
 //
 //        }
 
+//        iv_gift.setVisibility(View.VISIBLE);
+//        tv_likes.setVisibility(View.VISIBLE);
+//        timer_hide.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tv_likes.setText("");
+//                        tv_likes.setVisibility(View.INVISIBLE);
+//                        iv_gift.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+//            }
+//        }, 1800);
+
+        if (System.currentTimeMillis() - GETGIFTTIME < 1000) {
+            if (giftId.equals(gift.getId())) {
+                GiftCount++;
+            } else {
+                GiftCount = 1;
+            }
+        } else {
+            GiftCount = 1;
+        }
         iv_gift.setVisibility(View.VISIBLE);
-        tv_likes.setVisibility(View.VISIBLE);
-        timer_hide.schedule(new TimerTask() {
+        giftId = gift.getId();
+        GETGIFTTIME = System.currentTimeMillis();
+        Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scalebig);
+        iv_gift.setVisibility(View.VISIBLE);
+        Glide.with(mContext).load(gift.picture).into(new GlideDrawableImageViewTarget(iv_gift) {
             @Override
-            public void run() {
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                super.onResourceReady(resource, animation);
+                Animation b = AnimationUtils.loadAnimation(mContext, R.anim.scalebig);
+                iv_gift.setAnimation(b);
+                b.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        iv_gift.clearAnimation();
+                        iv_gift.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+            }
+        });
+        mTvGiftCount.setVisibility(View.VISIBLE);
+        mTvGiftCount.setText("X" + GiftCount);
+        a.setFillAfter(true);
+        mTvGiftCount.startAnimation(a);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tv_likes.setText("");
-                        tv_likes.setVisibility(View.INVISIBLE);
-                        iv_gift.setVisibility(View.INVISIBLE);
+                        if (mTvGiftCount.getVisibility() == View.VISIBLE) {
+                            F.e("---------------------------------mTvGiftCount GONE");
+                            mTvGiftCount.clearAnimation();
+                            mTvGiftCount.setVisibility(View.GONE);
+                        }
                     }
                 });
             }
-        }, 1800);
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
     }
 
     public void initDialogSettings() {
@@ -1448,7 +1566,9 @@ public class StreamingBaseActivity extends Activity implements
     }
 
     public void doDanmu(String message) {
-        mDanmakuView.addItem(new DanmakuItem(this, message, mDanmakuView.getWidth()));
+        DanmakuItem dm = new DanmakuItem(this, message, mDanmakuView.getWidth());
+        dm.setTextColor(Color.parseColor("#49C3B8"));
+        mDanmakuView.addItem(dm);
         mDanmakuView.setVisibility(View.VISIBLE);
         mDanmakuView.show();
     }

@@ -53,6 +53,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         UserInfo anchorItem = follow.getMember();
         holder.tvPos.setVisibility(View.GONE);
         holder.img_center_num.setVisibility(View.GONE);
+        holder.left.setVisibility(View.GONE);
         if(null != anchorItem.getMbNickname())
         {
             holder.tvName.setText(anchorItem.getMbNickname());
@@ -114,10 +115,12 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         ImageView img_center_num;
         ImageView img_tyrants_follow;
         View item;
+        View left;
 
         public AnchorHotViewHolder(View itemView) {
             super(itemView);
             this.item = itemView;
+            this.left = itemView.findViewById(R.id.view_left);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
             this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);
