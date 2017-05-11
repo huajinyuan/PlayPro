@@ -15,7 +15,7 @@ public class UserInfo implements Serializable {
     public String mbPhoto;
     public int mbAge;
 
-    public String mbGoldPay;
+    public int mbGoldPay;
     public int mbGold = 0;
     public int MbLevel;
     public int auditAnchor;
@@ -80,11 +80,11 @@ public class UserInfo implements Serializable {
         this.mbGold = mbGold;
     }
 
-    public String getMbGoldPay() {
+    public int getMbGoldPay() {
         return mbGoldPay;
     }
 
-    public void setMbGoldPay(String mbGoldPay) {
+    public void setMbGoldPay(int mbGoldPay) {
         this.mbGoldPay = mbGoldPay;
     }
 

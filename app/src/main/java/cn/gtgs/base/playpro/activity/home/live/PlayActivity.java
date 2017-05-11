@@ -23,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,6 +57,7 @@ import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,9 +74,13 @@ import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.mymessage.ChatActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
+import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.AppUtil;
+import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.utils.ToastUtil;
@@ -143,6 +149,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView tv_live_booking_anchorid;
     @BindView(R.id.listView)
     ListView listView;
+    @BindView(R.id.tv_play_toast)
+    TextView mTvToast;
 
     Timer timer_hide = new Timer();
     Follow anchorItem;
@@ -157,7 +165,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     private final int LEAVECHAT = 5;
     private final int FOLLOWINGANCHOR = 6;
 
-    private final String defautPath2 = "http://playback.yequtv.cn/appleplayback2.m3u8";
+    private final String defautPath2 = "";
     AllGiftViewpager viewpager;
     //        private boolean mIsGetGift = false;
     private String[] mReport = {"广告欺诈", "淫秽色情", "骚扰谩骂", "反动政治", "其他内容"};
@@ -175,6 +183,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public PeriscopeLayout periscopeLayout;
     @BindView(R.id.img_anchor_info_follow)
     ImageView mImgFollow;
+    @BindView(R.id.tv_play_level)
+    TextView mTvLevel;
+    @BindView(R.id.tv_play_gold)
+    TextView mTvGold;
     ACache aCache;
 
     @Override
@@ -202,10 +214,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         initviews();
         initEmoji();
         if (!isMember) {
-            doPlay();
+            getAnChorInfo(anchorItem.getAnId());
+            initviews();
+//            doPlay();
             //----------------------------------------------------------以下为环信
             //-------------------------------------------------------------------
-            login();
+//            login();
         }
 
     }
@@ -226,7 +240,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         });
         String MYURL = defautPath2;
         if (null != anchorItem.getWcPullAddress()) {
-            MYURL = anchorItem.getWcPullAddress();
+            try {
+                MYURL = new DESUtil().decrypt(anchorItem.getWcPullAddress());
+//                Des3.decode(anchorItem.getWcPullAddress(), Des3.secretKey);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         AVOptions options = new AVOptions();
         options.setInteger(AVOptions.KEY_MEDIACODEC, 1);
@@ -242,8 +261,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     @Override
     protected void onResume() {
         super.onResume();
-//        vv_test.setVideoPath(anchorItem.stream.play);
-//        vv_test.start();
+        if (!isMember) {
+            vv_test.setVideoPath(anchorItem.getWcPullAddress());
+            vv_test.start();
+        }
     }
 
     @Override
@@ -255,7 +276,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     @Override
     protected void onStop() {
         super.onStop();
-//        vv_test.stopPlayback();
+        if (!isMember) {
+            vv_test.stopPlayback();
+        }
     }
 
     @Override
@@ -295,28 +318,24 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             message.setAttribute("user_name", loginInfo.getMbNickname());
             message.setAttribute("level", loginInfo.getMbLevel());
             if (mCheckBox.isChecked()) {
-                message.setAttribute("Danmu", loginInfo.getMbLevel());
+                message.setAttribute("DanMu", loginInfo.getMbLevel());
                 doDanmu(et_huanxin_content);
             }
             //发送消息
             EMClient.getInstance().chatManager().sendMessage(message);
-
-            msgList.add(message);
-            if (null != adapter) {
-                adapter.notifyDataSetChanged();
+            if (!mCheckBox.isChecked()) {
+                et_content.setText("");
+                frame_live_chat.setVisibility(View.INVISIBLE);
+                frame_live_menu.setVisibility(View.VISIBLE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
+//                if (isOpen) {
+//                    ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(PlayActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                }
+            } else {
+                mCheckBox.setChecked(false);
             }
-            if (msgList.size() > 0) {
-                listView.setSelection(listView.getCount() - 1);
-            }
 
-        }
-        et_content.setText("");
-        frame_live_chat.setVisibility(View.INVISIBLE);
-        frame_live_menu.setVisibility(View.VISIBLE);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
-        if (isOpen) {
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(PlayActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -547,6 +566,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     void settochat() {
+        AddFriend();
         Intent intent = new Intent(context, ChatActivity.class);
         if (!isMember) {
             intent.putExtra("chatto", anchorItem.getMbId());
@@ -555,6 +575,39 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }
         startActivity(intent);
     }
+
+    public void AddFriend() {
+
+        HttpParams params = new HttpParams();
+        params.put("userName", loginInfo.getMbId());
+        params.put("friendName", anchorItem.getMember().getMbId());
+        PostRequest request = OkGo.post(Config.MEMBER_ADDFRIEND).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+                String Str = null;
+                try {
+                    Str = response.body().string();
+                    F.e("-----------------" + Str);
+                    JSONObject ob = JSON.parseObject(Str);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
 
     void GetCoin() {
 //        Intent intent = new Intent(LiveActivity.this, GetCoinActivity.class);
@@ -666,7 +719,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }, 1500);
     }
 
-    public void sendGift(String num) {
+    public void sendGift(final String num) {
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
@@ -691,6 +744,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     if (ob.containsKey("code")) {
                         int code = ob.getInteger("code");
                         if (code == 1) {
+                            if (ob.containsKey("data")) {
+                                int gold = ob.getIntValue("data");
+                                loginInfo.setMbGold(gold);
+                                tv_live_credits.setText("趣味币:" + loginInfo.getMbGold());
+                                mF.setMember(loginInfo);
+                                aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
+                            }
                             giftPost();
 
                         } else {
@@ -739,14 +799,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         giftId = gift.getId();
         GETGIFTTIME = System.currentTimeMillis();
         Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig);
-//        Glide.with(context).load(gift.picture).animate(R.anim.scalebig).into(iv_gift);
-//        iv_gift.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                iv_gift.clearAnimation();
-//                iv_gift.setVisibility(View.GONE);
-//            }
-//        }, 1000);
         iv_gift.setVisibility(View.VISIBLE);
         Glide.with(context).load(gift.picture).into(new GlideDrawableImageViewTarget(iv_gift) {
             @Override
@@ -852,6 +904,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             String sex = !isMember ? anchorItem.getAnSex() : anchorItem.getMember().getMbSex() + "";
             String mId = !isMember ? anchorItem.mbId : anchorItem.getMember().getMbId() + "";
             chatroomid = !isMember ? anchorItem.getChatRoomId() : "261649293176209844";
+
 //            if (!isMember) {
 //                chatroomid = anchorItem.getChatRoomId();
             Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
@@ -876,42 +929,27 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             iv_booking_sex.setImageResource(sex.equals("1") ? R.mipmap.global_male : R.mipmap.global_female);
             tv_booking_currentname.setText(name);
             tv_live_booking_anchorid.setText(mId);
-
-//            } else {
-//                UserInfo info = anchorItem.getMember();
-//                F.e("*********************************" + info.toString());
-////                Glide.with(context).load(null != info.getMbPhone() ? Config.BASE + info.getMbPhone() : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
-////                    @Override
-////                    protected void setResource(Bitmap resource) {
-////                        RoundedBitmapDrawable circularBitmapDrawable =
-////                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-////                        circularBitmapDrawable.setCircular(true);
-////                        mImgIcon.setImageDrawable(circularBitmapDrawable);
-////                    }
-////                });
-////                mTvName.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
-////                Glide.with(context).load(null != info.getMbPhone() ? Config.BASE + info.getMbPhone() : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_live_booking_anchoricon) {
-////                    @Override
-////                    protected void setResource(Bitmap resource) {
-////                        RoundedBitmapDrawable circularBitmapDrawable =
-////                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-////                        circularBitmapDrawable.setCircular(true);
-////                        iv_live_booking_anchoricon.setImageDrawable(circularBitmapDrawable);
-////                    }
-////                });
-////                iv_booking_sex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
-////                tv_booking_currentname.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
-////                tv_live_booking_anchorid.setText(info.getMbId());
-//
-//            }
-
+            mTvLevel.setText(AppUtil.getDJ(anchorItem.getMember().getMbGold()) + "");
+            mTvGold.setText(AppUtil.getDJ(anchorItem.getMember().getMbGoldPay()) + "");
+            if (null != anchorItem.getFaCount()) {
+                mTvCount.setText(anchorItem.getFaCount());
+            }
         }
-
+        tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
         contentAction();
-
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    et_content.setHint("(每条弹幕收费1钻石)你想对主播说些什么？");
+                } else {
+                    et_content.setHint("请输入消息内容");
+                }
+            }
+        });
     }
 
-    @OnClick({R.id.lin_anchor_info_action_follow, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.tv_live_recharge, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_anchor_info_action_follow, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -952,9 +990,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.bt_live_booking_tochat:
                 settochat();
                 break;
-            case R.id.tv_live_recharge:
-                GetCoin();
-                break;
+//            case R.id.tv_live_recharge:
+//                GetCoin();
+//                break;
             case R.id.layout_live_icon_content:
                 contentAction();
                 break;
@@ -1207,8 +1245,47 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     });
                 } else if (map.containsKey("Recharge")) {
                     // TODO 收费
+                    Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
+                    mTvToast.setVisibility(View.VISIBLE);
+                    mTvToast.setText("主播开启收费模式：" + (String) map.get("Recharge") + "钻石/分钟");
+                    a.setFillAfter(true);
+                    mTvToast.startAnimation(a);
+                    a.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mTvToast.getVisibility() == View.VISIBLE) {
+                                        F.e("---------------------------------mTvGiftCount GONE");
+                                        mTvToast.clearAnimation();
+                                        mTvToast.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    if (null != timer2) {
+                        timer2.cancel();
+                        timer2 = null;
+                        timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
+                        temp2 = true;
+                    } else {
+                        timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
+                        temp2 = false;
+                    }
                     if (temp2) {
-                        new MyTimer2(999999999, 60000, (String) map.get("Recharge")).start();
+                        timer2.start();
                         temp2 = false;
                     }
                 } else if (map.containsKey("DanMu")) {
@@ -1232,53 +1309,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         }
                     });
                 }
-
-//                if (null != spotType) {
-//                    if (spotType.equals("FJZY_SPOT")) {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showLikes(message_from);
-//                            }
-//                        });
-//                    } else if (spotType.equals("GIFT")) {
-//                        mGetGift = new Gift();
-//                        mGetGift.name = (String) map.get("GiftName");
-////                        mGetGift.picture = (String) map.get("GiftPicture");
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showGifts(message_from, mGetGift);
-////                                showGifts(message_from, message_content.substring(message_content.length() - 2));
-//                            }
-//                        });
-//                    } else {
-//                        msgList.add(message);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.notifyDataSetChanged();
-//                                if (msgList.size() > 0) {
-//                                    listView.setSelection(listView.getCount() - 1);
-//                                    Log.e("sad", "setselection");
-//                                }
-//                            }
-//                        });
-//                    }
-//                } else {
-//                    msgList.add(message);
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            adapter.notifyDataSetChanged();
-//                            if (msgList.size() > 0) {
-//                                listView.setSelection(listView.getCount() - 1);
-//                                Log.e("sad", "setselection");
-//                            }
-//                        }
-//                    });
-//                }
-
             }
             // 收到消息
         }
@@ -1308,6 +1338,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         mDanmakuView.show();
     }
 
+    public MyTimer2 timer2;
     private boolean temp = true;
 
     private class MyTimer extends CountDownTimer {
@@ -1363,7 +1394,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
 
-    public void sendGift2(String num) {
+    public void sendGift2(final String num) {
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
@@ -1388,6 +1419,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     if (ob.containsKey("code")) {
                         int code = ob.getInteger("code");
                         if (code == 1) {
+                            if (ob.containsKey("data")) {
+                                int gold = ob.getIntValue("data");
+                                loginInfo.setMbGold(gold);
+                                tv_live_credits.setText("趣味币:" + loginInfo.getMbGold());
+                                mF.setMember(loginInfo);
+                                aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
+                            }
+
                             giftPost();
 
                         } else {
@@ -1401,7 +1440,37 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             }
         });
+    }
 
+
+    public void getAnChorInfo(String anId) {
+        HttpParams params = new HttpParams();
+        params.put("anId", anId);
+        PostRequest request = OkGo.post(Config.POST_ANCHOR_GET).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Response response) {
+                HttpBase<Follow> bf = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                anchorItem = bf.getData();
+                chatroomid = anchorItem.getChatRoomId();
+
+                doPlay();
+                //----------------------------------------------------------以下为环信
+                //-------------------------------------------------------------------
+                login();
+
+            }
+        });
 
     }
 

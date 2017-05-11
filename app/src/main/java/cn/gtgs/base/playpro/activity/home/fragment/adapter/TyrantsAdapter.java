@@ -17,6 +17,7 @@ import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.GlideCircleTransform;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
@@ -87,45 +88,9 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
                 }
             }
         });
+        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
+        holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
 
-//        holder.tvName.setText(anchorItem.huanxin_username);
-//        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        holder.tvName.setText(anchorItem.name);
-//        holder.tvSiteName.setText(anchorItem.place);
-//        holder.tvCount.setText(anchorItem.online_count);
-//        ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
-//        params.height = mWith / 2;
-//        holder.pic.setLayoutParams(params);
-//        final String path = anchorItem.avatar;
-//        if (anchorItem.live.equals("1")) {
-//            Glide.with(mContext).load(anchorItem.stream.snapshot).listener(new RequestListener<String, GlideDrawable>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                    holder.pic.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Glide.with(mContext).load(path).into(holder.pic);
-//                        }
-//                    });
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    return false;
-//                }
-//            }).into(holder.pic);
-//        } else {
-//            Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        }
-//        holder.pic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Intent intent = new Intent(mContext, LiveActivity.class);
-////                intent.putExtra("anchoritem", mData.get(position));
-////                mContext.startActivity(intent);
-//            }
-//        });
 
     }
 
@@ -144,6 +109,8 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
         TextView tvName;
         TextView tvPos;
         TextView tv_tyrants_sum;
+        TextView tv_item_l;
+        TextView tv_item_g;
         ImageView img_tyrants_icon;
         ImageView img_tyrants_sex;
         ImageView img_center_num;
@@ -155,6 +122,8 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
             this.item = itemView;
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
+            this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);
+            this.tv_item_g = (TextView) itemView.findViewById(R.id.tv_item_g);
             this.tv_tyrants_sum = (TextView) itemView.findViewById(R.id.tv_tyrants_sum);
             this.img_tyrants_icon = (ImageView) itemView.findViewById(R.id.img_tyrants_icon);
             this.img_tyrants_sex = (ImageView) itemView.findViewById(R.id.img_tyrants_sex);

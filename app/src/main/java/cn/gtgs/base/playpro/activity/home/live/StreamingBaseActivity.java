@@ -79,6 +79,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
@@ -269,6 +270,7 @@ public class StreamingBaseActivity extends Activity implements
         setRequestedOrientation(Config.SCREEN_ORIENTATION);
         setContentView(R.layout.activity_camera_streaming);
 
+        ButterKnife.bind(this);
         //----------------------------------------------------------以下为环信
         //-------------------------------------------------------------------
 //        aCache = ACache.get(this);
@@ -679,7 +681,8 @@ public class StreamingBaseActivity extends Activity implements
         iv_live_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 构建弹出框View
+
+//                // 构建弹出框View
                 View outerView = LayoutInflater.from(mContext)
                         .inflate(R.layout.wheel_view, null);
 
@@ -701,7 +704,7 @@ public class StreamingBaseActivity extends Activity implements
 
                 // 展示弹出框
                 new AlertDialog.Builder(mContext)
-                        .setTitle("设置收费单价(?金币/分钟)").setView(outerView)
+                        .setTitle("设置收费单价(?钻石/分钟)").setView(outerView)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -715,14 +718,6 @@ public class StreamingBaseActivity extends Activity implements
 
 
         });
-//        view_booking_click.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                rl_live_bootombar.setVisibility(View.VISIBLE);
-//                ll_live_booking.setVisibility(View.INVISIBLE);
-//            }
-//        });
-//        checkOnlineNum();
     }
 
     public void Shoufei(String price) {

@@ -17,6 +17,7 @@ import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.search.presenter.ISearchItemListenser;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.GlideCircleTransform;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
@@ -50,23 +51,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.AnchorHotV
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
         final Follow follow = mData.get(position);
         final UserInfo anchorItem = follow.getMember();
-        if (position == 0) {
-            holder.img_center_num.setVisibility(View.VISIBLE);
-            holder.tvPos.setVisibility(View.GONE);
-            holder.img_center_num.setImageResource(R.mipmap.icon_medal1);
-        } else if (position == 1) {
-            holder.img_center_num.setVisibility(View.VISIBLE);
-            holder.tvPos.setVisibility(View.GONE);
-            holder.img_center_num.setImageResource(R.mipmap.icon_medal2);
-        } else if (position == 2) {
-            holder.img_center_num.setVisibility(View.VISIBLE);
-            holder.tvPos.setVisibility(View.GONE);
-            holder.img_center_num.setImageResource(R.mipmap.icon_medal3);
-        } else {
-            holder.img_center_num.setVisibility(View.GONE);
-            holder.tvPos.setVisibility(View.VISIBLE);
-            holder.tvPos.setText("NO." + (position + 1));
-        }
+        holder.img_center_num.setVisibility(View.GONE);
+        holder.tvPos.setVisibility(View.GONE);
         if (null != anchorItem.getMbNickname()) {
             holder.tvName.setText(anchorItem.getMbNickname());
         } else {
@@ -86,7 +72,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.AnchorHotV
                 }
             }
         });
-
+        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
+        holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
     }
 
     @Override
@@ -104,6 +91,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.AnchorHotV
         TextView tvName;
         TextView tvPos;
         TextView tv_tyrants_sum;
+        TextView tv_item_l;
+        TextView tv_item_g;
         ImageView img_tyrants_icon;
         ImageView img_tyrants_sex;
         ImageView img_center_num;
@@ -115,6 +104,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.AnchorHotV
             this.item = itemView;
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
+            this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);
+            this.tv_item_g = (TextView) itemView.findViewById(R.id.tv_item_g);
             this.tv_tyrants_sum = (TextView) itemView.findViewById(R.id.tv_tyrants_sum);
             this.img_tyrants_icon = (ImageView) itemView.findViewById(R.id.img_tyrants_icon);
             this.img_tyrants_sex = (ImageView) itemView.findViewById(R.id.img_tyrants_sex);

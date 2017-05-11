@@ -28,6 +28,7 @@ import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 import rx.Subscriber;
@@ -156,9 +157,14 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                     Follow follow = baseF.getData();
                     F.e("--------------" + follow.getWcPushAddress());
                     Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
-                    intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + follow.getWcPushAddress());
-                    intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
-                    startActivity(intent);
+                    try {
+//                        .decode(follow.getWcPushAddress(), Des3.secretKey)
+                        intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
+                        intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 //                startPush("URL:"+follow.getWcPullAddress());
                 }
             });

@@ -8,24 +8,30 @@
     android:padding="10dp">
 
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
         <TextView
             android:id="@+id/tv_tyrants_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:maxLines="1"
             android:text="NO.2"
             android:textColor="@color/colorBlue"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/sp_14" />
 
-<ImageView
-    android:id="@+id/img_center_num"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:scaleType="centerInside"
-    android:layout_weight="1"
-    android:gravity="center"/>
+        <ImageView
+            android:id="@+id/img_center_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:scaleType="centerInside" />
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/img_tyrants_icon"
@@ -39,12 +45,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_tyrants_name"
                 android:layout_width="wrap_content"
@@ -55,16 +62,15 @@
                 android:maxLines="1"
                 android:text="奥斯卡的"
                 android:textSize="@dimen/sp_14" />
+
             <ImageView
                 android:id="@+id/img_tyrants_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/global_male"
                 android:layout_marginLeft="3dp"
-                />
+                app:srcCompat="@mipmap/global_male" />
 
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -74,6 +80,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_item_l"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:background="@drawable/background_green"
@@ -87,6 +94,7 @@
                 android:textSize="@dimen/sp_10" />
 
             <TextView
+                android:id="@+id/tv_item_g"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:layout_marginLeft="8dp"

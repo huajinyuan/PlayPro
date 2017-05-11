@@ -17,6 +17,7 @@ import cn.gtgs.base.playpro.activity.home.fragment.presenter.IFollowItemListener
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.GlideCircleTransform;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
@@ -87,7 +88,8 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
             }
         });
         holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
-
+        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
+        holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
     }
 
     @Override
@@ -101,14 +103,16 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
     }
 
     class AnchorHotViewHolder extends RecyclerView.ViewHolder {
+
         TextView tvName;
         TextView tvPos;
         TextView tv_tyrants_sum;
+        TextView tv_item_l;
+        TextView tv_item_g;
         ImageView img_tyrants_icon;
         ImageView img_tyrants_sex;
         ImageView img_center_num;
         ImageView img_tyrants_follow;
-
         View item;
 
         public AnchorHotViewHolder(View itemView) {
@@ -116,6 +120,8 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
             this.item = itemView;
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
+            this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);
+            this.tv_item_g = (TextView) itemView.findViewById(R.id.tv_item_g);
             this.tv_tyrants_sum = (TextView) itemView.findViewById(R.id.tv_tyrants_sum);
             this.img_tyrants_icon = (ImageView) itemView.findViewById(R.id.img_tyrants_icon);
             this.img_tyrants_sex = (ImageView) itemView.findViewById(R.id.img_tyrants_sex);

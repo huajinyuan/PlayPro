@@ -42,77 +42,14 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
 
     @Override
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
-//        final AnchorItem anchorItem = mData.get(position);
-//        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        holder.tvName.setText(anchorItem.name);
-//        holder.tvSiteName.setText(anchorItem.place);
-//        holder.tvCount.setText(anchorItem.online_count);
         ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
         params.height = mWith / 2;
         holder.pic.setLayoutParams(params);
-//        final String path = anchorItem.avatar;
-//        if (anchorItem.live.equals("1")) {
-//            Glide.with(mContext).load(anchorItem.stream.snapshot).listener(new RequestListener<String, GlideDrawable>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                    holder.pic.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Glide.with(mContext).load(path).into(holder.pic);
-//                        }
-//                    });
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    return false;
-//                }
-//            }).into(holder.pic);
-//        } else {
-//            Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        }
-//        holder.pic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(mContext, PlayActivity.class);
-//                intent.putExtra("anchoritem", mData.get(position));
-//                mContext.startActivity(intent);
-//            }
-//        });
 
 
         final Follow anchorItem = mData.get(position);
-//        UserInfo info = anchorItem.getMember();
         Glide.with(mContext).load(null != anchorItem.getAnPhoto() ? Config.BASE + anchorItem.getAnPhoto() : R.drawable.circle_zhubo).into(holder.pic);
         holder.tvName.setText(anchorItem.getAnRemark());
-//        holder.tvSiteName.setText(anchorItem.place);
-//        holder.tvCount.setText(anchorItem.online_count);
-//        ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
-//        params.height = mWith / 2;
-//        holder.pic.setLayoutParams(params);
-//        final String path = anchorItem.avatar;
-//        if (anchorItem.live.equals("1")) {
-//            Glide.with(mContext).load(anchorItem.stream.snapshot).listener(new RequestListener<String, GlideDrawable>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                    holder.pic.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Glide.with(mContext).load(path).into(holder.pic);
-//                        }
-//                    });
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    return false;
-//                }
-//            }).into(holder.pic);
-//        } else {
-//            Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        }
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,14 +75,12 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
     class AnchorHotViewHolder extends RecyclerView.ViewHolder {
         ImageView pic;
         TextView tvName;
-        //        TextView tvSiteName;
         TextView tvCount;
 
         public AnchorHotViewHolder(View itemView) {
             super(itemView);
             this.pic = (ImageView) itemView.findViewById(R.id.img_layout_hotanchor_item_pic);
             this.tvName = (TextView) itemView.findViewById(R.id.tv_layout_hotanchor_item_name);
-//            this.tvSiteName = (TextView) itemView.findViewById(R.id.tv_layout_hotanchor_item_sitename);
             this.tvCount = (TextView) itemView.findViewById(R.id.tv_layout_hotanchor_item_count);
         }
     }

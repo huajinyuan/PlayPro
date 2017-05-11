@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/rl_bottom_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            >
+            <CheckBox
+                android:id="@+id/checkbox_danmu"
+                style="@style/CustomCheckboxTheme"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:text="" />
+            <Button
+                android:id="@+id/bt_openemoji"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/checkbox_danmu"
+                android:background="@drawable/emoji" />
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_toLeftOf="@id/bt_send"
+            android:layout_toRightOf="@id/bt_openemoji"
+            android:background="#f0f0f0"
+            android:hint="请输入内容"
+            android:minHeight="@dimen/dp_40"
+            android:padding="@dimen/dp_10"
+            android:paddingLeft="10dp"
+            android:textColor="@color/color_black"
+            android:textColorHint="@color/color_grey"
+            android:layout_weight="3"
+            android:textSize="14sp" />
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_button_black"
+            android:text="发送"
+            android:textColor="#fff"
+            android:layout_weight="5"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

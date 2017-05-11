@@ -103,7 +103,8 @@
                             android:paddingLeft="3dp"
                             android:paddingRight="3dp"
                             android:text="01"
-                            android:textColor="@color/colorwhite" />
+                            android:textColor="@color/colorwhite"
+                            android:textSize="@dimen/sp_12" />
 
                         <TextView
                             android:id="@+id/tv_center_g"
@@ -117,7 +118,8 @@
                             android:paddingLeft="3dp"
                             android:paddingRight="3dp"
                             android:text="01"
-                            android:textColor="@color/colorwhite" />
+                            android:textColor="@color/colorwhite"
+                            android:textSize="@dimen/sp_12" />
 
                     </LinearLayout>
 

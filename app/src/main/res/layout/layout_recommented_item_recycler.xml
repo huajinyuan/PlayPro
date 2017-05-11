@@ -29,7 +29,8 @@
             android:drawablePadding="3dp"
             android:gravity="center_vertical|right"
             android:maxLines="1"
-            android:text="123" />
+            android:text="123"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/lin_bottom"

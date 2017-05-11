@@ -141,5 +141,10 @@ public interface Config {
      * 广告
      */
     String GET_ADVERTS = BASE_URL + "common/adverts";
+    /**
+     *添加好友
+     * userName=1&friendName=2
+     * */
+    String MEMBER_ADDFRIEND = BASE_URL + "member/addFriend";
 
 }

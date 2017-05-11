@@ -32,6 +32,10 @@ public class Follow implements Serializable {
     public String anGoldGet;
     public String liveStatus;
     public String anPhoto;
+    public String sysMsg;
+    public int dayGold = 0;
+    public int anGoldAble;
+    public int anPrice;
     public UserInfo member;
 
     public String getAnGold() {
@@ -226,10 +230,43 @@ public class Follow implements Serializable {
         this.anPhoto = anPhoto;
     }
 
+    public int getAnGoldAble() {
+        return anGoldAble;
+    }
+
+    public void setAnGoldAble(int anGoldAble) {
+        this.anGoldAble = anGoldAble;
+    }
+
+    public int getAnPrice() {
+        return anPrice;
+    }
+
+    public void setAnPrice(int anPrice) {
+        this.anPrice = anPrice;
+    }
+
+    public int getDayGold() {
+        return dayGold;
+    }
+
+    public void setDayGold(int dayGold) {
+        this.dayGold = dayGold;
+    }
+
+    public String getSysMsg() {
+        return sysMsg;
+    }
+
+    public void setSysMsg(String sysMsg) {
+        this.sysMsg = sysMsg;
+    }
+
     @Override
     public String toString() {
         return "Follow{" +
-                "anQq='" + anQq + '\'' +
+                "anGold='" + anGold + '\'' +
+                ", anQq='" + anQq + '\'' +
                 ", isRecommend='" + isRecommend + '\'' +
                 ", anRemark='" + anRemark + '\'' +
                 ", flag='" + flag + '\'' +
@@ -248,10 +285,13 @@ public class Follow implements Serializable {
                 ", anSex='" + anSex + '\'' +
                 ", liveCount='" + liveCount + '\'' +
                 ", faId='" + faId + '\'' +
-                ", anGold='" + anGold + '\'' +
                 ", anGoldGet='" + anGoldGet + '\'' +
                 ", liveStatus='" + liveStatus + '\'' +
                 ", anPhoto='" + anPhoto + '\'' +
+                ", sysMsg='" + sysMsg + '\'' +
+                ", dayGold=" + dayGold +
+                ", anGoldAble=" + anGoldAble +
+                ", anPrice=" + anPrice +
                 ", member=" + member +
                 '}';
     }

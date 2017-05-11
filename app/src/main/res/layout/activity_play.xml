@@ -101,62 +101,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_20"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <RelativeLayout
-            android:id="@+id/rl_bottom_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <include layout="@layout/layout_input_bottom" />
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_bottom_input"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--&gt;-->
 
-            <Button
-                android:id="@+id/bt_send"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/selector_button_black"
-                android:text="发送"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+        <!--<Button-->
+        <!--android:id="@+id/bt_send"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:background="@drawable/selector_button_black"-->
+        <!--android:text="发送"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="16sp" />-->
 
-            <CheckBox
-                android:id="@+id/checkbox_danmu"
-                style="@style/CustomCheckboxTheme"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:text="" />
+        <!--<CheckBox-->
+        <!--android:id="@+id/checkbox_danmu"-->
+        <!--style="@style/CustomCheckboxTheme"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:text="" />-->
 
-            <Button
-                android:id="@+id/bt_openemoji"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/checkbox_danmu"
-                android:background="@drawable/emoji" />
+        <!--<Button-->
+        <!--android:id="@+id/bt_openemoji"-->
+        <!--android:layout_width="24dp"-->
+        <!--android:layout_height="24dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toRightOf="@+id/checkbox_danmu"-->
+        <!--android:background="@drawable/emoji" />-->
 
-            <EditText
-                android:id="@+id/et_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="@dimen/dp_8"
-                android:layout_toLeftOf="@id/bt_send"
-                android:layout_toRightOf="@id/bt_openemoji"
-                android:background="#f0f0f0"
-                android:hint="请输入内容"
-                android:minHeight="@dimen/dp_40"
-                android:padding="@dimen/dp_10"
-                android:paddingLeft="10dp"
-                android:textColor="@color/color_black"
-                android:textColorHint="@color/color_grey"
-                android:textSize="14sp" />
-        </RelativeLayout>
+        <!--<EditText-->
+        <!--android:id="@+id/et_content"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_marginBottom="@dimen/dp_20"-->
+        <!--android:layout_toLeftOf="@id/bt_send"-->
+        <!--android:layout_toRightOf="@id/bt_openemoji"-->
+        <!--android:background="#f0f0f0"-->
+        <!--android:hint="请输入内容"-->
+        <!--android:minHeight="@dimen/dp_40"-->
+        <!--android:padding="@dimen/dp_10"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:textColor="@color/color_black"-->
+        <!--android:textColorHint="@color/color_grey"-->
+        <!--android:textSize="14sp" />-->
+        <!--</RelativeLayout>-->
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_emoji"
@@ -200,19 +203,8 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="@dimen/dp_8"
                 android:paddingTop="@dimen/dp_8"
-                android:text="趣味币："
+                android:text="钻石："
                 android:textColor="@color/color_progress_end" />
-
-            <TextView
-                android:id="@+id/tv_live_recharge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/tv_live_credits"
-                android:drawableRight="@drawable/icon_doller"
-                android:paddingLeft="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_10"
-                android:text="充值 >" />
 
             <Button
                 android:id="@+id/bt_live_sendgift"
@@ -221,7 +213,6 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/selector_button_pink_noradius"
                 android:text="发送" />
-
 
         </RelativeLayout>
     </LinearLayout>
@@ -238,7 +229,8 @@
         android:id="@+id/view_click"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/frame_live_gifts" />
+        android:layout_above="@id/listView"
+        />
 
     <include
         android:id="@+id/layout_live_icon_content"
@@ -277,5 +269,18 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="70dp"
         android:layout_marginTop="@dimen/dp_50" />
+
+    <TextView
+        android:id="@+id/tv_play_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_green"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/colorwhite"
+        android:visibility="gone" />
 
 </RelativeLayout>

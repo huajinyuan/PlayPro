@@ -10,6 +10,8 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static android.os.Build.VERSION_CODES.N;
+
 /**
  * Created by gtgs on 2016/10/6.
  */
@@ -27,6 +29,7 @@ public class AppUtil {
                     .hideSoftInputFromWindow(activity.getCurrentFocus()
                             .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
+
     /**
      * MD5加密
      *
@@ -75,27 +78,30 @@ public class AppUtil {
         context.startActivity(intent);
     }
 
-    /**
-     * 直接拨号，需要增加CALL_PHONE权限
-     *
-     * @param context 上下文
-     * @param phone   手机号码
-     */
+//    /**
+//     * 直接拨号，需要增加CALL_PHONE权限
+//     *
+//     * @param context 上下文
+//     * @param phone   手机号码
+//     */
 //    public static void actionCall(Context context, String phone) {
 //        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
 //        intent.setAction(Intent.ACTION_CALL);// 直接拨号
 //        context.startActivity(intent);
 //    }
 
-    /**
-     * 跳到拨号盘-拨打电话
-     *
-     * @param context 上下文
-     * @param phone   手机号码
-     */
+//    /**
+//     * 跳到拨号盘-拨打电话
+//     *
+//     * @param context 上下文
+//     * @param phone   手机号码
+//     */
 //    public static void actionDial(Context context, String phone) {
 //        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
 //        intent.setAction(Intent.ACTION_DIAL);// 拨号盘
 //        context.startActivity(intent);
 //    }
+    public static int getDJ(int gold) {
+        return (int) (Math.sqrt(N / 100 + 4) - 2);
+    }
 }

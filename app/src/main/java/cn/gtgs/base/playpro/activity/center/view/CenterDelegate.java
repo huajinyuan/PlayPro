@@ -18,6 +18,7 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.AppUtil;
 
 /**
  * Created by gtgs on 2017/4/25.
@@ -69,9 +70,9 @@ public class CenterDelegate extends AppDelegate {
                 mIcon.setImageDrawable(circularBitmapDrawable);
             }
         });
-        tvLe.setText("LV" + info.getMbLevel());
-        tvg.setText(info.getMbGold() + "");
-        mGole.setText(info.getMbGold() + "");
+        tvLe.setText(AppUtil.getDJ(info.getMbGold()) + "");
+        tvg.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
+        mGole.setText("今日收益" + follow.getDayGold() + "钻石");
         mImgSex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
     }
 

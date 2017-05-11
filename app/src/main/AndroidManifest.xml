@@ -86,7 +86,8 @@
         <!-- android:name="com.qiniu.pili.droid.streaming.screen.ScreenCaptureRequestActivity" -->
         <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar"/> -->
         <activity android:name=".activity.center.SettingActivity" />
-        <activity android:name=".activity.home.search.SearchActivity"></activity>
+        <activity android:name=".activity.home.search.SearchActivity" />
+        <activity android:name=".activity.center.EdtInfoActivity"></activity>
     </application>
 
 </manifest>

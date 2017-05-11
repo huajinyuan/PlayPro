@@ -13,6 +13,7 @@ import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
@@ -48,6 +49,12 @@ public class ApprovePresenter implements IApprove
                 ToastUtil.showToast("请设置头像",delegate.getActivity());
                 return;
             }
+            if(StringUtils.isEmpty(delegate.getQQ()))
+            {
+                ToastUtil.showToast("请填写QQ号",delegate.getActivity());
+                return;
+            }
+
             params.put("mbId",info.getMbId());
             params.put("anQq",delegate.getQQ());
             params.put("anSex",delegate.getSex());

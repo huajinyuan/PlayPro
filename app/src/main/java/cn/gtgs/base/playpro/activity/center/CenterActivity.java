@@ -6,13 +6,16 @@ import android.view.View;
 
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.center.presenter.CenterPresenter;
 import cn.gtgs.base.playpro.activity.center.view.CenterDelegate;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 
 public class CenterActivity extends ActivityPresenter<CenterDelegate> implements SwipeRefreshLayout.OnRefreshListener {
+    CenterPresenter presenter;
+
     @Override
     protected void onInitPresenters() {
-
+        presenter = new CenterPresenter(viewDelegate);
     }
 
     @Override
@@ -50,6 +53,6 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> implements
 
     @Override
     public void onRefresh() {
-
+        presenter.doRefresh();
     }
 }
