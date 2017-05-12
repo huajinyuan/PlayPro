@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
  * Created by zuoyun on 2016/11/7.
@@ -42,12 +47,15 @@ public class ListViewConversationsAdapter extends ArrayAdapter<EMConversation> {
     protected int primarySize;
     protected int secondarySize;
     protected float timeSize;
+    Follow follow;
 
     public ListViewConversationsAdapter(Context context, int resource, List<EMConversation> objects) {
         super(context, resource, objects);
         conversationList = objects;
         copyConversationList = new ArrayList<EMConversation>();
         copyConversationList.addAll(objects);
+        ACache aCache = ACache.get(context);
+        follow = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
     }
 
     @Override
@@ -99,18 +107,24 @@ public class ListViewConversationsAdapter extends ArrayAdapter<EMConversation> {
             Map<String, Object> map = lastMessage.ext();
             String username = (String) map.get("user_name");
             String avatar = (String) map.get("user_avatar");
-            holder.name.setText("与 " + (username != null ? username : conversation.conversationId()) + " 的会话");
-            holder.message.setText(((EMTextMessageBody) lastMessage.getBody()).getMessage());
-            holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
-            if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
-                holder.msgState.setVisibility(View.VISIBLE);
-            } else {
-                holder.msgState.setVisibility(View.GONE);
-            }
-
-            if (avatar != null) {
+            String to_avatar = (String) map.get("to_avatar");
+            String to_userName = (String) map.get("to_userName");
+            if (username.equals(follow.getMember().getMbNickname())) {
+                holder.name.setText(StringUtils.isNotEmpty(to_userName)?"与 " + to_userName + " 的会话":"");
                 final ImageView iv_icon = holder.iv_avatar;
-                Glide.with(getContext()).load(avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon){
+                Glide.with(getContext()).load(Config.BASE + to_avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        iv_icon.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+            } else {
+                holder.name.setText(StringUtils.isNotEmpty(username)?"与 " + username + " 的会话":"");
+                final ImageView iv_icon = holder.iv_avatar;
+                Glide.with(getContext()).load(Config.BASE + avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                     @Override
                     protected void setResource(Bitmap resource) {
                         RoundedBitmapDrawable circularBitmapDrawable =
@@ -120,6 +134,15 @@ public class ListViewConversationsAdapter extends ArrayAdapter<EMConversation> {
                     }
                 });
             }
+
+            holder.message.setText(((EMTextMessageBody) lastMessage.getBody()).getMessage());
+            holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+            if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
+                holder.msgState.setVisibility(View.VISIBLE);
+            } else {
+                holder.msgState.setVisibility(View.GONE);
+            }
+
         }
         return convertView;
     }
@@ -159,17 +182,29 @@ public class ListViewConversationsAdapter extends ArrayAdapter<EMConversation> {
     }
 
     private static class ViewHolder {
-        /** 和谁的聊天记录 */
+        /**
+         * 和谁的聊天记录
+         */
         TextView name;
-        /** 消息未读数 */
+        /**
+         * 消息未读数
+         */
         TextView unreadLabel;
-        /** 最后一条消息的内容 */
+        /**
+         * 最后一条消息的内容
+         */
         TextView message;
-        /** 最后一条消息的时间 */
+        /**
+         * 最后一条消息的时间
+         */
         TextView time;
-        /** 最后一条消息的发送状态 */
+        /**
+         * 最后一条消息的发送状态
+         */
         View msgState;
-        /** 整个list中每一行总布局 */
+        /**
+         * 整个list中每一行总布局
+         */
 
         ImageView iv_avatar;
 

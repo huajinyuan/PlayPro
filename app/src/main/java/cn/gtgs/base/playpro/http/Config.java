@@ -101,6 +101,10 @@ public interface Config {
      */
     String POST_MEMBER_GET = BASE_URL + "member/get";
     /**
+     * 个人信息修改
+     */
+    String POST_MEMBER_EDIT = BASE_URL + "member/edit";
+    /**
      * 土豪榜
      */
     String POST_MEMBER_TOP = BASE_URL + "member/top";

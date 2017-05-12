@@ -29,15 +29,17 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
     private Context mContext;
     private int mWith = 0;
     public IFollowItemListener iFollowItemListener;
+
     public FollowAdapter(ArrayList<Follow> data, Context context) {
         this.mData = data;
         this.mContext = context;
         this.mWith = PixelUtil.getWidth(mContext);
     }
-    public void setListener(IFollowItemListener listener)
-    {
+
+    public void setListener(IFollowItemListener listener) {
         this.iFollowItemListener = listener;
     }
+
     @Override
     public AnchorHotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_tyrants_item_recycler,
@@ -54,24 +56,20 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         holder.tvPos.setVisibility(View.GONE);
         holder.img_center_num.setVisibility(View.GONE);
         holder.left.setVisibility(View.GONE);
-        if(null != anchorItem.getMbNickname())
-        {
+        if (null != anchorItem.getMbNickname()) {
             holder.tvName.setText(anchorItem.getMbNickname());
-        }
-        else {
+        } else {
             holder.tvName.setText(anchorItem.getMbPhone());
         }
-        holder.img_tyrants_sex.setImageResource(anchorItem.getMbSex()==0?R.mipmap.global_male:R.mipmap.global_female);
-        if (null != anchorItem.getMbPhoto())
-        {
-            Glide.with(mContext).load(Config.BASE+anchorItem.getMbPhoto()).transform(new GlideCircleTransform(mContext)).into(holder.img_tyrants_icon);
+        holder.img_tyrants_sex.setImageResource(anchorItem.getMbSex() == 0 ? R.mipmap.global_male : R.mipmap.global_female);
+        if (null != anchorItem.getMbPhoto()) {
+            Glide.with(mContext).load(Config.BASE + anchorItem.getMbPhoto()).transform(new GlideCircleTransform(mContext)).into(holder.img_tyrants_icon);
         }
 
         holder.img_tyrants_follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != iFollowItemListener)
-                {
+                if (null != iFollowItemListener) {
                     iFollowItemListener.ItemFolloClick(follow);
                 }
 
@@ -81,8 +79,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != iFollowItemListener)
-                {
+                if (null != iFollowItemListener) {
                     iFollowItemListener.itemClick(follow);
                 }
 
@@ -91,6 +88,12 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
         holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
         holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
         holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
+
+        if (anchorItem.getMbGoldPay() == 0) {
+            holder.tv_tyrants_sum.setText("暂无奉献");
+        } else {
+            holder.tv_tyrants_sum.setText(anchorItem.getMbGoldPay() + "");
+        }
     }
 
     @Override

@@ -24,7 +24,7 @@
         android:id="@+id/tv_live_booking_jubao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="举报"
+        android:text="关闭"
         android:textColor="@color/colorwhite"
         android:layout_alignParentTop="true"
        android:layout_margin="20dp"

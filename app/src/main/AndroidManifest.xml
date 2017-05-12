@@ -81,10 +81,6 @@
         <activity android:name=".activity.center.GetCoinActivity" />
         <activity android:name=".activity.home.mymessage.ChatActivity" />
         <activity android:name=".activity.home.mymessage.MessageListActivity" />
-
-        <!-- <activity -->
-        <!-- android:name="com.qiniu.pili.droid.streaming.screen.ScreenCaptureRequestActivity" -->
-        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar"/> -->
         <activity android:name=".activity.center.SettingActivity" />
         <activity android:name=".activity.home.search.SearchActivity" />
         <activity android:name=".activity.center.EdtInfoActivity"></activity>

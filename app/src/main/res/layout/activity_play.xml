@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.pili.pldroid.player.widget.PLVideoView
         android:id="@+id/vv_test"
@@ -99,67 +100,17 @@
     <LinearLayout
         android:id="@+id/frame_live_chat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_20"
+        android:gravity="bottom"
         android:orientation="vertical"
         android:visibility="visible">
 
-        <include layout="@layout/layout_input_bottom" />
-        <!--<RelativeLayout-->
-        <!--android:id="@+id/rl_bottom_input"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--&gt;-->
-
-        <!--<Button-->
-        <!--android:id="@+id/bt_send"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:background="@drawable/selector_button_black"-->
-        <!--android:text="发送"-->
-        <!--android:textColor="#fff"-->
-        <!--android:textSize="16sp" />-->
-
-        <!--<CheckBox-->
-        <!--android:id="@+id/checkbox_danmu"-->
-        <!--style="@style/CustomCheckboxTheme"-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:text="" />-->
-
-        <!--<Button-->
-        <!--android:id="@+id/bt_openemoji"-->
-        <!--android:layout_width="24dp"-->
-        <!--android:layout_height="24dp"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_toRightOf="@+id/checkbox_danmu"-->
-        <!--android:background="@drawable/emoji" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/et_content"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_margin="10dp"-->
-        <!--android:layout_marginBottom="@dimen/dp_20"-->
-        <!--android:layout_toLeftOf="@id/bt_send"-->
-        <!--android:layout_toRightOf="@id/bt_openemoji"-->
-        <!--android:background="#f0f0f0"-->
-        <!--android:hint="请输入内容"-->
-        <!--android:minHeight="@dimen/dp_40"-->
-        <!--android:padding="@dimen/dp_10"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:textColor="@color/color_black"-->
-        <!--android:textColorHint="@color/color_grey"-->
-        <!--android:textSize="14sp" />-->
-        <!--</RelativeLayout>-->
+        <include
+            layout="@layout/layout_input_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#88F1F1F1" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_emoji"
@@ -177,18 +128,11 @@
         android:orientation="vertical"
         android:visibility="invisible">
 
-        <!--<include-->
-        <!--android:id="@+id/GiftGiveView"-->
-        <!--layout="@layout/giftgiveview" />-->
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_gifts"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_190"
             android:layout_marginBottom="@dimen/dp_5" />
-
-        <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="15dp" />-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -204,7 +148,7 @@
                 android:paddingBottom="@dimen/dp_8"
                 android:paddingTop="@dimen/dp_8"
                 android:text="钻石："
-                android:textColor="@color/color_progress_end" />
+                android:textColor="@color/colorBlue" />
 
             <Button
                 android:id="@+id/bt_live_sendgift"
@@ -217,20 +161,11 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <include
-        android:id="@+id/layout_play_bottom_dialog"
-        layout="@layout/layout_dialog_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone" />
-
-    <View
-        android:id="@+id/view_click"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/listView"
-        />
+    <!--<View-->
+    <!--android:id="@+id/view_click"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_above="@+id/layout_play_bottom_dialog" />-->
 
     <include
         android:id="@+id/layout_live_icon_content"
@@ -240,14 +175,6 @@
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_50" />
 
-    <!--<com.foru.yequtvplay.widget.PeriscopeLayout-->
-    <!--android:id="@+id/periscope"-->
-    <!--android:layout_width="100dp"-->
-    <!--android:layout_marginTop="@dimen/dp_50"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_marginBottom="70dp" />-->
 
     <com.opendanmaku.DanmakuView
         android:id="@+id/danmakuView"
@@ -282,5 +209,23 @@
         android:paddingTop="8dp"
         android:textColor="@color/colorwhite"
         android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rel_layout_bottom_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/layout_play_bottom_dialog"
+            layout="@layout/layout_dialog_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

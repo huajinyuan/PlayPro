@@ -31,8 +31,17 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:padding="10dp"
-        android:text="ALL"
         android:textColor="@color/colorwhite"
         android:textStyle="bold"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/img_topbar_right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="12dp"
+        android:visibility="gone"
+        app:srcCompat="@mipmap/icon_booking_normal" />
 </RelativeLayout>

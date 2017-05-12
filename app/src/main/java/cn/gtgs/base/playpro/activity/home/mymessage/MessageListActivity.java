@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,11 +43,12 @@ public class MessageListActivity extends AppCompatActivity {
     UserInfo loginInfo;
     ArrayList<EMConversation> conversations = new ArrayList<>();
     ListViewConversationsAdapter adapter;
-
     @BindView(R.id.lv_conversitions)
     ListView lv_conversitions;
     @BindView(R.id.tv_message_tip)
     TextView mTvTip;
+    @BindView(R.id.tv_topbar_title)
+    public TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +57,29 @@ public class MessageListActivity extends AppCompatActivity {
         instance = this;
         setContentView(R.layout.activity_message_list);
         ButterKnife.bind(this);
+        mTvTitle.setText("我的消息");
         context = this;
         aCache = ACache.get(this);
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        loginInfo =mF.getMember();
+        loginInfo = mF.getMember();
 
         lv_conversitions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 EMConversation conversation = adapter.getItem(i);
+                EMMessage lastMessage = conversation.getLastMessage();
+                Map<String, Object> map = lastMessage.ext();
+                String username = (String) map.get("user_name");
+                String avatar = (String) map.get("user_avatar");
                 // 进入聊天页面
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("chatto", conversation.conversationId());
+                if (map.containsKey("to_userName")) {
+                    intent.putExtra("chatName", (String) map.get("to_userName"));
+                } else {
+                    intent.putExtra("chatName", conversation.conversationId());
+                }
+//                intent.putExtra("chatName", conversation.());//TODO
                 startActivity(intent);
             }
         });
@@ -74,7 +87,7 @@ public class MessageListActivity extends AppCompatActivity {
         login();
     }
 
-    @OnClick(R.id.img_message_back)
+    @OnClick(R.id.img_topbar_back)
     public void back() {
         this.finish();
     }
@@ -83,10 +96,10 @@ public class MessageListActivity extends AppCompatActivity {
         String userName = "111";
         String password = "111";
         if (null != loginInfo) {
-            userName = loginInfo.getMbId()+"";
-            password = MD5Util.getMD5("webcast"+loginInfo.getMbId());
+            userName = loginInfo.getMbId() + "";
+            password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
         }
-        F.e(userName+"  " +password);
+        F.e(userName + "  " + password);
         EMClient.getInstance().login(userName, password, new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -97,14 +110,22 @@ public class MessageListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(int i, String s) {
+            public void onError(int code, String s) {
                 Log.e("da", "Login EM Error");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (code == 200) {
+                    EMClient.getInstance().logout(true);
+                    login();
+                }
+                else
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
             }
 
             @Override

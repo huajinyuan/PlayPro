@@ -60,14 +60,13 @@ public class MessageChatroomAdapter extends BaseAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder=null;
+        ViewHolder viewHolder = null;
         EMMessage message = getItem(position);
-        if (convertView == null){
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_message_chatroom_received, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-        }
-        else
+        } else
             viewHolder = (ViewHolder) convertView.getTag();
 
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
@@ -77,7 +76,10 @@ public class MessageChatroomAdapter extends BaseAdapter {
         Map<String, Object> map = message.ext();
         if (map != null) {
             if (map.get("level") != null) {
-                viewHolder.tv_level.setText(map.get("level")+"");
+                viewHolder.tv_level.setVisibility(View.VISIBLE);
+                viewHolder.tv_level.setText(map.get("level") + "");
+            } else {
+                viewHolder.tv_level.setVisibility(View.GONE);
             }
         }
 
@@ -85,9 +87,10 @@ public class MessageChatroomAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        TextView tv_username,tv_level;
+        TextView tv_username, tv_level;
         EmoticonsTextView tv_content;
-        public ViewHolder(View view){
+
+        public ViewHolder(View view) {
             tv_username = (TextView) view.findViewById(R.id.tv_username);
             tv_level = (TextView) view.findViewById(R.id.tv_level);
             tv_content = (EmoticonsTextView) view.findViewById(R.id.tv_chatcontent);

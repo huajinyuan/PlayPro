@@ -30,7 +30,8 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
     private int mWith = 0;
     public IFollowItemListener iFollowItemListener;
     public ArrayList<String> mFollowIf;
-    public Follow_StarAdapter(ArrayList<Follow> data,ArrayList<String> mFollowIf, Context context) {
+
+    public Follow_StarAdapter(ArrayList<Follow> data, ArrayList<String> mFollowIf, Context context) {
         this.mData = data;
         this.mContext = context;
         this.mWith = PixelUtil.getWidth(mContext);
@@ -106,56 +107,21 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
             }
         });
 
-        if (!mFollowIf.isEmpty()&&mFollowIf.contains(follow.getAnId()))
-        {
+        if (!mFollowIf.isEmpty() && mFollowIf.contains(follow.getAnId())) {
             holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
 
-        }else
-        {
+        } else {
             holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image);
         }
         holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
         holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
+        holder.tv_tyrants_sn.setText("贡献黄钻");
+        if (anchorItem.getMbGoldPay() == 0) {
+            holder.tv_tyrants_sum.setText("暂无贡献");
+        } else {
+            holder.tv_tyrants_sum.setText(anchorItem.getMbGoldPay() + "");
+        }
 
-
-//        holder.tvName.setText(follow.huanxin_username);
-//        Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        holder.tvName.setText(anchorItem.name);
-//        holder.tvSiteName.setText(anchorItem.place);
-//        holder.tvCount.setText(anchorItem.online_count);
-//        ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
-//        params.height = mWith / 2;
-//        holder.pic.setLayoutParams(params);
-//        final String path = anchorItem.avatar;
-//        if (anchorItem.live.equals("1")) {
-//            Glide.with(mContext).load(anchorItem.stream.snapshot).listener(new RequestListener<String, GlideDrawable>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                    holder.pic.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Glide.with(mContext).load(path).into(holder.pic);
-//                        }
-//                    });
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    return false;
-//                }
-//            }).into(holder.pic);
-//        } else {
-//            Glide.with(mContext).load(anchorItem.avatar).into(holder.pic);
-//        }
-//        holder.pic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Intent intent = new Intent(mContext, LiveActivity.class);
-////                intent.putExtra("anchoritem", mData.get(position));
-////                mContext.startActivity(intent);
-//            }
-//        });
 
     }
 
@@ -175,6 +141,7 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
         TextView tv_tyrants_sum;
         TextView tv_item_l;
         TextView tv_item_g;
+        TextView tv_tyrants_sn;
         ImageView img_tyrants_icon;
         ImageView img_tyrants_sex;
         ImageView img_center_num;
@@ -186,6 +153,7 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
             this.item = itemView;
             this.tvName = (TextView) itemView.findViewById(R.id.tv_tyrants_name);
             this.tvPos = (TextView) itemView.findViewById(R.id.tv_tyrants_count);
+            this.tv_tyrants_sn = (TextView) itemView.findViewById(R.id.tv_tyrants_sn);
             this.tv_item_l = (TextView) itemView.findViewById(R.id.tv_item_l);
             this.tv_item_g = (TextView) itemView.findViewById(R.id.tv_item_g);
             this.tv_tyrants_sum = (TextView) itemView.findViewById(R.id.tv_tyrants_sum);

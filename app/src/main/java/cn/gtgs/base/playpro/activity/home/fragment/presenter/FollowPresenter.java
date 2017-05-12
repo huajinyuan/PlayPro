@@ -111,7 +111,9 @@ public class FollowPresenter implements IFollow {
 
                 @Override
                 public void onError(Throwable e) {
-
+                    if (delegate.getmSwp().isRefreshing()) {
+                        delegate.getmSwp().setRefreshing(false);
+                    }
                 }
 
                 @Override

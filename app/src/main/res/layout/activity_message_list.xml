@@ -3,32 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_message_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <include
         android:id="@+id/rel_message_top"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@color/color_black_background"
-        >
+        layout="@layout/layout_com_topbar" />
 
-        <ImageView
-            android:id="@+id/img_message_back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="15dp"
-            android:src="@mipmap/icon_coment_back" />
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rel_message_top"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:background="@color/color_black_background"-->
+    <!--&gt;-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="我的消息"
-            android:textSize="@dimen/sp_18"
+    <!--<ImageView-->
+    <!--android:id="@+id/img_message_back"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:padding="15dp"-->
+    <!--android:src="@mipmap/icon_coment_back" />-->
 
-            />
-    </RelativeLayout>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:text="我的消息"-->
+    <!--android:textSize="@dimen/sp_18"-->
+
+    <!--/>-->
+    <!--</RelativeLayout>-->
 
     <ListView
         android:id="@+id/lv_conversitions"

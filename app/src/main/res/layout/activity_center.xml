@@ -22,6 +22,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/rel_center_2edt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorwhite">

@@ -91,6 +91,11 @@ public class TyrantsAdapter extends RecyclerView.Adapter<TyrantsAdapter.AnchorHo
         holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
         holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
 
+        if (anchorItem.getMbGoldPay() == 0) {
+            holder.tv_tyrants_sum.setText("暂无奉献");
+        } else {
+            holder.tv_tyrants_sum.setText(anchorItem.getMbGoldPay() + "");
+        }
 
     }
 

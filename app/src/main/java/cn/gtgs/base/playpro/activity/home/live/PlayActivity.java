@@ -189,6 +189,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvLevel;
     @BindView(R.id.tv_play_gold)
     TextView mTvGold;
+    @BindView(R.id.tv_live_booking_jubao)
+    TextView mTvCancel;
+    @BindView(R.id.rel_layout_bottom_dialog)
+    View rel_layout_bottom_dialog;
     ACache aCache;
 
     @Override
@@ -218,12 +222,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (!isMember) {
             getAnChorInfo(anchorItem.getAnId());
             initviews();
-
-
 //            doPlay();
             //----------------------------------------------------------以下为环信
             //-------------------------------------------------------------------
 //            login();
+        } else {
+            mTvCancel.setVisibility(View.GONE);
         }
 
     }
@@ -316,7 +320,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void sendMsg() {
         vp_emoji.setVisibility(View.GONE);
         et_huanxin_content = et_content.getText().toString().trim();
-
         F.e("------------------------" + et_huanxin_content);
         if (et_huanxin_content.isEmpty()) {
             Log.e("main", "isempty");
@@ -553,17 +556,23 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
-//    void setbookingclose() {
-//        mLayoutBottom.setVisibility(View.INVISIBLE);
-////        m.setVisibility(View.INVISIBLE);
-//        frame_live_menu.setVisibility(View.VISIBLE);
-//    }
+    void setbookingclose() {
+        mLayoutBottom.setVisibility(View.INVISIBLE);
+//        m.setVisibility(View.INVISIBLE);
+        frame_live_menu.setVisibility(View.VISIBLE);
+    }
 
     void setviewClick() {
         frame_live_menu.setVisibility(View.VISIBLE);
-        frame_live_chat.setVisibility(View.INVISIBLE);
+        frame_live_chat.setVisibility(View.GONE);
+        rel_layout_bottom_dialog.setVisibility(View.GONE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
         mLayoutBottom.setVisibility(View.INVISIBLE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
+        if (isOpen) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(PlayActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     void setsendgift() {
@@ -579,6 +588,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     void settochat() {
         AddFriend();
         Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra("chatName", null != anchorItem.getMember().getMbNickname() ? anchorItem.getMember().getMbNickname() : anchorItem.getMbId() + "");
+        intent.putExtra("chattoURL", anchorItem.getMember().getMbPhoto());
         if (!isMember) {
             intent.putExtra("chatto", anchorItem.getMbId());
         } else {
@@ -632,6 +643,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void contentAction() {
         hidelayout();
         mLayoutBottom.setVisibility(View.VISIBLE);
+        rel_layout_bottom_dialog.setVisibility(View.VISIBLE);
         ArrayList<String> gs = PApplication.getInstance().getmFList();
         if (null != anchorItem.getAnId()) {
 
@@ -691,8 +703,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     public void hidelayout() {
         frame_live_menu.setVisibility(View.INVISIBLE);
-        frame_live_chat.setVisibility(View.INVISIBLE);
+        frame_live_chat.setVisibility(View.GONE);
         mLayoutBottom.setVisibility(View.INVISIBLE);
+        rel_layout_bottom_dialog.setVisibility(View.GONE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
     }
 
@@ -958,11 +971,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         });
     }
 
-    @OnClick({R.id.lin_anchor_info_action_follow, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.view_click, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_anchor_info_action_follow, R.id.rel_layout_bottom_dialog, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
-                sendMsg();
+                if (mCheckBox.isChecked()) {
+                    sendGift2("2", true);
+                } else {
+                    sendMsg();
+                }
                 break;
             case R.id.bt_openemoji:
                 setopenemoji();
@@ -979,16 +996,28 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //            case R.id.bt_live_booking:
 //                booking();
 //                break;
-//            case R.id.iv_live_booking_anchoricon:
-//                go2Info();
-//                break;
+            case R.id.tv_live_booking_jubao:
+                if (!isMember) {
+                    setbookingclose();
+                }
+                break;
             case R.id.bt_live_gifts:
                 setgifts();
                 break;
             case R.id.lin_anchor_info_action_follow://关注
                 follow();
                 break;
-            case R.id.view_click:
+//            case R.id.view_click:
+//                if (!isMember) {
+//                    setviewClick();
+//                }
+//                break;
+            case R.id.frame_live_chat:
+                if (!isMember) {
+                    setviewClick();
+                }
+                break;
+            case R.id.rel_layout_bottom_dialog:
                 if (!isMember) {
                     setviewClick();
                 }
@@ -1132,6 +1161,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onError(int code, String message) {
                 Log.e("main", "登录聊天服务器失败！");
+                if (code == 200) {
+                    EMClient.getInstance().logout(true);
+                    login();
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
@@ -1401,7 +1441,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         @Override
         public void onTick(long millisUntilFinished) {
 //            periscopeLayout.addHeart();
-            sendGift2(sum);
+            sendGift2(sum, false);
         }
 
         //倒计时结束时做的操作↓↓
@@ -1412,7 +1452,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
 
-    public void sendGift2(final String num) {
+    public void sendGift2(final String num, final boolean isDanmu) {
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
@@ -1444,11 +1484,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 mF.setMember(loginInfo);
                                 aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
                             }
-
-
+                            if (isDanmu) {
+                                sendMsg();
+                            }
                         } else {
-                            ToastUtil.showToast(ob.getString("msg"), context);
-                            PlayActivity.this.finish();
+                            if (isDanmu) {
+                                ToastUtil.showToast(ob.getString("msg") + "，充值后再发弹幕吧", context);
+                            } else {
+                                ToastUtil.showToast(ob.getString("msg") + ",请充值后再进入观看", context);
+                                PlayActivity.this.finish();
+                            }
+
                         }
                     }
                 } catch (Exception e) {

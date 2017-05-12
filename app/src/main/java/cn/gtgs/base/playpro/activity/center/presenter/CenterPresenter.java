@@ -60,9 +60,7 @@ public class CenterPresenter {
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 if (null != bs.getData()) {
                     aCache.put(ACacheKey.CURRENT_ACCOUNT, bs.getData());
-                    if (delegate.getmSwp().isRefreshing()) {
-                        delegate.getmSwp().setRefreshing(false);
-                    }
+                    delegate.init();
                 }
             }
         });

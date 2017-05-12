@@ -112,7 +112,10 @@ public class StarPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-
+                if (delegate.getmSwp().isRefreshing())
+                {
+                    delegate.getmSwp().setRefreshing(false);
+                }
             }
 
             @Override

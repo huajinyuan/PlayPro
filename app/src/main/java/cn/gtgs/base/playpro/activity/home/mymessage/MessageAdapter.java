@@ -31,10 +31,12 @@ public class MessageAdapter extends BaseAdapter {
     private List<EMMessage> msgs;
     private Context context;
     private LayoutInflater inflater;
+    private String chattoURL;
 
-    public MessageAdapter(List<EMMessage> msgs, Context context_) {
+    public MessageAdapter(List<EMMessage> msgs, String chattoURL, Context context_) {
         this.msgs = msgs;
         this.context = context_;
+        this.chattoURL = chattoURL;
         inflater = LayoutInflater.from(context);
     }
 
@@ -90,8 +92,19 @@ public class MessageAdapter extends BaseAdapter {
         String username = (String) map.get("user_name");
         String avatar = (String) map.get("user_avatar");
         holder.tv_content.setText(txtBody.getMessage());
-        holder.tv_username.setText(username != null ? username : message.getFrom());
-        if (avatar != null) {
+        if (viewType == 0) {
+            final ImageView iv_icon = holder.iv_avatar;
+            Glide.with(context).load(null != chattoURL ? Config.BASE + chattoURL : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    iv_icon.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+        } else {
+            holder.tv_username.setText(username != null ? username : message.getFrom());
             final ImageView iv_icon = holder.iv_avatar;
             Glide.with(context).load(null != avatar ? Config.BASE + avatar : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                 @Override

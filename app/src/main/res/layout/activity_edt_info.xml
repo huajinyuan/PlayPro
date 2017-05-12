@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_edt_info"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swp_center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="cn.gtgs.base.playpro.activity.center.EdtInfoActivity">
-
-    <include layout="@layout/layout_com_topbar" />
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <LinearLayout
+        android:id="@+id/activity_edt_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20dp"></LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@color/colorbg"
+        android:orientation="vertical"
+        >
 
-</LinearLayout>
+        <include layout="@layout/layout_com_topbar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:background="@color/colorwhite"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/img_edt_info_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:srcCompat="@drawable/circle_zhubo" />
+
+            <EditText
+                android:id="@+id/edt_edt_info_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="请输入昵称"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+

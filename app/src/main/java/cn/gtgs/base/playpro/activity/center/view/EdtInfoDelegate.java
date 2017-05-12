@@ -5,6 +5,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,51 +20,41 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
-import cn.gtgs.base.playpro.utils.AppUtil;
 
 /**
  * Created by gtgs on 2017/4/25.
  */
 
-public class CenterDelegate extends AppDelegate {
+public class EdtInfoDelegate extends AppDelegate {
 
     @BindView(R.id.tv_topbar_title)
     TextView mTvTitle;
-    @BindView(R.id.img_center_icon)
-    ImageView mIcon;
-    @BindView(R.id.tv_center_name)
-    TextView mTvName;
-    @BindView(R.id.img_center_sex)
-    ImageView mImgSex;
-    @BindView(R.id.img_topbar_right)
-    ImageView mImgRight;
-    @BindView(R.id.tv_center_id)
-    TextView mTvId;
-    @BindView(R.id.tv_center_gole)
-    TextView mGole;
-    @BindView(R.id.tv_center_level)
-    TextView tvLe;
-    @BindView(R.id.tv_center_g)
-    TextView tvg;
     @BindView(R.id.swp_center)
     SwipeRefreshLayout mSwp;
+    @BindView(R.id.img_edt_info_icon)
+    ImageView mIcon;
+    @BindView(R.id.edt_edt_info_name)
+    EditText mEdtName;
+    @BindView(R.id.tv_topbar_right)
+    TextView mTvRight;
     UserInfo info;
 
     @Override
     public int getRootLayoutId() {
-        return R.layout.activity_center;
+        return R.layout.activity_edt_info;
     }
 
     public void setmTvTitle(String title) {
         mTvTitle.setText(title);
     }
 
+    public ImageView getmIcon()
+    {
+        return mIcon;
+    }
     public void init() {
         Follow follow = (Follow) ACache.get(this.getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = follow.getMember();
-        mTvName.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
-        mTvId.setText(info.getMbId() + "");
-        mImgRight.setVisibility(View.VISIBLE);
         Glide.with(this.getActivity()).load(null != info.getMbPhoto() ? Config.BASE + info.getMbPhoto() : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mIcon) {
             @Override
             protected void setResource(Bitmap resource) {
@@ -73,12 +64,17 @@ public class CenterDelegate extends AppDelegate {
                 mIcon.setImageDrawable(circularBitmapDrawable);
             }
         });
-        tvLe.setText(AppUtil.getDJ(info.getMbGold()) + "");
-        tvg.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
-        mGole.setText("今日收益" + follow.getDayGold() + "钻石");
-        mImgSex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
+        mEdtName.setText(info.getMbNickname());
+        setmTvTitle("个人编辑");
+        mTvRight.setVisibility(View.VISIBLE);
+        mTvRight.setText("完成");
+
     }
 
+    public String getEdtName()
+    {
+        return mEdtName.getText().toString().trim();
+    }
     public SwipeRefreshLayout getmSwp() {
         return mSwp;
     }

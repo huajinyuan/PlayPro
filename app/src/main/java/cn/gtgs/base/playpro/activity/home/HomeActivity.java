@@ -30,6 +30,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -67,10 +68,8 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         fragmentTransaction.add(R.id.fragment_home_content, mRanking);
         fragmentTransaction.add(R.id.fragment_home_content, mRecommented);
         fragmentTransaction.add(R.id.fragment_home_content, mFollow);
-        fragmentTransaction.hide(mRecommented);
-        fragmentTransaction.hide(mFollow);
-        fragmentTransaction.show(mRanking);
         fragmentTransaction.commit();
+        setTab(1);
         presenter.initData();
     }
 
@@ -171,6 +170,8 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 //                startPush("URL:"+follow.getWcPullAddress());
                 }
             });
+        } else {
+            ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", this);
         }
 
 //        PostRequest request = OkGo.post(Config.POST_ANCHOR_GET).params(params);

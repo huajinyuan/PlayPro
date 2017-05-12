@@ -63,22 +63,13 @@ public class RecommentedPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-
+                if (delegate.getmSwp().isRefreshing()) {
+                    delegate.getmSwp().setRefreshing(false);
+                }
             }
 
             @Override
             public void onNext(Response response) {
-
-//                        F.e(response.body().toString());
-//                try {
-//                    ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-//                    delegate.setData(lists);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-
-//                ArrayList<AnchorItem> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
-//
                 BaseList<Follow> bList = Parsing.getInstance().ResponseToList2(response, Follow.class);
                 F.e("-----------------------------" + bList.toString());
                 ArrayList<Follow> follows = (ArrayList<Follow>) bList.getDataList();

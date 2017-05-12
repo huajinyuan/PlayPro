@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
@@ -38,6 +39,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
 import cn.gtgs.base.playpro.widget.OnEmoticoSelectedListener;
 import cn.gtgs.base.playpro.widget.ParentViewPaperAdapter;
@@ -52,15 +54,19 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
     ViewPager vp_emoji;
     @BindView(R.id.et_content)
     EditText et_content;
+    @BindView(R.id.tv_topbar_title)
+    TextView mTvTitle;
 
     Follow mF;
     UserInfo loginInfo;
-    String message_from,message_content,chatto;
+    String message_from, message_content, chatto;
     ArrayList<EMMessage> msgList = new ArrayList<>();
     MessageAdapter adapter;
     String et_huanxin_content;
-
-    private int FACE_SIZE;// 表情大小
+    private String mToUserNam;
+    private String chattoURL;
+    private int FACE_SIZE;//
+    // 表情大小
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,81 +79,71 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         loginInfo = mF.getMember();
         chatto = getIntent().getStringExtra("chatto");
+        mToUserNam = getIntent().getStringExtra("chatName");
+        chattoURL = getIntent().getStringExtra("chattoURL");
+        if (StringUtils.isNotEmpty(mToUserNam)) {
+            mTvTitle.setText(mToUserNam);
+        } else if (StringUtils.isNotEmpty(mToUserNam)) {
+            mTvTitle.setText(mToUserNam);
+        }
         FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         login();
         initviews();
     }
 
-    @OnClick(R.id.bt_openemoji)
-    void setopenEmoji(){
+    void setopenEmoji() {
         vp_emoji.setVisibility(vp_emoji.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if ((vp_emoji.getVisibility() == View.VISIBLE) && imm.isActive()) {
             F.e("here");
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken() , InputMethodManager.HIDE_NOT_ALWAYS);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-    @OnClick(R.id.et_content)
-    void setetClick(){
+
+    void setetClick() {
         vp_emoji.setVisibility(View.GONE);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if ((vp_emoji.getVisibility() == View.VISIBLE) && (!imm.isActive())) {
             F.e("here");
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
+    @OnClick({R.id.img_topbar_back, R.id.et_content, R.id.bt_openemoji})
+    public void Onclick(View v) {
+        switch (v.getId()) {
+            case R.id.img_topbar_back:
+                this.finish();
+                break;
+            case R.id.et_content:
+                setetClick();
+                break;
+            case R.id.bt_openemoji:
+                setopenEmoji();
+                break;
+        }
+    }
+
     private List<ViewPager> viewpagers = new ArrayList<ViewPager>();
     private ChatEmoticoViewPager emoticoViewPager;
-    void initviews(){
-//        view_emoji1 = LayoutInflater.from(context).inflate(R.layout.item_viewpager_emoji, null);
-//        view_emoji2 = LayoutInflater.from(context).inflate(R.layout.item_viewpager_emoji, null);
-//        ArrayList<View> views = new ArrayList<>();
-//        views.add(view_emoji1);
-//        views.add(view_emoji2);
-//        vp_emoji.setAdapter(new MyViewPagerAdapter(views));
-//
-//        gv_emoji1 = (GridView) view_emoji1.findViewById(R.id.gv_emoji);
-//        gv_emoji2 = (GridView) view_emoji2.findViewById(R.id.gv_emoji);
-//
-//        ArrayList<Integer> emojiIds1 = new ArrayList<>();
-//        for(int i=0;i<21;i++) {
-//            emojiIds1.add(emojisIdMap.get(emojisKeyList.get(i)));
-//        }
-//        ArrayList<Integer> emojiIds2 = new ArrayList<>();
-//        for(int i=21;i<40;i++) {
-//            emojiIds2.add(emojisIdMap.get(emojisKeyList.get(i)));
-//        }
-//        gv_emoji1.setAdapter(new GridViewEmojiAdapter(context,emojiIds1));
-//        gv_emoji2.setAdapter(new GridViewEmojiAdapter(context,emojiIds2));
-//
-//        gv_emoji1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                setEtEmoji(emojisKeyList.get(i));
-//            }
-//        });
-//        gv_emoji2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                setEtEmoji(emojisKeyList.get(i+21));
-//            }
-//        });
+
+    void initviews() {
         emoticoViewPager = new ChatEmoticoViewPager(context);
         emoticoViewPager.setOnEmoticoSelectedListener(this);
         viewpagers.add(emoticoViewPager);
         ParentViewPaperAdapter viewPaperAdapter = new ParentViewPaperAdapter(viewpagers);
         vp_emoji.setAdapter(viewPaperAdapter);
     }
-    public void login(){
+
+    public void login() {
 
         String userName = "111";
         String password = "111";
         if (null != loginInfo) {
-            userName = loginInfo.getMbId()+"";
-            password = MD5Util.getMD5("webcast"+loginInfo.getMbId());
+            userName = loginInfo.getMbId() + "";
+            password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
         }
-        F.e(userName+"  " +password);
+        F.e(userName + "  " + password);
         EMClient.getInstance().login(userName, password, new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -164,14 +160,20 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
             }
 
             @Override
-            public void onError(int i, String s) {
-                Log.e("da","Login EM Error");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onError(int code, String s) {
+                if (code == 200) {
+                    EMClient.getInstance().logout(true);
+                    login();
+                }else
+                {
+                    Log.e("da", "Login EM Error");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
 
             @Override
@@ -181,42 +183,47 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         });
     }
 
-    public void loadsomes(){
+    public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
-        Log.e("dsaa", "chatto:"+chatto);
+        Log.e("dsaa", "chatto:" + chatto);
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(chatto, EMConversation.EMConversationType.Chat,true);
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(chatto, EMConversation.EMConversationType.Chat, true);
         conversation.markAllMessagesAsRead();
-        if(MessageListActivity.instance!=null)
+        if (MessageListActivity.instance != null)
             MessageListActivity.instance.refreshList();
 
         msgList.addAll(conversation.getAllMessages());
-        adapter = new MessageAdapter(msgList,context);
+        adapter = new MessageAdapter(msgList, chattoURL, context);
         lv_chat.setAdapter(adapter);
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
-        if(msgList.size()>0)
+        if (msgList.size() > 0)
             lv_chat.setSelection(lv_chat.getCount() - 1);
         Log.e("sdad", "finish loadsomes");
     }
 
     @OnClick(R.id.bt_send)
-    void setsend(){
+    void setsend() {
         et_huanxin_content = et_content.getText().toString().trim();
         if (et_huanxin_content.isEmpty()) {
             Log.e("main", "isempty");
-        }
-        else{
+        } else {
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
             EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatto);
             message.setChatType(EMMessage.ChatType.Chat);
-            message.setAttribute("user_name", null!=loginInfo.getMbNickname()?loginInfo.getMbNickname():loginInfo.getMbPhone());
+            message.setAttribute("user_name", null != loginInfo.getMbNickname() ? loginInfo.getMbNickname() : loginInfo.getMbPhone());
             message.setAttribute("level", "1");
             message.setAttribute("user_avatar", loginInfo.getMbPhoto());
+            if (StringUtils.isNotEmpty(mToUserNam)) {
+                message.setAttribute("to_userName", mToUserNam);//TODO缺to_userName
+            } else if (StringUtils.isNotEmpty(chatto)) {
+                message.setAttribute("to_userName", chatto);//TODO缺to_userName
+            }
+            message.setAttribute("to_avatar", chattoURL);//TODO缺to_userName
             EMClient.getInstance().chatManager().sendMessage(message);
 
             msgList.add(message);
             adapter.notifyDataSetChanged();
-            if(MessageListActivity.instance!=null)
+            if (MessageListActivity.instance != null)
                 MessageListActivity.instance.refreshList();
             if (msgList.size() > 0) {
                 lv_chat.setSelection(lv_chat.getCount() - 1);
@@ -231,11 +238,11 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
             Log.e("main", "收到消息");
-            if(MessageListActivity.instance!=null)
+            if (MessageListActivity.instance != null)
                 MessageListActivity.instance.refreshList();
 
             for (EMMessage message : messages) {
-                if(message.getUserName().equals(chatto)){
+                if (message.getUserName().equals(chatto)) {
                     //--------------------------------------------->
                     message_from = message.getUserName();
                     EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
