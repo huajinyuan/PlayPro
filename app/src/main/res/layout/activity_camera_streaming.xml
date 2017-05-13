@@ -170,4 +170,14 @@
         app:pick_interval="1000"
         app:show_debug="false"
         app:start_Y_offset="0.2" />
+
+
+    <cn.gtgs.base.playpro.widget.PeriscopeLayout
+        android:id="@+id/periscope"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginTop="@dimen/dp_50" />
 </RelativeLayout>

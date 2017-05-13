@@ -63,8 +63,8 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
     ArrayList<EMMessage> msgList = new ArrayList<>();
     MessageAdapter adapter;
     String et_huanxin_content;
-    private String mToUserNam;
-    private String chattoURL;
+    //    private String mToUserNam;
+//    private String chattoURL;
     private int FACE_SIZE;//
     // 表情大小
 
@@ -79,13 +79,15 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         loginInfo = mF.getMember();
         chatto = getIntent().getStringExtra("chatto");
-        mToUserNam = getIntent().getStringExtra("chatName");
-        chattoURL = getIntent().getStringExtra("chattoURL");
-        if (StringUtils.isNotEmpty(mToUserNam)) {
-            mTvTitle.setText(mToUserNam);
-        } else if (StringUtils.isNotEmpty(mToUserNam)) {
-            mTvTitle.setText(mToUserNam);
+        if (StringUtils.isNotEmpty(chatto)) {
+            mTvTitle.setText(chatto);
         }
+//        mToUserNam = getIntent().getStringExtra("chatName");
+//        chattoURL = getIntent().getStringExtra("chattoURL");
+//        if (StringUtils.isNotEmpty(mToUserNam)) {
+//        } else if (StringUtils.isNotEmpty(mToUserNam)) {
+//            mTvTitle.setText(mToUserNam);
+//        }
         FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         login();
         initviews();
@@ -164,8 +166,7 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
                 if (code == 200) {
                     EMClient.getInstance().logout(true);
                     login();
-                }else
-                {
+                } else {
                     Log.e("da", "Login EM Error");
                     runOnUiThread(new Runnable() {
                         @Override
@@ -193,7 +194,7 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
             MessageListActivity.instance.refreshList();
 
         msgList.addAll(conversation.getAllMessages());
-        adapter = new MessageAdapter(msgList, chattoURL, context);
+        adapter = new MessageAdapter(msgList, context);
         lv_chat.setAdapter(adapter);
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
         if (msgList.size() > 0)
@@ -213,12 +214,12 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
             message.setAttribute("user_name", null != loginInfo.getMbNickname() ? loginInfo.getMbNickname() : loginInfo.getMbPhone());
             message.setAttribute("level", "1");
             message.setAttribute("user_avatar", loginInfo.getMbPhoto());
-            if (StringUtils.isNotEmpty(mToUserNam)) {
-                message.setAttribute("to_userName", mToUserNam);//TODO缺to_userName
-            } else if (StringUtils.isNotEmpty(chatto)) {
-                message.setAttribute("to_userName", chatto);//TODO缺to_userName
-            }
-            message.setAttribute("to_avatar", chattoURL);//TODO缺to_userName
+//            if (StringUtils.isNotEmpty(mToUserNam)) {
+//                message.setAttribute("to_userName", mToUserNam);//TODO缺to_userName
+//            } else if (StringUtils.isNotEmpty(chatto)) {
+//                message.setAttribute("to_userName", chatto);//TODO缺to_userName
+//            }
+//            message.setAttribute("to_avatar", chattoURL);//TODO缺to_userName
             EMClient.getInstance().chatManager().sendMessage(message);
 
             msgList.add(message);

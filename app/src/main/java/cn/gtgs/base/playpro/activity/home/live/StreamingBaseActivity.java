@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -101,6 +102,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.widget.PeriscopeLayout;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.WheelView;
 import cn.gtgs.base.playpro.widget.gles.FBO;
@@ -261,7 +263,8 @@ public class StreamingBaseActivity extends Activity implements
     };
 
     Follow mAnchor;
-
+    @BindView(R.id.periscope)
+    public PeriscopeLayout periscopeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1110,17 +1113,6 @@ public class StreamingBaseActivity extends Activity implements
 
         }
 
-//        @Override
-//        public void onMemberKicked(String roomId, String roomName, String participant) {
-//            if (roomId.equals(chatroomid)) {
-//                String curUser = EMClient.getInstance().getCurrentUser();
-//                if (curUser.equals(participant)) {
-//                    EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
-//                } else {
-//                    showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
-//                }
-//            }
-//        }
 
     };
 
@@ -1182,57 +1174,6 @@ public class StreamingBaseActivity extends Activity implements
                 }
 
 
-//                String spotType = null;
-//                if (map.containsKey("SPOT_KEY")) {
-//                    spotType = (String) map.get("SPOT_KEY");
-//                    F.e(spotType);
-//                }
-//                if (null != spotType) {
-//                    if (spotType.equals("FJZY_SPOT")) {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showLikes(message_from);
-//                            }
-//                        });
-//                    } else if (spotType.equals("GIFT")) {
-//                        mGetGift = new Gift();
-//                        mGetGift.name = (String) map.get("GiftName");
-////                        mGetGift.picture = (String) map.get("GiftPicture");
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showGifts(message_from, mGetGift);
-//                            }
-//                        });
-//                    } else {
-//                        msgList.add(message);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.notifyDataSetChanged();
-//                                if (msgList.size() > 0) {
-//                                    listView.setSelection(listView.getCount() - 1);
-//                                    Log.e("sad", "setselection");
-//                                }
-//                            }
-//                        });
-//                    }
-//
-//                } else {
-//                    msgList.add(message);
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            adapter.notifyDataSetChanged();
-//                            if (msgList.size() > 0) {
-//                                listView.setSelection(listView.getCount() - 1);
-//                                Log.e("sad", "setselection");
-//                            }
-//                        }
-//                    });
-//                }
-
             }
         }
 
@@ -1281,6 +1222,11 @@ public class StreamingBaseActivity extends Activity implements
                 });
             }
         }, 1500);
+        if (temp) {
+            new MyTimer(2000, 300).start();
+            temp = false;
+        }
+
     }
 
 
@@ -1457,74 +1403,9 @@ public class StreamingBaseActivity extends Activity implements
             }
         });
 
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        String levelString = aCache.getAsString("beautyLevel");
-//                        if (levelString != null) {
-//                            int level = Integer.parseInt(levelString);
-//
-//                            CameraStreamingSetting.FaceBeautySetting fbSetting = mCameraStreamingSetting.getFaceBeautySetting();
-//                            fbSetting.beautyLevel = level / 100.0f;
-//                            fbSetting.whiten = level / 100.0f;
-//                            fbSetting.redden = level / 100.0f;
-//                            mMediaStreamingManager.updateFaceBeautySetting(fbSetting);
-//                            Log.e("aaa", levelString + "  " + (level + 10000));
-//                            seekBarBeauty.setProgress(level);
-//                        }
-//                    }
-//                });
-//            }
-//        }, 2000);
-
         initButtonText();
         dialogsettings.hide();
     }
-//
-//    OnResponseListener<String> responseListener=new OnResponseListener<String>() {
-//        @Override
-//        public void onStart(int what) {
-//
-//        }
-//
-//        @Override
-//        public void onSucceed(int what, Response<String> response) {
-//            if (response.responseCode() == 200) {
-//                switch (what) {
-//                    case Int_StopStreaming:
-//                        Log.e("aaa", "finish streaming");
-//                        break;
-//                    case Int_BookingValid:
-//                        DingtaiList dingtaiList = JSON.parseObject(response.get(), DingtaiList.class);
-//                        if (dingtaiList != null) {
-//                            ListViewFragmentDTAdapter adapter = new ListViewFragmentDTAdapter(context, dingtaiList.data);
-//                            lv_live_booking.setAdapter(adapter);
-//                        }
-//                        break;
-//                    case Int_OnlineNum:
-//                        ArrayList<OnlineNum> onlineNums = (ArrayList<OnlineNum>) JSON.parseArray(response.get(), OnlineNum.class);
-//                        if (onlineNums != null) {
-//                            tv_live_onlinenum.setText(onlineNums.get(0).count);
-//                            Log.e("aaa", onlineNums.get(0).count);
-//                        }
-//                        break;
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void onFailed(int what, Response<String> response) {
-//
-//        }
-//
-//        @Override
-//        public void onFinish(int what) {
-//
-//        }
-//    };
 
     public void showDialogClose() {
         final AlertDialog mydialog;
@@ -1565,4 +1446,32 @@ public class StreamingBaseActivity extends Activity implements
         mDanmakuView.setVisibility(View.VISIBLE);
         mDanmakuView.show();
     }
+
+
+    private boolean temp = true;
+    private class MyTimer extends CountDownTimer {
+
+        private static final String TAG = "MyTimer";
+
+        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+        public MyTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        //每过你规定的时间间隔做的操作
+        @Override
+        public void onTick(long millisUntilFinished) {
+            periscopeLayout.addHeart();
+            Log.d(TAG, "111");
+        }
+
+        //倒计时结束时做的操作↓↓
+        @Override
+        public void onFinish() {
+            temp = true;
+        }
+    }
+
+
 }

@@ -74,11 +74,11 @@ public class MessageListActivity extends AppCompatActivity {
                 // 进入聊天页面
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("chatto", conversation.conversationId());
-                if (map.containsKey("to_userName")) {
-                    intent.putExtra("chatName", (String) map.get("to_userName"));
-                } else {
-                    intent.putExtra("chatName", conversation.conversationId());
-                }
+//                if (map.containsKey("to_userName")) {
+//                    intent.putExtra("chatName", (String) map.get("to_userName"));
+//                } else {
+//                    intent.putExtra("chatName", conversation.conversationId());
+//                }
 //                intent.putExtra("chatName", conversation.());//TODO
                 startActivity(intent);
             }

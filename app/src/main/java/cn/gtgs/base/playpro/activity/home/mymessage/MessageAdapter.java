@@ -21,7 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.widget.EmoticonsTextView;
 
 /**
@@ -31,13 +35,14 @@ public class MessageAdapter extends BaseAdapter {
     private List<EMMessage> msgs;
     private Context context;
     private LayoutInflater inflater;
-    private String chattoURL;
+    UserInfo info;
 
-    public MessageAdapter(List<EMMessage> msgs, String chattoURL, Context context_) {
+    public MessageAdapter(List<EMMessage> msgs, Context context_) {
         this.msgs = msgs;
         this.context = context_;
-        this.chattoURL = chattoURL;
         inflater = LayoutInflater.from(context);
+        Follow follow = (Follow) ACache.get(context_).getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        info = follow.getMember();
     }
 
     @Override
@@ -94,7 +99,7 @@ public class MessageAdapter extends BaseAdapter {
         holder.tv_content.setText(txtBody.getMessage());
         if (viewType == 0) {
             final ImageView iv_icon = holder.iv_avatar;
-            Glide.with(context).load(null != chattoURL ? Config.BASE + chattoURL : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+            Glide.with(context).load(info.getMbPhoto()).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =
@@ -106,7 +111,7 @@ public class MessageAdapter extends BaseAdapter {
         } else {
             holder.tv_username.setText(username != null ? username : message.getFrom());
             final ImageView iv_icon = holder.iv_avatar;
-            Glide.with(context).load(null != avatar ? Config.BASE + avatar : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+            Glide.with(context).load(Config.BASE + avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =

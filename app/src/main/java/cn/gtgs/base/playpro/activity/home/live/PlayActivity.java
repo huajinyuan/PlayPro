@@ -174,8 +174,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     //        private boolean mIsGetGift = false;
     private String[] mReport = {"广告欺诈", "淫秽色情", "骚扰谩骂", "反动政治", "其他内容"};
     private String star_at;
-    //    @BindView(R.id.periscope)
-//    public PeriscopeLayout periscopeLayout;
     private int FACE_SIZE;// 表情大小
 
     boolean isMember = false;
@@ -562,6 +560,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         mLayoutBottom.setVisibility(View.INVISIBLE);
 //        m.setVisibility(View.INVISIBLE);
         frame_live_menu.setVisibility(View.VISIBLE);
+        rel_layout_bottom_dialog.setVisibility(View.GONE);
+        //TODO
     }
 
     void setviewClick() {
@@ -569,7 +569,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         frame_live_chat.setVisibility(View.GONE);
         rel_layout_bottom_dialog.setVisibility(View.GONE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
-        mLayoutBottom.setVisibility(View.INVISIBLE);
+        mLayoutBottom.setVisibility(View.GONE);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         boolean isOpen = imm.isActive();//isOpen若返回true，则表示输入法打开
         if (isOpen) {
@@ -590,8 +590,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     void settochat() {
         AddFriend();
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("chatName", null != anchorItem.getMember().getMbNickname() ? anchorItem.getMember().getMbNickname() : anchorItem.getMbId() + "");
-        intent.putExtra("chattoURL", anchorItem.getMember().getMbPhoto());
+//        intent.putExtra("chatName", null != anchorItem.getMember().getMbNickname() ? anchorItem.getMember().getMbNickname() : anchorItem.getMbId() + "");
+//        intent.putExtra("chattoURL", anchorItem.getMember().getMbPhoto());
         if (!isMember) {
             intent.putExtra("chatto", anchorItem.getMbId());
         } else {
@@ -706,7 +706,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void hidelayout() {
         frame_live_menu.setVisibility(View.INVISIBLE);
         frame_live_chat.setVisibility(View.GONE);
-        mLayoutBottom.setVisibility(View.INVISIBLE);
+        mLayoutBottom.setVisibility(View.GONE);
         rel_layout_bottom_dialog.setVisibility(View.GONE);
         framel_live_gifts.setVisibility(View.INVISIBLE);
     }
@@ -728,6 +728,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
         } else {
             tv_likes.setText(from + " 给主播点了赞");
+            if (temp) {
+                new MyTimer(2000, 300).start();
+                temp = false;
+            }
 
         }
         tv_likes.setVisibility(View.VISIBLE);
@@ -984,15 +988,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    et_content.setHint("(每条弹幕收费1钻石)你想对主播说些什么？");
+                    et_content.setHint("(每条弹幕收费2钻石)你想对主播说些什么？");
                 } else {
                     et_content.setHint("请输入消息内容");
                 }
             }
         });
     }
-
-    @OnClick({R.id.lin_anchor_info_action_follow, R.id.rel_layout_bottom_dialog, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_anchor_info_action_follow,R.id.rel_layout_bottom_dialog, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -1011,12 +1014,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.bt_live_chat:
                 setchat();
                 break;
-//            case R.id.btn_live_dingtai:
-//                booking();
-//                break;
-//            case R.id.bt_live_booking:
-//                booking();
-//                break;
             case R.id.tv_live_booking_jubao:
                 if (!isMember) {
                     setbookingclose();
@@ -1028,11 +1025,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.lin_anchor_info_action_follow://关注
                 follow();
                 break;
-//            case R.id.view_click:
-//                if (!isMember) {
-//                    setviewClick();
-//                }
-//                break;
             case R.id.frame_live_chat:
                 if (!isMember) {
                     setviewClick();
@@ -1040,6 +1032,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 break;
             case R.id.rel_layout_bottom_dialog:
                 if (!isMember) {
+//                    hidelayout();
                     setviewClick();
                 }
                 break;
@@ -1049,9 +1042,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             case R.id.bt_live_booking_tochat:
                 settochat();
                 break;
-//            case R.id.tv_live_recharge:
-//                GetCoin();
-//                break;
             case R.id.layout_live_icon_content:
                 contentAction();
                 break;
