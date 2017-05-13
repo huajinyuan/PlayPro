@@ -47,6 +47,8 @@ public class CenterDelegate extends AppDelegate {
     TextView tvg;
     @BindView(R.id.swp_center)
     SwipeRefreshLayout mSwp;
+    @BindView(R.id.tv_center_isauditAnchor)
+    TextView mTvisanditAnchor;
     UserInfo info;
 
     @Override
@@ -77,6 +79,13 @@ public class CenterDelegate extends AppDelegate {
         tvg.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
         mGole.setText("今日收益" + follow.getDayGold() + "钻石");
         mImgSex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
+        if (info.getAuditAnchor()==1)
+        {
+            mTvisanditAnchor.setText("已认证");
+        }else
+        {
+            mTvisanditAnchor.setText("未认证");
+        }
     }
 
     public SwipeRefreshLayout getmSwp() {

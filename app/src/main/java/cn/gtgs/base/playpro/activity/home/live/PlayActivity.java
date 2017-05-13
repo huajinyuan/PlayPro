@@ -13,6 +13,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.DynamicDrawableSpan;
@@ -85,6 +86,7 @@ import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.utils.ToastUtil;
 import cn.gtgs.base.playpro.widget.AllGiftViewpager;
 import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
@@ -800,17 +802,35 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setAttribute("user_name", loginInfo.getMbNickname());
         message.setAttribute("user_url", loginInfo.getMbPhoto());
         EMClient.getInstance().chatManager().sendMessage(message);
-        showGifts(message.getFrom(), gift);
+        showGifts("我", loginInfo.getMbPhoto(),gift);
     }
 
     @BindView(R.id.tv_play_gift_count)
     TextView mTvGiftCount;
+    @BindView(R.id.lin_play_gift_send)
+    View linGiftSend;
+    @BindView(R.id.img_play_gift_send_icon)
+    ImageView img_play_gift_send_icon;
+    @BindView(R.id.tv_play_gift_name)
+    TextView tv_play_gift_name;
 
     long GETGIFTTIME = 0;
     int GiftCount = 1;
     String giftId = "";
 
-    public void showGifts(String from, Gift gift) {
+    public void showGifts(String from,String icon, Gift gift) {
+
+        linGiftSend.setVisibility(View.VISIBLE);
+        Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                img_play_gift_send_icon.setImageDrawable(circularBitmapDrawable);
+            }
+        });
+        tv_play_gift_name.setText(from);
         if (System.currentTimeMillis() - GETGIFTTIME < 1000) {
             if (giftId.equals(gift.getId())) {
                 GiftCount++;
@@ -840,6 +860,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     public void onAnimationEnd(Animation animation) {
                         iv_gift.clearAnimation();
                         iv_gift.setVisibility(View.GONE);
+                        linGiftSend.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -1272,16 +1293,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 final Map<String, Object> map = message.ext();
                 String spotType = null;
                 if (map.containsKey("Gift")) {
-//                    spotType = (String) map.get("SPOT_KEY");
-//                    mGetGift = new Gift();
-//                    mGetGift.id = (String) map.get("Gift");
+                    message_from = (String) map.get("user_name");
+                    final String icon = (String) map.get("user_url");
                     mGetGift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
 //                        mGetGift.picture = (String) map.get("GiftPicture");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showGifts(message_from, mGetGift);
-//                                showGifts(message_from, message_content.substring(message_content.length() - 2));
+                            showGifts(message_from,icon, mGetGift);
                         }
                     });
 
@@ -1527,6 +1546,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
 
+                    if (StringUtils.isNotEmpty(anchorItem.getWordLimit()))
+                    {
+                        int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
+                        et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxlenth)});
+                    }
                 if (null != bf.getData().getFaCount()) {
                     mTvCount.setText(bf.getData().getFaCount());
                 }
@@ -1545,6 +1569,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         temp2 = false;
                     }
                 }
+
                 doPlay();
                 //----------------------------------------------------------以下为环信
                 //-------------------------------------------------------------------

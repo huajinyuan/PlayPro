@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="@dimen/dp_20"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/img_play_gift_send_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:srcCompat="@drawable/circle_zhubo"
+        />
+    <TextView
+        android:id="@+id/tv_play_gift_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlue"
+        />
+    <ImageView
+        android:id="@+id/iv_gift"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_above="@id/tv_likes"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:id="@+id/tv_play_gift_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_gift"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/iv_gift"
+        android:textColor="@color/colorBlue"
+        android:textSize="16sp" />
+
+</LinearLayout>

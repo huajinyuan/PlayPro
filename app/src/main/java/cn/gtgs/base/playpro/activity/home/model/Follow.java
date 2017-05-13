@@ -33,9 +33,11 @@ public class Follow implements Serializable {
     public String liveStatus;
     public String anPhoto;
     public String sysMsg;
+    public String wordLimit;
     public int dayGold = 0;
     public int anGoldAble;
     public int anPrice;
+
     public UserInfo member;
 
     public String getAnGold() {
@@ -262,11 +264,18 @@ public class Follow implements Serializable {
         this.sysMsg = sysMsg;
     }
 
+    public String getWordLimit() {
+        return wordLimit;
+    }
+
+    public void setWordLimit(String wordLimit) {
+        this.wordLimit = wordLimit;
+    }
+
     @Override
     public String toString() {
         return "Follow{" +
-                "anGold='" + anGold + '\'' +
-                ", anQq='" + anQq + '\'' +
+                "anQq='" + anQq + '\'' +
                 ", isRecommend='" + isRecommend + '\'' +
                 ", anRemark='" + anRemark + '\'' +
                 ", flag='" + flag + '\'' +
@@ -285,10 +294,12 @@ public class Follow implements Serializable {
                 ", anSex='" + anSex + '\'' +
                 ", liveCount='" + liveCount + '\'' +
                 ", faId='" + faId + '\'' +
+                ", anGold='" + anGold + '\'' +
                 ", anGoldGet='" + anGoldGet + '\'' +
                 ", liveStatus='" + liveStatus + '\'' +
                 ", anPhoto='" + anPhoto + '\'' +
                 ", sysMsg='" + sysMsg + '\'' +
+                ", wordLimit='" + wordLimit + '\'' +
                 ", dayGold=" + dayGold +
                 ", anGoldAble=" + anGoldAble +
                 ", anPrice=" + anPrice +

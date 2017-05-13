@@ -124,21 +124,13 @@
         android:layout_margin="10dp"
         android:textColor="@color/color_progress_end"
         android:visibility="invisible"/>
-    <ImageView
-        android:id="@+id/iv_gift"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_above="@id/tv_likes"
-        android:adjustViewBounds="true"/>
-    <TextView
-        android:id="@+id/tv_play_gift_count"
+    <include
+        android:id="@+id/lin_play_gift_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iv_gift"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/iv_gift"
-        android:textColor="@color/colorBlue"
-        android:textSize="16sp" />
+        android:layout_above="@id/tv_likes"
+        android:visibility="gone"
+        layout="@layout/layout_play_gift_lin"/>
     <RelativeLayout
         android:id="@+id/rl_live_bootombar"
         android:layout_width="match_parent"

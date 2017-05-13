@@ -8,8 +8,13 @@ import butterknife.OnClick;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.center.presenter.CenterPresenter;
 import cn.gtgs.base.playpro.activity.center.view.CenterDelegate;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.mymessage.MessageListActivity;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 
 public class CenterActivity extends ActivityPresenter<CenterDelegate> implements SwipeRefreshLayout.OnRefreshListener {
     CenterPresenter presenter;
@@ -36,8 +41,15 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> implements
         Intent intent;
         switch (v.getId()) {
             case R.id.rel_center_approve:
-                intent = new Intent(this, AnchorApproveActivity.class);
-                startActivity(intent);
+                Follow follow = (Follow) ACache.get(this).getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                UserInfo info = follow.getMember();
+
+                if (info.getAuditAnchor() == 1) {
+                    ToastUtil.showToast("您已认证，无须再申请认证",this);
+                } else {
+                    intent = new Intent(this, AnchorApproveActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rel_center_getcoin:
                 intent = new Intent(this, GetCoinActivity.class);

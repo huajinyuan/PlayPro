@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.model.HttpParams;
@@ -1141,11 +1144,12 @@ public class StreamingBaseActivity extends Activity implements
                 if (map.containsKey("Gift")) {
                     mGetGift = new Gift();
                     mGetGift =PApplication.getInstance().getGiftObject((String) map.get("Gift"));
-//                        mGetGift.picture = (String) map.get("GiftPicture");
+                    message_from = (String) map.get("user_name");
+                    final String icon = (String) map.get("user_url");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showGifts(message_from, mGetGift);
+                            showGifts(message_from,icon, mGetGift);
                         }
                     });
                 } else if (map.containsKey("DianZan")) {
@@ -1282,39 +1286,27 @@ public class StreamingBaseActivity extends Activity implements
 
     @BindView(R.id.tv_play_gift_count)
     TextView mTvGiftCount;
+    @BindView(R.id.lin_play_gift_send)
+    View linGiftSend;
+    @BindView(R.id.img_play_gift_send_icon)
+    ImageView img_play_gift_send_icon;
+    @BindView(R.id.tv_play_gift_name)
+    TextView tv_play_gift_name;
     long GETGIFTTIME = 0;
     int GiftCount = 1;
     String giftId = "";
-
-    public void showGifts(String from, Gift gift) {
-//        Glide.with(mContext).load(gift.picture).into(iv_gift);
-//        //开始动画
-//        ScaleAnimation animation = new ScaleAnimation(1, 2, 1, 2, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-//        animation.setDuration(800);
-//        iv_gift.startAnimation(animation);
-//        if (from.equals(loginInfo.name)) {
-//            tv_likes.setText("你 给主播送了一个" + gift.name);
-//        } else {
-//            tv_likes.setText("用户 " + from + " 给主播送了一个" + gift.name);
-//
-//        }
-
-//        iv_gift.setVisibility(View.VISIBLE);
-//        tv_likes.setVisibility(View.VISIBLE);
-//        timer_hide.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tv_likes.setText("");
-//                        tv_likes.setVisibility(View.INVISIBLE);
-//                        iv_gift.setVisibility(View.INVISIBLE);
-//                    }
-//                });
-//            }
-//        }, 1800);
-
+    public void showGifts(String from,String icon, Gift gift) {
+        linGiftSend.setVisibility(View.VISIBLE);
+        Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                img_play_gift_send_icon.setImageDrawable(circularBitmapDrawable);
+            }
+        });
+        tv_play_gift_name.setText(from);
         if (System.currentTimeMillis() - GETGIFTTIME < 1000) {
             if (giftId.equals(gift.getId())) {
                 GiftCount++;
@@ -1345,6 +1337,7 @@ public class StreamingBaseActivity extends Activity implements
                     public void onAnimationEnd(Animation animation) {
                         iv_gift.clearAnimation();
                         iv_gift.setVisibility(View.GONE);
+                        linGiftSend.setVisibility(View.GONE);
                     }
 
                     @Override

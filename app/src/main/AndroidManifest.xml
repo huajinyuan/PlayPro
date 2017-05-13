@@ -77,13 +77,14 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".activity.home.live.PlayActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name=".activity.center.GetCoinActivity" />
         <activity android:name=".activity.home.mymessage.ChatActivity" />
         <activity android:name=".activity.home.mymessage.MessageListActivity" />
         <activity android:name=".activity.center.SettingActivity" />
         <activity android:name=".activity.home.search.SearchActivity" />
-        <activity android:name=".activity.center.EdtInfoActivity"></activity>
+        <activity android:name=".activity.center.EdtInfoActivity"/>
     </application>
 
 </manifest>
