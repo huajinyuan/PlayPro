@@ -806,7 +806,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setAttribute("user_name", loginInfo.getMbNickname());
         message.setAttribute("user_url", loginInfo.getMbPhoto());
         EMClient.getInstance().chatManager().sendMessage(message);
-        showGifts("我", loginInfo.getMbPhoto(),gift);
+        showGifts("我", loginInfo.getMbPhoto(), gift);
     }
 
     @BindView(R.id.tv_play_gift_count)
@@ -822,7 +822,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     int GiftCount = 1;
     String giftId = "";
 
-    public void showGifts(String from,String icon, Gift gift) {
+    public void showGifts(String from, String icon, Gift gift) {
 
         linGiftSend.setVisibility(View.VISIBLE);
         Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
@@ -995,7 +995,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             }
         });
     }
-    @OnClick({R.id.lin_anchor_info_action_follow,R.id.rel_layout_bottom_dialog, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+
+    @OnClick({R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -1030,7 +1031,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     setviewClick();
                 }
                 break;
-            case R.id.rel_layout_bottom_dialog:
+            case R.id.view_gone:
                 if (!isMember) {
 //                    hidelayout();
                     setviewClick();
@@ -1290,7 +1291,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showGifts(message_from,icon, mGetGift);
+                            showGifts(message_from, icon, mGetGift);
                         }
                     });
 
@@ -1536,11 +1537,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
 
-                    if (StringUtils.isNotEmpty(anchorItem.getWordLimit()))
-                    {
-                        int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
-                        et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxlenth)});
-                    }
+                if (StringUtils.isNotEmpty(anchorItem.getWordLimit())) {
+                    int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
+                    et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxlenth)});
+                }
                 if (null != bf.getData().getFaCount()) {
                     mTvCount.setText(bf.getData().getFaCount());
                 }
