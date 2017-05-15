@@ -1,6 +1,8 @@
 package cn.gtgs.base.playpro.activity.home.view;
 
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -18,6 +20,10 @@ public class HomeDelegate extends AppDelegate {
     TextView mBtnRecommented;
     @BindView(R.id.btn_follow)
     TextView mBtnFollow;
+    @BindView(R.id.pro_play_p)
+    ProgressBar mPro;
+    @BindView(R.id.img_home_play)
+    View mPlayView;
 
     @Override
     public int getRootLayoutId() {
@@ -49,5 +55,22 @@ public class HomeDelegate extends AppDelegate {
                 mBtnFollow.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorwhite));
                 break;
         }
+    }
+
+    public void showPro() {
+        if (mPro.getVisibility() == View.GONE) {
+            mPro.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hidePro() {
+        if (mPro.getVisibility() == View.VISIBLE) {
+            mPro.setVisibility(View.GONE);
+
+        }
+    }
+
+    public View getmPlayView() {
+        return mPlayView;
     }
 }

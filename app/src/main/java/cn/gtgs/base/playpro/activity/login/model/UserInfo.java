@@ -2,6 +2,8 @@ package cn.gtgs.base.playpro.activity.login.model;
 
 import java.io.Serializable;
 
+import cn.gtgs.base.playpro.utils.AppUtil;
+
 /**
  * Created by  on 2017/5/2.
  */
@@ -97,7 +99,7 @@ public class UserInfo implements Serializable {
     }
 
     public int getMbLevel() {
-        return MbLevel;
+        return AppUtil.getDJ(getMbGold());
     }
 
     public void setMbLevel(int mbLevel) {

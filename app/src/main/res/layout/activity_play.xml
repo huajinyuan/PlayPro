@@ -172,7 +172,18 @@
         android:paddingTop="8dp"
         android:textColor="@color/colorwhite"
         android:visibility="gone" />
-
+    <TextView
+        android:id="@+id/tv_play_level_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:background="@drawable/shape_level"
+        android:textColor="@color/color_black_0D"
+        android:layout_marginLeft="20dp"
+        android:textSize="14sp" />
     <RelativeLayout
         android:id="@+id/rel_layout_bottom_dialog"
         android:layout_width="match_parent"

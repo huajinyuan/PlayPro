@@ -54,6 +54,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 import com.opendanmaku.DanmakuItem;
 import com.opendanmaku.DanmakuView;
 import com.opendanmaku.IDanmakuItem;
@@ -189,6 +190,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvCancel;
     @BindView(R.id.tv_play_toast_sys)
     TextView mTvSysToast;
+    @BindView(R.id.tv_play_level_1)
+    TextView mTvLevel_2;
     @BindView(R.id.rel_layout_bottom_dialog)
     View rel_layout_bottom_dialog;
     ACache aCache;
@@ -217,7 +220,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             e.printStackTrace();
         }
         setContentView(R.layout.activity_play);
-
         gifts = new ArrayList<>();
         context = this;
         ButterKnife.bind(this);
@@ -233,10 +235,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (!isMember) {
             getAnChorInfo(anchorItem.getAnId());
             initviews();
-//            doPlay();
-            //----------------------------------------------------------以下为环信
-            //-------------------------------------------------------------------
-//            login();
         } else {
             mTvCancel.setVisibility(View.GONE);
         }
@@ -261,7 +259,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (null != anchorItem.getWcPullAddress()) {
             try {
                 MYURL = new DESUtil().decrypt(anchorItem.getWcPullAddress());
-//                Des3.decode(anchorItem.getWcPullAddress(), Des3.secretKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -330,7 +327,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             message.setFrom(loginInfo.getMbNickname());
             message.setChatType(EMMessage.ChatType.ChatRoom);
             message.setAttribute("user_name", loginInfo.getMbNickname());
-            message.setAttribute("level", "lv" + loginInfo.getMbLevel());
+            message.setAttribute("level", loginInfo.getMbLevel());//
             if (mCheckBox.isChecked()) {
                 message.setAttribute("DanMu", loginInfo.getMbLevel());
                 doDanmu(et_huanxin_content);
@@ -361,8 +358,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setAttribute("DianZan", "DianZan");
         message.setAttribute("level", loginInfo.getMbLevel());
         EMClient.getInstance().chatManager().sendMessage(message);
-        Map<String, Object> map = message.ext();
-//        showLikes(message.getFrom());
         if (temp) {
             new MyTimer(2000, 300).start();
             temp = false;
@@ -380,7 +375,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onChatRoomDestroyed(String roomId, String roomName) {
                 if (roomId.equals(chatroomid)) {
-//                    showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
                 }
             }
 
@@ -388,38 +382,38 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             public void onMemberJoined(String roomId, String participant) {
                 getCountOnline();
 
-                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                        }
-                    }
-                });
+//                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
+//                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                message.setFrom("动态");
+//                msgList.add(message);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.notifyDataSetChanged();
+//                        if (msgList.size() > 0) {
+//                            listView.setSelection(listView.getCount() - 1);
+//                        }
+//                    }
+//                });
             }
 
             @Override
             public void onMemberExited(String roomId, String roomName, String participant) {
                 getCountOnline();
 
-                EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
-                message.setChatType(EMMessage.ChatType.ChatRoom);
-                message.setFrom("动态");
-                msgList.add(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        if (msgList.size() > 0) {
-                            listView.setSelection(listView.getCount() - 1);
-                        }
-                    }
-                });
+//                EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
+//                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                message.setFrom("动态");
+//                msgList.add(message);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.notifyDataSetChanged();
+//                        if (msgList.size() > 0) {
+//                            listView.setSelection(listView.getCount() - 1);
+//                        }
+//                    }
+//                });
             }
 
             @Override
@@ -507,7 +501,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
                 @Override
                 public void onPageSelected(int arg0) {
-//                                indicatorScroll(arg0);
                 }
 
                 @Override
@@ -531,7 +524,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         mLayoutBottom.setVisibility(View.INVISIBLE);
         frame_live_menu.setVisibility(View.VISIBLE);
         rel_layout_bottom_dialog.setVisibility(View.GONE);
-        //TODO
     }
 
     void setviewClick() {
@@ -564,11 +556,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         intent.putExtra("chatto", anchorItem.getMember().getMbPhone());
         intent.putExtra("chattophoto", anchorItem.getMember().getMbPhoto());
         intent.putExtra("chattoname", anchorItem.getMember().getMbNickname());
-//        if (!isMember) {
-//
-//        } else {
-//            intent.putExtra("chatto", anchorItem.getMember().getMbId() + "");
-//        }
         startActivity(intent);
     }
 
@@ -601,10 +588,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
             }
         });
-
     }
-
-
 
     public void contentAction() {
         hidelayout();
@@ -612,20 +596,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         rel_layout_bottom_dialog.setVisibility(View.VISIBLE);
         ArrayList<String> gs = PApplication.getInstance().getmFList();
         if (null != anchorItem.getAnId()) {
-
             if (gs.contains(anchorItem.getAnId())) {
                 mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
             } else {
                 mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
             }
         }
-
-
     }
-
-
-
-
 
     public void hidelayout() {
         frame_live_menu.setVisibility(View.INVISIBLE);
@@ -687,7 +664,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",PlayActivity.this);
+                ToastUtil.showToast("请求失败，请检查网络", PlayActivity.this);
             }
 
             @Override
@@ -726,7 +703,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(loginInfo.getMbNickname());
         message.setAttribute("Gift", gift.getId());
-        message.setAttribute("level", "LV" + loginInfo.getMbLevel());
+        message.setAttribute("level", loginInfo.getMbLevel());
         message.setAttribute("user_name", loginInfo.getMbNickname());
         message.setAttribute("user_url", loginInfo.getMbPhoto());
         EMClient.getInstance().chatManager().sendMessage(message);
@@ -850,9 +827,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             String sex = !isMember ? anchorItem.getAnSex() : anchorItem.getMember().getMbSex() + "";
             String mId = !isMember ? anchorItem.mbId : anchorItem.getMember().getMbId() + "";
             chatroomid = !isMember ? anchorItem.getChatRoomId() : "0";
-
-//            if (!isMember) {
-//                chatroomid = anchorItem.getChatRoomId();
             Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
                 @Override
                 protected void setResource(Bitmap resource) {
@@ -879,6 +853,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             mTvGold.setText(AppUtil.getDJ(anchorItem.getMember().getMbGoldPay()) + "");
 
         }
+        mTvLv.setText("Lv" + anchorItem.getMember().getMbLevel());
         tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
         contentAction();
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -893,7 +868,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         });
     }
 
-    @OnClick({R.id.lin_play_gift_panel_bottom,R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -965,20 +940,16 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
                 @Override
                 public void onError(Throwable e) {
-                    ToastUtil.showToast("请求失败，请检查网络",PlayActivity.this);
+                    ToastUtil.showToast("请求失败，请检查网络", PlayActivity.this);
 
                 }
 
                 @Override
                 public void onNext(Response response) {
-//                HttpBase base = Parsing.getInstance().ResponseToObject(response)
                     try {
                         String Str = response.body().string();
                         F.e("-----------------" + Str);
                         JSONObject ob = JSON.parseObject(Str);
-
-//                    org.json.JSONObject ob = new org.json.JSONObject()
-//                    JSONObject object = JSON.parseObject(response.body().toString());
                         if (ob.containsKey("code")) {
                             int i = ob.getIntValue("code");
                             if (i == 1) {
@@ -993,9 +964,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 }
                                 String str = JSON.toJSONString(gs);
                                 aCache.put(ACacheKey.CURRENT_FOLLOW, str);
-
-
-//                            ToastUtil.showToast("操作成功",delegate.getActivity());
                             }
                         }
                     } catch (Exception e) {
@@ -1006,7 +974,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
             });
         } else {
-            ToastUtil.showToast("该入口暂不支持关注",this);
+            ToastUtil.showToast("该入口暂不支持关注", this);
         }
 
     }
@@ -1091,45 +1059,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
-//    public void JoinChatRoom(String anchorId) {
-//        String url = UriTemplate.fromTemplate(Config.URL_JOINCHAT)
-//                .set("id", anchorId)
-//                .expand();
-////        Request<String> request = NoHttp.createStringRequest(url, RequestMethod.POST);
-////        request.add("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-////        request.addHeader("Authorization", "Bearer  " + loginInfo.token);
-////
-////        CallServer.getRequestInstance().add(JOINCHATROOM, request, joinRoomListener);
-//
-//        HttpParams params = new HttpParams();
-//        params.put("key", "z45CasVgh8K3q6300g0d95VkK197291A");
-//        PostRequest request = OkGo.post(url).params(params);
-//        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(Response response) {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (null != anchorItem) {
-//                            joinchatroom();
-//                        }
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-
     public void joinchatroom() {
         Log.e("adad", "startJoinChatRoom..");
         EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
@@ -1139,6 +1068,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 if (room != null) {
                     showChatroomToast("join room success : " + room.getName());
                     Log.e("adad", "JoinChatRoom succeed");
+                    sendJoinMSG();
                     isJoined = true;
                 } else {
                     Log.e("dasda", "JoinChatRoom Failed!");
@@ -1159,6 +1089,18 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         });
     }
 
+    public void sendJoinMSG() {
+        //TODO 发送加入消息
+        EMMessage message = EMMessage.createTxtSendMessage("进来逛逛", chatroomid);
+        message.setFrom(loginInfo.getMbNickname());
+        message.setChatType(EMMessage.ChatType.ChatRoom);
+        message.setAttribute("JOIN_CHATROOM", chatroomid);
+        message.setAttribute("user_name", loginInfo.getMbNickname());
+        message.setAttribute("level", loginInfo.getMbLevel());
+        //发送消息
+        EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
     public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
@@ -1175,8 +1117,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         public void onMessageReceived(List<EMMessage> list) {
             Log.e("onMessageReceived", "收到消息" + list.toString());
             for (EMMessage message : list) {
-                if (!message.getChatType().equals(EMMessage.ChatType.ChatRoom))
-                {
+                if (!message.getChatType().equals(EMMessage.ChatType.ChatRoom)) {
                     return;
                 }
                 String username = null;
@@ -1268,6 +1209,66 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         }
                     });
 
+                } else if (map.containsKey("JOIN_CHATROOM")) {
+                    //TODO 新人加入聊天室消息
+                    message_from = (String) map.get("user_name");
+//                    int count = Integer.valueOf(anchorItem.getFaCount()) + 1;
+                    anchorItem.setFaCount(getChatRoomInfoCount() + "");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvCount.setText(anchorItem.getFaCount() + "");
+                        }
+                    });
+                    if (map.containsKey("level")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int level = Integer.valueOf((String) map.get("level"));
+                                Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
+                                a.setFillAfter(true);
+                                mTvLevel_2.setVisibility(View.VISIBLE);
+                                mTvLevel_2.setText(message_from + "加入聊天室");
+                                if (level >= 15) {
+                                    mTvToast.setVisibility(View.VISIBLE);
+                                    mTvToast.setText(message_from + "加入聊天室");
+                                    mTvToast.startAnimation(a);
+                                }
+                                mTvLevel_2.startAnimation(a);
+                                a.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (mTvToast.getVisibility() == View.VISIBLE) {
+                                                    mTvToast.clearAnimation();
+                                                    mTvToast.setVisibility(View.GONE);
+
+                                                }
+                                                if (mTvLevel_2.getVisibility() == View.VISIBLE) {
+                                                    mTvLevel_2.clearAnimation();
+                                                    mTvLevel_2.setVisibility(View.GONE);
+                                                }
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+
+                                    }
+                                });
+                            }
+                        });
+
+                    }
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {
@@ -1408,7 +1409,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",PlayActivity.this);
+                ToastUtil.showToast("请求失败，请检查网络", PlayActivity.this);
             }
 
             @Override
@@ -1460,7 +1461,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",PlayActivity.this);
+                ToastUtil.showToast("请求失败，请检查网络", PlayActivity.this);
             }
 
             @Override
@@ -1468,10 +1469,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 HttpBase<Follow> bf = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
-                if (StringUtils.isNotEmpty(anchorItem.getSysMsg()))
-                {
+                if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
                     mTvSysToast.setVisibility(View.VISIBLE);
-                    mTvSysToast.setText("系统消息："+anchorItem.getSysMsg());
+                    mTvSysToast.setText("系统消息：" + anchorItem.getSysMsg());
                     Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
                     mTvSysToast.startAnimation(a);
                     a.setAnimationListener(new Animation.AnimationListener() {
@@ -1546,5 +1546,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }
         patternString.replace(patternString.length() - 1, patternString.length(), ")");
         return Pattern.compile(patternString.toString());
+    }
+
+    public int getChatRoomInfoCount() {
+        try {
+            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+            return chatRoom.getMemberCount();
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

@@ -72,10 +72,14 @@
             app:srcCompat="@mipmap/icon_center" />
     </RelativeLayout>
 
+
     <FrameLayout
         android:id="@+id/fragment_home_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/rel_home_tab_top" />
 
     <ImageView
@@ -86,4 +90,14 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         app:srcCompat="@mipmap/tab_launch_play" />
+
+    <ProgressBar
+        android:id="@+id/pro_play_p"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="25dp"
+        android:visibility="gone" />
 </RelativeLayout>

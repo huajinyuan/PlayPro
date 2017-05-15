@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,49 +11,52 @@
         android:id="@+id/cameraPreview_afl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <cn.gtgs.base.playpro.activity.home.live.CameraPreviewFrameView
             android:id="@+id/cameraPreview_surfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
-        <include layout="@layout/focus_indicator"/>
+
+        <include layout="@layout/focus_indicator" />
 
     </com.qiniu.pili.droid.streaming.widget.AspectFrameLayout>
+
     <TextView
         android:id="@+id/log_info"
-        android:contentDescription="cd_tv_log_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:contentDescription="cd_tv_log_info" />
 
     <TextView
         android:id="@+id/streamingStatus"
-        android:contentDescription="cd_tv_streaming_state_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
+        android:contentDescription="cd_tv_streaming_state_hint"
         android:text="READY"
-        android:textSize="14sp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/pldroid_streaming_yellow"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/stream_status"
-        android:contentDescription="cd_tv_stream_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/streamingStatus"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/streamingStatus"
-        android:layout_alignTop="@id/streamingStatus"
         android:background="@android:color/transparent"
+        android:contentDescription="cd_tv_stream_status"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorwhite"
-        android:textSize="12sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textSize="12sp" />
+
 
     <LinearLayout
         android:id="@+id/ll_live_onlinenum"
@@ -61,50 +64,55 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/streamingStatus"
         android:layout_marginLeft="10dp"
-        android:orientation="horizontal"
         android:background="@drawable/background_grey_trans"
+        android:orientation="horizontal"
         android:padding="3dp"
         android:visibility="invisible">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="在线"
-            android:textColor="@color/color_progress_end"/>
+            android:textColor="@color/color_progress_end" />
+
         <TextView
             android:id="@+id/tv_live_onlinenum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/color_pink"/>
+            android:textColor="@color/color_pink" />
     </LinearLayout>
+
     <ImageView
         android:id="@+id/iv_live_close"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:padding="5dp"
         android:layout_alignParentRight="true"
-        android:src="@mipmap/icon_close"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="28dp"/>
+        android:layout_marginTop="28dp"
+        android:padding="5dp"
+        android:src="@mipmap/icon_close" />
+
     <TextView
         android:id="@+id/tv_live_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:layout_below="@id/iv_live_close"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/iv_live_close"
+        android:layout_marginRight="20dp"
         android:textColor="@color/color_background_gray"
-        android:layout_marginRight="20dp"/>
+        android:textSize="12sp" />
+
     <ImageView
         android:id="@+id/iv_live_option"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_toLeftOf="@id/iv_live_close"
         android:layout_alignTop="@id/iv_live_close"
         android:layout_marginRight="30dp"
         android:layout_marginTop="4dp"
+        android:layout_toLeftOf="@id/iv_live_close"
         android:background="@mipmap/icon_center_option"
-        android:clickable="true"/>
+        android:clickable="true" />
 
     <TextView
         android:id="@+id/tv_play_toast_sys"
@@ -114,61 +122,66 @@
         android:paddingBottom="8dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textColor="@color/red_btn_bg_color"
         android:paddingTop="8dp"
-        android:visibility="gone"
-        />
+        android:textColor="@color/red_btn_bg_color"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
-        android:divider="@null"/>
+        android:divider="@null" />
+
     <TextView
         android:id="@+id/tv_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/background_grey_trans"
         android:layout_above="@id/listView"
         android:layout_margin="10dp"
+        android:background="@drawable/background_grey_trans"
+        android:padding="5dp"
         android:textColor="@color/color_progress_end"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
+
     <include
         android:id="@+id/lin_play_gift_send"
+        layout="@layout/layout_play_gift_lin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/tv_likes"
-        android:visibility="gone"
-        layout="@layout/layout_play_gift_lin"/>
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/rl_live_bootombar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="40dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp">
+
         <ImageView
             android:id="@+id/iv_live_changecamera"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@mipmap/icon_changecamera_normal"
+            android:background="@drawable/selector_live_changecamera"
             android:clickable="true"
-            android:background="@drawable/selector_live_changecamera"/>
+            android:padding="8dp"
+            android:src="@mipmap/icon_changecamera_normal" />
+
         <ImageView
             android:id="@+id/iv_live_booking"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@mipmap/icon_booking_normal"
+            android:background="@drawable/selector_live_booking"
             android:clickable="true"
-            android:background="@drawable/selector_live_booking"/>
+            android:padding="8dp"
+            android:src="@mipmap/icon_booking_normal" />
     </RelativeLayout>
 
     <com.opendanmaku.DanmakuView
@@ -205,4 +218,30 @@
         android:textColor="@android:color/white"
         android:textSize="10sp"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_camera_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:background="@drawable/shape_level"
+        android:textColor="@color/color_black_0D"
+        android:layout_marginLeft="20dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/tv_camera_level_toast"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/colorwhite"
+        android:visibility="gone"
+        android:background="@drawable/shape_rec_org"
+        />
 </RelativeLayout>

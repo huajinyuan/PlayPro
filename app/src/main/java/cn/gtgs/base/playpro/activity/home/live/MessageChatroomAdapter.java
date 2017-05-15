@@ -77,7 +77,7 @@ public class MessageChatroomAdapter extends BaseAdapter {
         if (map != null) {
             if (map.get("level") != null) {
                 viewHolder.tv_level.setVisibility(View.VISIBLE);
-                viewHolder.tv_level.setText(map.get("level") + "");
+                viewHolder.tv_level.setText("lv" + map.get("level") + "");
             } else {
                 viewHolder.tv_level.setVisibility(View.GONE);
             }

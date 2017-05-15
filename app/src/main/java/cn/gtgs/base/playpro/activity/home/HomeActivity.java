@@ -119,8 +119,8 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                 setTab(2);
                 break;
             case R.id.img_home_play:
-//                Intent intent = new Intent(this, HWCodecCameraStreamingActivity.class);
-//                startActivity(intent);
+                viewDelegate.showPro();
+                viewDelegate.getmPlayView().setClickable(false);
                 getAnchorInfo();
                 break;
             case R.id.img_home_top_userinfo:
@@ -148,7 +148,9 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
                 @Override
                 public void onError(Throwable e) {
-                    ToastUtil.showToast("请求失败，请检查网络",HomeActivity.this);
+                    ToastUtil.showToast("请求失败，请检查网络", HomeActivity.this);
+                    viewDelegate.hidePro();
+                    viewDelegate.getmPlayView().setClickable(true);
                 }
 
                 @Override
@@ -156,12 +158,10 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
                     HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     Follow follow = baseF.getData();
-                    F.e("--------------" + follow.getWcPushAddress());
-                    if (StringUtils.isNotEmpty(follow.getIsRecommend())&&follow.getIsRecommend().equals("1"))
-                    {
+                    F.e("--------------" + follow.toString());
+                    if (StringUtils.isNotEmpty(follow.getIsRecommend()) && follow.getIsRecommend().equals("1")) {
                         Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
                         try {
-//                        .decode(follow.getWcPushAddress(), Des3.secretKey)
                             intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
                             intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
                             intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
@@ -170,8 +170,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }else
-                    {
+                    } else {
                         ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", HomeActivity.this);
                     }
 
@@ -180,7 +179,6 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         } else {
             ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", this);
         }
-
 
 
     }
@@ -200,12 +198,14 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
                 @Override
                 public void onError(Throwable e) {
-
+                    viewDelegate.hidePro();
+                    viewDelegate.getmPlayView().setClickable(true);
                 }
 
                 @Override
                 public void onNext(Response response) {
-
+                    viewDelegate.hidePro();
+                    viewDelegate.getmPlayView().setClickable(true);
                 }
             });
         }

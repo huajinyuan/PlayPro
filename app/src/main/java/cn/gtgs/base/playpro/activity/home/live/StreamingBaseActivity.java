@@ -51,6 +51,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 import com.opendanmaku.DanmakuItem;
 import com.opendanmaku.DanmakuView;
 import com.qiniu.android.dns.DnsManager;
@@ -269,6 +270,11 @@ public class StreamingBaseActivity extends Activity implements
     Follow mAnchor;
     @BindView(R.id.periscope)
     public PeriscopeLayout periscopeLayout;
+    @BindView(R.id.tv_camera_level)
+    public TextView mTvLevel;
+    @BindView(R.id.tv_camera_level_toast)
+    public TextView mTvLevelToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -705,6 +711,9 @@ public class StreamingBaseActivity extends Activity implements
         tv_live_id = (TextView) findViewById(R.id.tv_live_id);
         tv_live_onlinenum = (TextView) findViewById(R.id.tv_live_onlinenum);
         ll_live_onlinenum = (LinearLayout) findViewById(R.id.ll_live_onlinenum);
+        if (StringUtils.isNotEmpty(mF.getFaCount())) {
+            tv_live_onlinenum.setText(mF.getFaCount());
+        }
 
 //        tv_live_id.setText("ID:" + loginInfo.id);
         iv_live_option.setOnClickListener(new View.OnClickListener() {
@@ -769,10 +778,9 @@ public class StreamingBaseActivity extends Activity implements
 
         });
 
-        if (StringUtils.isNotEmpty(mF.getSysMsg()))
-        {
+        if (StringUtils.isNotEmpty(mF.getSysMsg())) {
             mTvSysToast.setVisibility(View.VISIBLE);
-            mTvSysToast.setText("系统消息："+mF.getSysMsg());
+            mTvSysToast.setText("系统消息：" + mF.getSysMsg());
             Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
             mTvSysToast.startAnimation(a);
             a.setAnimationListener(new Animation.AnimationListener() {
@@ -802,7 +810,6 @@ public class StreamingBaseActivity extends Activity implements
                 }
             });
         }
-
 
 
     }
@@ -1082,40 +1089,40 @@ public class StreamingBaseActivity extends Activity implements
         public void onMemberJoined(String roomId, String participant) {
 //                checkOnlineNum();
 
-            EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
-            message.setChatType(EMMessage.ChatType.ChatRoom);
-            message.setFrom("动态");
-            msgList.add(message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                    if (msgList.size() > 0) {
-                        listView.setSelection(listView.getCount() - 1);
-                        Log.e("sad", "setselection");
-                    }
-                }
-            });
+//            EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
+//            message.setChatType(EMMessage.ChatType.ChatRoom);
+//            message.setFrom("动态");
+//            msgList.add(message);
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    adapter.notifyDataSetChanged();
+//                    if (msgList.size() > 0) {
+//                        listView.setSelection(listView.getCount() - 1);
+//                        Log.e("sad", "setselection");
+//                    }
+//                }
+//            });
         }
 
         @Override
         public void onMemberExited(String roomId, String roomName, String participant) {
 //                checkOnlineNum();
 
-            EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
-            message.setChatType(EMMessage.ChatType.ChatRoom);
-            message.setFrom("动态");
-            msgList.add(message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                    if (msgList.size() > 0) {
-                        listView.setSelection(listView.getCount() - 1);
-                        Log.e("sad", "setselection");
-                    }
-                }
-            });
+//            EMMessage message = EMMessage.createTxtSendMessage(participant + "离开了聊天室", chatroomid);
+//            message.setChatType(EMMessage.ChatType.ChatRoom);
+//            message.setFrom("动态");
+//            msgList.add(message);
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    adapter.notifyDataSetChanged();
+//                    if (msgList.size() > 0) {
+//                        listView.setSelection(listView.getCount() - 1);
+//                        Log.e("sad", "setselection");
+//                    }
+//                }
+//            });
         }
 
         @Override
@@ -1177,13 +1184,13 @@ public class StreamingBaseActivity extends Activity implements
                 Map<String, Object> map = message.ext();
                 if (map.containsKey("Gift")) {
                     mGetGift = new Gift();
-                    mGetGift =PApplication.getInstance().getGiftObject((String) map.get("Gift"));
+                    mGetGift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
                     message_from = (String) map.get("user_name");
                     final String icon = (String) map.get("user_url");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showGifts(message_from,icon, mGetGift);
+                            showGifts(message_from, icon, mGetGift);
                         }
                     });
                 } else if (map.containsKey("DianZan")) {
@@ -1201,6 +1208,73 @@ public class StreamingBaseActivity extends Activity implements
                             doDanmu(message_content);
                         }
                     });
+                } else if (map.containsKey("JOIN_CHATROOM")) {
+                    //TODO 新人加入聊天室消息
+                    message_from = (String) map.get("user_name");
+                    mF.setFaCount(getChatRoomInfoCount() + "");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_live_onlinenum.setText(mF.getFaCount() + "");
+                        }
+                    });
+
+//                    String name = null;
+//                    if (map.containsKey("user_name")) {
+//                        name = (String) map.get("user_name");
+//                    }
+                    if (map.containsKey("level")) {
+                        final int level = Integer.valueOf((String) map.get("level"));
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Animation a = AnimationUtils.loadAnimation(StreamingBaseActivity.this, R.anim.scalebig2);
+                                a.setFillAfter(true);
+                                mTvLevel.setVisibility(View.VISIBLE);
+                                mTvLevel.setText(message_from + "加入聊天室");
+                                mTvLevel.startAnimation(a);
+                                if (level >= 15) {
+                                    mTvLevelToast.setVisibility(View.VISIBLE);
+                                    mTvLevelToast.setText(message_from + "加入聊天室");
+                                    mTvLevelToast.startAnimation(a);
+                                }
+                                a.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (mTvLevelToast.getVisibility() == View.VISIBLE) {
+                                                    mTvLevelToast.clearAnimation();
+                                                    mTvLevelToast.setVisibility(View.GONE);
+
+                                                }
+                                                if (mTvLevel.getVisibility() == View.VISIBLE) {
+                                                    mTvLevel.clearAnimation();
+                                                    mTvLevel.setVisibility(View.GONE);
+                                                }
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+
+                                    }
+                                });
+                            }
+                        });
+
+
+                    }
+
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {
@@ -1283,7 +1357,8 @@ public class StreamingBaseActivity extends Activity implements
     long GETGIFTTIME = 0;
     int GiftCount = 1;
     String giftId = "";
-    public void showGifts(String from,String icon, Gift gift) {
+
+    public void showGifts(String from, String icon, Gift gift) {
         linGiftSend.setVisibility(View.VISIBLE);
         Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
             @Override
@@ -1491,6 +1566,7 @@ public class StreamingBaseActivity extends Activity implements
 
 
     private boolean temp = true;
+
     private class MyTimer extends CountDownTimer {
 
         private static final String TAG = "MyTimer";
@@ -1515,5 +1591,14 @@ public class StreamingBaseActivity extends Activity implements
         }
     }
 
+    public int getChatRoomInfoCount() {
+        try {
+            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+            return chatRoom.getMemberCount();
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
 }
