@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.activity.home.live.model;
 import java.io.Serializable;
 
 /**
- * Created by zuoyun on 2016/10/31.
+ * Created by  on 2016/10/31.
  */
 
 public class Gift implements Serializable {

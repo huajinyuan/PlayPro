@@ -17,7 +17,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.widget.gles.GlUtil;
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 public class CameraFilterToneCurve extends CameraFilter {
 

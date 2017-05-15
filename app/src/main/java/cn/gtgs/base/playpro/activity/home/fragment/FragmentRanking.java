@@ -10,7 +10,7 @@ import cn.gtgs.base.playpro.activity.home.fragment.view.RankingDelegate;
 import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 
 /**
- * Created by gtgs on 2017/4/26.
+ * Created by  on 2017/4/26.
  */
 
 public class FragmentRanking extends FragmentPresenter<RankingDelegate> {

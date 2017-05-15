@@ -24,7 +24,7 @@ import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class RegisterPresenter implements IRegisterPresenter {
@@ -76,6 +76,7 @@ public class RegisterPresenter implements IRegisterPresenter {
             @Override
             public void onError(Throwable e) {
 
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
             }
 
             @Override
@@ -117,7 +118,7 @@ public class RegisterPresenter implements IRegisterPresenter {
 
                 @Override
                 public void onError(Throwable e) {
-
+                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
                 }
 
                 @Override
@@ -130,16 +131,6 @@ public class RegisterPresenter implements IRegisterPresenter {
                         Toast.makeText(delegate.getActivity(), base.msg, Toast.LENGTH_SHORT).show();
                         delegate.getSmsView().setClickable(true);
                     }
-//                        F.e(response.body().toString());
-//                    SMSHash smsHash = JSON.parseObject(response.body().toString(), SMSHash.class);
-//                    if (smsHash.error != null) {
-//                        Toast.makeText(delegate.getActivity(), "请稍后重试", Toast.LENGTH_SHORT).show();
-//                        delegate.getSmsView().setClickable(true);
-//                    } else {
-//                        sms_hash = smsHash.sms_hash;
-//                        Log.e("dadw", sms_hash);
-//                        timecount();
-//                    }
                 }
             });
         }

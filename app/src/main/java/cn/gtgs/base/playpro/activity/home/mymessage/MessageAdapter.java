@@ -26,6 +26,7 @@ import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.widget.EmoticonsTextView;
 
 /**
@@ -92,14 +93,38 @@ public class MessageAdapter extends BaseAdapter {
             convertView.setTag(holder);
         }
 
+
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         Map<String, Object> map = message.ext();
-        String username = (String) map.get("user_name");
-        String avatar = (String) map.get("user_avatar");
+        String chatto=null,chattophoto=null,chattoname=null,phone_from=null,photo_from=null,name_from=null;
+        if (map.containsKey("phone_to"))
+        {
+            chatto = (String) map.get("phone_to");
+        }
+        if (map.containsKey("photo_to"))
+        {
+            chattophoto = (String) map.get("photo_to");
+        }
+        if (map.containsKey("name_to"))
+        {
+            chattoname = (String) map.get("name_to");
+        }
+        if (map.containsKey("phone_from"))
+        {
+            phone_from = (String) map.get("phone_from");
+        }
+        if (map.containsKey("photo_from"))
+        {
+            photo_from = (String) map.get("photo_from");
+        }
+        if (map.containsKey("name_from"))
+        {
+            name_from = (String) map.get("name_from");
+        }
         holder.tv_content.setText(txtBody.getMessage());
-        if (viewType == 0) {
+        if (viewType != 0) {//发送的的消息
             final ImageView iv_icon = holder.iv_avatar;
-            Glide.with(context).load(info.getMbPhoto()).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+            Glide.with(context).load(Config.BASE +info.getMbPhoto()).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =
@@ -108,18 +133,26 @@ public class MessageAdapter extends BaseAdapter {
                     iv_icon.setImageDrawable(circularBitmapDrawable);
                 }
             });
-        } else {
-            holder.tv_username.setText(username != null ? username : message.getFrom());
+        } else {//接收的消息
+            if (StringUtils.isNotEmpty(name_from))
+            {
+                holder.tv_username.setText(name_from);
+            }
+
             final ImageView iv_icon = holder.iv_avatar;
-            Glide.with(context).load(Config.BASE + avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
-                @Override
-                protected void setResource(Bitmap resource) {
-                    RoundedBitmapDrawable circularBitmapDrawable =
-                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    iv_icon.setImageDrawable(circularBitmapDrawable);
-                }
-            });
+            if (StringUtils.isNotEmpty(photo_from))
+            {
+                Glide.with(context).load(Config.BASE + photo_from).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        iv_icon.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+            }
+
         }
         return convertView;
     }

@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.activity.home.presenter;
 
 /**
- * Created by hjy on 17/5/8.
+ * Created by  on 17/5/8.
  */
 
 public interface IHome {

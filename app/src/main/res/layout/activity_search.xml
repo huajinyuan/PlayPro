@@ -26,7 +26,9 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
             android:layout_toLeftOf="@+id/btn_search"
+            android:cursorVisible="true"
             android:layout_weight="1"
+            android:textCursorDrawable="@null"
             android:background="@color/colorwhite"
             android:paddingLeft="8dp" />
 
@@ -42,6 +44,16 @@
             android:gravity="center"
             android:text="搜索"
             android:textColor="@color/colorwhite" />
+
+        <ProgressBar
+            android:id="@+id/progressbar_search_p"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

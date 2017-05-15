@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.widget.gles;
 import java.nio.FloatBuffer;
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 public class Drawable2d {
     private static final int SIZEOF_FLOAT = 4;

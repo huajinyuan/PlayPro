@@ -24,7 +24,7 @@ import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by hjy on 17/5/11.
+ * Created by  on 17/5/11.
  */
 
 public class EdtInfoPresenter {
@@ -69,7 +69,7 @@ public class EdtInfoPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
             }
 
             @Override

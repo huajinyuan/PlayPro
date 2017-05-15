@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.utils;
 
 /**
- * Created by gtgs on 2017/3/8.
+ * Created by  on 2017/3/8.
  */
 
 public class IntentKey {

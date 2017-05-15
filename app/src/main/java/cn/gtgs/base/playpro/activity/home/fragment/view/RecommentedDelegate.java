@@ -21,7 +21,7 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.widget.bn.CarouselView;
 
 /**
- * Created by gtgs on 2017/4/25.
+ * Created by  on 2017/4/25.
  */
 
 public class RecommentedDelegate extends AppDelegate {

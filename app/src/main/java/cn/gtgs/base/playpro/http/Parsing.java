@@ -13,7 +13,7 @@ import okhttp3.Response;
 //import cn.gtgs.base.playpro.base.model.BaseError;
 
 /**
- * Created by gtgs on 2017/2/17.
+ * Created by  on 2017/2/17.
  */
 
 public class Parsing {

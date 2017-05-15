@@ -7,7 +7,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 
 /**
- * Created by gtgs on 2017/4/25.
+ * Created by  on 2017/4/25.
  */
 
 public class SettingDelegate extends AppDelegate {

@@ -10,7 +10,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.utils.TransStatusBar;
 
 /**
- * Created by jerikc on 15/10/29.
+ * Created by  on 15/10/29.
  */
 public class HWCodecCameraStreamingActivity extends StreamingBaseActivity {
     private static final String TAG = "HWCodecCameraStreaming";

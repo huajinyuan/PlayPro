@@ -8,7 +8,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 
 /**
- * Created by gtgs on 2017/1/13.
+ * Created by  on 2017/1/13.
  */
 
 public class LoginDelegate extends AppDelegate {

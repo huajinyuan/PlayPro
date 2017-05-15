@@ -20,9 +20,10 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.GlideCircleTransform;
 import cn.gtgs.base.playpro.utils.PixelUtil;
+import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
- * Created by gtgs on 2016/9/2.
+ * Created by  on 2016/9/2.
  */
 public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.AnchorHotViewHolder> {
     private ArrayList<Follow> mData;
@@ -115,11 +116,11 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
         }
         holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
         holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
-        holder.tv_tyrants_sn.setText("贡献黄钻");
-        if (anchorItem.getMbGoldPay() == 0) {
-            holder.tv_tyrants_sum.setText("暂无贡献");
+        holder.tv_tyrants_sn.setText("收入黄钻");
+        if (StringUtils.isEmpty(follow.getAnGold())||follow.getAnGold().equals("0")) {
+            holder.tv_tyrants_sum.setText("暂无收入");
         } else {
-            holder.tv_tyrants_sum.setText(anchorItem.getMbGoldPay() + "");
+            holder.tv_tyrants_sum.setText(follow.getAnGold() + "");
         }
 
 

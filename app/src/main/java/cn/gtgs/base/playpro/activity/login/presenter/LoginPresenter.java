@@ -13,12 +13,15 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
+import cn.gtgs.base.playpro.utils.CheckUtil;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class LoginPresenter implements ILoginPresenter {
@@ -34,8 +37,16 @@ public class LoginPresenter implements ILoginPresenter {
     @Override
     public void login() {
         String pwd = delegate.getPwd();
-        if (pwd.equals(""))
+        if(!CheckUtil.IsPhone(delegate.getPhone()))
+        {
+            ToastUtil.showToast("手机号码格式不正确",delegate.getActivity());
+            return;
+        }
+
+        if (StringUtils.isEmpty(pwd))
+        {
             Toast.makeText(delegate.getActivity(), "输入您的验证码", Toast.LENGTH_SHORT).show();
+        }
         else {
             HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbPhone", delegate.getPhone());
@@ -49,7 +60,7 @@ public class LoginPresenter implements ILoginPresenter {
 
                 @Override
                 public void onError(Throwable e) {
-
+                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
                 }
 
                 @Override

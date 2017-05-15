@@ -19,11 +19,12 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class RecommentedPresenter implements IRecommented {
@@ -63,6 +64,7 @@ public class RecommentedPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
                 if (delegate.getmSwp().isRefreshing()) {
                     delegate.getmSwp().setRefreshing(false);
                 }

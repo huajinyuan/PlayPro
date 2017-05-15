@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.activity.center.model;
 import java.io.Serializable;
 
 /**
- * Created by hjy on 17/5/12.
+ * Created by  on 17/5/12.
  */
 
 public class Gold implements Serializable {

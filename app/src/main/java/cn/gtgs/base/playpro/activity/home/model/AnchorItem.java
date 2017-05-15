@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.activity.home.model;
 import java.io.Serializable;
 
 /**
- * Created by zuoyun on 2016/9/2.
+ * Created by  on 2016/9/2.
  */
 public class AnchorItem implements Serializable {
     public String id, name, realname, avatar, place_id, gender, role, status, level, place, count, count_name, huanxin_username, huanxin_password, huanxin_chatroom_id, live, credits, region_id, rank_change, online_count;

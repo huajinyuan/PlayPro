@@ -39,6 +39,7 @@ public class SearchActivity extends ActivityPresenter<SearchDelegate> implements
                 this.finish();
                 break;
             case R.id.btn_search:
+                viewDelegate.showProgressbar();
                 presenter.search();
                 break;
         }

@@ -2,8 +2,10 @@ package cn.gtgs.base.playpro.activity.home.search.view;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
 
 /**
- * Created by gtgs on 2017/1/13.
+ * Created by  on 2017/1/13.
  */
 
 public class SearchDelegate extends AppDelegate {
@@ -29,6 +31,8 @@ public class SearchDelegate extends AppDelegate {
     Button mBtnSearch;
     @BindView(R.id.edt_search)
     EditText mEdtSearch;
+    @BindView(R.id.progressbar_search_p)
+    ProgressBar progressbar_search_p;
     LinearLayoutManager manager;
     ArrayList<Follow> mData = new ArrayList<>();
     SearchAdapter adapter;
@@ -64,5 +68,13 @@ public class SearchDelegate extends AppDelegate {
     public Button getmBtnSearch() {
         return mBtnSearch;
     }
+    public void hideProgressbar()
+    {
+        progressbar_search_p.setVisibility(View.GONE);
+    }
 
+    public void showProgressbar()
+    {
+        progressbar_search_p.setVisibility(View.VISIBLE);
+    }
 }

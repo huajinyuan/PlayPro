@@ -5,7 +5,7 @@ import java.io.Serializable;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 
 /**
- * Created by gtgs on 2017/5/4.
+ * Created by  on 2017/5/4.
  */
 
 public class Follow implements Serializable {
@@ -271,6 +271,7 @@ public class Follow implements Serializable {
     public void setWordLimit(String wordLimit) {
         this.wordLimit = wordLimit;
     }
+
 
     @Override
     public String toString() {

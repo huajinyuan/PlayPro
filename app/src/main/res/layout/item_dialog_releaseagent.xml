@@ -49,7 +49,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_button_pink_rightbottom"
                 android:text="确定解除"
-                android:textColor="@color/color_black_background"/>
+                android:textColor="@color/colorwhite"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

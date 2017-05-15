@@ -28,6 +28,7 @@ public class RegisterActivity extends ActivityPresenter<RegisterDelegate> implem
     @Override
     protected void initData() {
         registerInfo = (RegisterInfo) getIntent().getSerializableExtra("RegisterInfo");
+        viewDelegate.setTitle();
     }
 
     @Override

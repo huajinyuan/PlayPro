@@ -17,7 +17,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 public class GlUtil {
     private static final String TAG = "GlDemoUtil";

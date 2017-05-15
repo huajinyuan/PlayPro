@@ -1,6 +1,9 @@
 package cn.gtgs.base.playpro.activity.home.mymessage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -16,15 +21,17 @@ import com.hyphenate.util.DateUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
-import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
- * Created by zuoyun on 2016/11/7.
+ * Created by  on 2016/11/7.
  */
 
 
@@ -97,44 +104,70 @@ public class ListViewConversationsAdapter extends ArrayAdapter<EMConversation> {
         if (conversation.getAllMsgCount() != 0) {
             // 把最后一条消息的内容作为item的message内容
             EMMessage lastMessage = conversation.getLastMessage();
-//            Map<String, Object> map = lastMessage.ext();
-//            String username = (String) map.get("user_name");
-//            String avatar = (String) map.get("user_avatar");
-//            String to_avatar = (String) map.get("to_avatar");
-//            String to_userName = (String) map.get("to_userName");
-//            EMMessage.Direct.RECEIVE
-//            message.direct()
-            holder.name.setText(conversation.conversationId());
-            F.e("conversation.conversationId()---------------------"+conversation.conversationId());
-//            if (lastMessage.direct() == EMMessage.Direct.RECEIVE)//接收到的消息
-//            {
-//                F.e("接收到消息:" + "username:" + username + " to_userName:" + to_userName);
-//                holder.name.setText(StringUtils.isNotEmpty(username) ? "与 " + username + " 的会话" : "");
-//                final ImageView iv_icon = holder.iv_avatar;
-//                Glide.with(getContext()).load(Config.BASE + avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
-//                    @Override
-//                    protected void setResource(Bitmap resource) {
-//                        RoundedBitmapDrawable circularBitmapDrawable =
-//                                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-//                        circularBitmapDrawable.setCircular(true);
-//                        iv_icon.setImageDrawable(circularBitmapDrawable);
-//                    }
-//                });
-//            } else//发送的消息
-//            {
-//                F.e("发送的消息:" + "username:" + username + " to_userName:" + to_userName);
-//                holder.name.setText(StringUtils.isNotEmpty(to_userName) ? "与 " + to_userName + " 的会话" : "");
-//                final ImageView iv_icon = holder.iv_avatar;
-//                Glide.with(getContext()).load(Config.BASE + to_avatar).asBitmap().centerCrop().into(new BitmapImageViewTarget(iv_icon) {
-//                    @Override
-//                    protected void setResource(Bitmap resource) {
-//                        RoundedBitmapDrawable circularBitmapDrawable =
-//                                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-//                        circularBitmapDrawable.setCircular(true);
-//                        iv_icon.setImageDrawable(circularBitmapDrawable);
-//                    }
-//                });
-//            }
+            Map<String, Object> map = lastMessage.ext();
+            String chatto=null,chattophoto=null,chattoname=null,phone_from=null,photo_from=null,name_from=null;
+            if (map.containsKey("phone_to"))
+            {
+                 chatto = (String) map.get("phone_to");
+            }
+            if (map.containsKey("photo_to"))
+            {
+                 chattophoto = (String) map.get("photo_to");
+            }
+            if (map.containsKey("name_to"))
+            {
+                 chattoname = (String) map.get("name_to");
+            }
+            if (map.containsKey("phone_from"))
+            {
+                 phone_from = (String) map.get("phone_from");
+            }
+            if (map.containsKey("photo_from"))
+            {
+                 photo_from = (String) map.get("photo_from");
+            }
+            if (map.containsKey("name_from"))
+            {
+                 name_from = (String) map.get("name_from");
+            }
+
+            final ImageView icon = holder.iv_avatar;
+            if (lastMessage.direct() == EMMessage.Direct.RECEIVE)//接收到的消息
+            {
+                if (StringUtils.isNotEmpty(name_from))
+                {
+                    holder.name.setText(StringUtils.isNotEmpty(name_from) ? "与 " + name_from + " 的会话" : "");
+                }
+                if (StringUtils.isNotEmpty(photo_from)){
+                    Glide.with(getContext()).load(Config.BASE + photo_from).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            icon.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+                }
+
+            }else{//发送的消息
+                if (StringUtils.isNotEmpty(chattoname))
+                {
+                    holder.name.setText(StringUtils.isNotEmpty(chattoname) ? "与 " + chattoname + " 的会话" : "");
+                }
+               if (StringUtils.isNotEmpty(chattophoto))
+               {
+                   Glide.with(getContext()).load(Config.BASE + chattophoto).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
+                       @Override
+                       protected void setResource(Bitmap resource) {
+                           RoundedBitmapDrawable circularBitmapDrawable =
+                                   RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                           circularBitmapDrawable.setCircular(true);
+                           icon.setImageDrawable(circularBitmapDrawable);
+                       }
+                   });
+               }
+            }
 
             holder.message.setText(((EMTextMessageBody) lastMessage.getBody()).getMessage());
             holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));

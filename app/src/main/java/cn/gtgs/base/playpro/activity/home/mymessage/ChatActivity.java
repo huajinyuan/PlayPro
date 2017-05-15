@@ -40,6 +40,7 @@ import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import cn.gtgs.base.playpro.widget.ChatEmoticoViewPager;
 import cn.gtgs.base.playpro.widget.OnEmoticoSelectedListener;
 import cn.gtgs.base.playpro.widget.ParentViewPaperAdapter;
@@ -59,12 +60,11 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
 
     Follow mF;
     UserInfo loginInfo;
-    String message_from, message_content, chatto;
+    String message_from, message_content;
+    String chatto,chattophoto,chattoname;
     ArrayList<EMMessage> msgList = new ArrayList<>();
     MessageAdapter adapter;
     String et_huanxin_content;
-    //    private String mToUserNam;
-//    private String chattoURL;
     private int FACE_SIZE;//
     // 表情大小
 
@@ -79,15 +79,11 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         loginInfo = mF.getMember();
         chatto = getIntent().getStringExtra("chatto");
-        if (StringUtils.isNotEmpty(chatto)) {
-            mTvTitle.setText(chatto);
+        chattophoto = getIntent().getStringExtra("chattophoto");
+        chattoname = getIntent().getStringExtra("chattoname");
+        if (StringUtils.isNotEmpty(chattoname)) {
+            mTvTitle.setText(chattoname);
         }
-//        mToUserNam = getIntent().getStringExtra("chatName");
-//        chattoURL = getIntent().getStringExtra("chattoURL");
-//        if (StringUtils.isNotEmpty(mToUserNam)) {
-//        } else if (StringUtils.isNotEmpty(mToUserNam)) {
-//            mTvTitle.setText(mToUserNam);
-//        }
         FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         login();
         initviews();
@@ -142,7 +138,7 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
         String userName = "111";
         String password = "111";
         if (null != loginInfo) {
-            userName = loginInfo.getMbId() + "";
+            userName = loginInfo.getMbPhone() + "";
             password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
         }
         F.e(userName + "  " + password);
@@ -156,13 +152,17 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        loadsomes();
+                        if(StringUtils.isNotEmpty(chatto))
+                        {
+                            loadsomes();
+                        }
+
                     }
                 });
             }
 
             @Override
-            public void onError(int code, String s) {
+            public void onError(int code, final String s) {
                 if (code == 200) {
                     EMClient.getInstance().logout(true);
                     login();
@@ -171,7 +171,7 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -211,15 +211,29 @@ public class ChatActivity extends AppCompatActivity implements OnEmoticoSelected
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
             EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatto);
             message.setChatType(EMMessage.ChatType.Chat);
-            message.setAttribute("user_name", null != loginInfo.getMbNickname() ? loginInfo.getMbNickname() : loginInfo.getMbPhone());
-            message.setAttribute("level", "1");
-            message.setAttribute("user_avatar", loginInfo.getMbPhoto());
-//            if (StringUtils.isNotEmpty(mToUserNam)) {
-//                message.setAttribute("to_userName", mToUserNam);//TODO缺to_userName
-//            } else if (StringUtils.isNotEmpty(chatto)) {
-//                message.setAttribute("to_userName", chatto);//TODO缺to_userName
-//            }
-//            message.setAttribute("to_avatar", chattoURL);//TODO缺to_userName
+            message.setAttribute("phone_from", loginInfo.getMbPhone());
+            message.setAttribute("photo_from", loginInfo.getMbPhoto());
+            message.setAttribute("name_from", loginInfo.getMbNickname());
+            if (StringUtils.isEmpty(chatto))
+            {
+                ToastUtil.showToast("对方账号未知，消息未发送",this);
+                return;
+            }
+            if (StringUtils.isEmpty(chattophoto))
+            {
+                ToastUtil.showToast("对方头像未知，消息未发送",this);
+                return;
+            }
+            if (StringUtils.isEmpty(chattoname))
+            {
+                ToastUtil.showToast("对方昵称未知，消息未发送",this);
+                return;
+            }
+            message.setAttribute("phone_to", chatto);
+            message.setAttribute("photo_to", chattophoto);
+            message.setAttribute("name_to", chattoname);
+
+
             EMClient.getInstance().chatManager().sendMessage(message);
 
             msgList.add(message);

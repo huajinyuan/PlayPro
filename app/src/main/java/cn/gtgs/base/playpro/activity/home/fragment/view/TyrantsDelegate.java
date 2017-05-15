@@ -15,7 +15,7 @@ import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.widget.DividerGridItemDecoration;
 
 /**
- * Created by gtgs on 2017/4/25.
+ * Created by  on 2017/4/25.
  */
 
 public class TyrantsDelegate extends AppDelegate {

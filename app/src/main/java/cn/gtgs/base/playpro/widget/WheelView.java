@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gtgs on 2017/5/10.
+ * Created by  on 2017/5/10.
  */
 
 public class WheelView extends ScrollView {
@@ -353,8 +353,8 @@ public class WheelView extends ScrollView {
     }
 
     private int getViewMeasuredHeight(View view) {
-        int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        int expandSpec = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
+        int width = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
         view.measure(width, expandSpec);
         return view.getMeasuredHeight();
     }

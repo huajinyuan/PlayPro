@@ -8,7 +8,7 @@ public class CheckUtil {
 
 		boolean flag;
 		// String phoneStr = phone.getText ( ).toString ( ).trim ( );
-		if (phonestr.equals("")) {
+		if (StringUtils.isEmpty(phonestr)) {
 			flag = false;
 		} else {
 			Pattern p = Pattern.compile("^1[3,4,5,7,8]+\\d{9}");

@@ -13,7 +13,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 /**
- * Created by gtgs on 2016/9/2.
+ * Created by  on 2016/9/2.
  * RecycleGrid分割线
  *
  */

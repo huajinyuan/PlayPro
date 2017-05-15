@@ -20,7 +20,7 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
 /**
- * Created by gtgs on 2016/9/2.
+ * Created by  on 2016/9/2.
  */
 public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.AnchorHotViewHolder> {
     private ArrayList<Follow> mData;

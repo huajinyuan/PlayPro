@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 /**
- * Created by jerikc on 16/2/5.
+ * Created by  on 16/2/5.
  */
 public class CameraPreviewFrameView extends GLSurfaceView {
     private static final String TAG = "CameraPreviewFrameView";

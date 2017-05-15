@@ -23,7 +23,7 @@ import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class HomePresenter implements IHome {

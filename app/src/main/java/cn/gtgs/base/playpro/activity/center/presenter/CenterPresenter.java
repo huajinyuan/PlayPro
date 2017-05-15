@@ -13,11 +13,12 @@ import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by hjy on 17/5/6.
+ * Created by  on 17/5/6.
  */
 
 public class CenterPresenter {
@@ -47,6 +48,7 @@ public class CenterPresenter {
 
             @Override
             public void onError(Throwable e) {
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
                 if (delegate.getmSwp().isRefreshing()) {
                     delegate.getmSwp().setRefreshing(false);
                 }

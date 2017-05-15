@@ -7,7 +7,7 @@ import android.view.View;
 import java.util.List;
 
 /**
- * Created by gtgs on 2017/5/5.
+ * Created by  on 2017/5/5.
  */
 
 public class ParentViewPaperAdapter extends PagerAdapter  {

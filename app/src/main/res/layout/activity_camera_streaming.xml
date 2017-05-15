@@ -106,14 +106,25 @@
         android:background="@mipmap/icon_center_option"
         android:clickable="true"/>
 
+    <TextView
+        android:id="@+id/tv_play_toast_sys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listView"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/red_btn_bg_color"
+        android:paddingTop="8dp"
+        android:visibility="gone"
+        />
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
-        android:divider="@null">
-    </ListView>
+        android:divider="@null"/>
     <TextView
         android:id="@+id/tv_likes"
         android:layout_width="wrap_content"
@@ -135,6 +146,7 @@
         android:id="@+id/rl_live_bootombar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true">
         <ImageView
             android:id="@+id/iv_live_changecamera"
@@ -180,4 +192,17 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="70dp"
         android:layout_marginTop="@dimen/dp_50" />
+
+    <TextView
+        android:id="@+id/unread_msg_number"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_play_toast_sys"
+        android:background="@drawable/shape_round_red"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:visibility="gone" />
 </RelativeLayout>

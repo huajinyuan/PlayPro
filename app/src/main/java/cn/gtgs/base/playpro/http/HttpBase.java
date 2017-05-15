@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by gtgs on 2017/5/2.
+ * Created by  on 2017/5/2.
  */
 
 public class HttpBase<T> implements Serializable {

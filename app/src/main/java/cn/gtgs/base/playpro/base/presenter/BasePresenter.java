@@ -4,7 +4,7 @@ import cn.gtgs.base.playpro.base.model.IModel;
 import cn.gtgs.base.playpro.base.view.IDelegate;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public interface BasePresenter <T extends IDelegate, D extends IModel> {

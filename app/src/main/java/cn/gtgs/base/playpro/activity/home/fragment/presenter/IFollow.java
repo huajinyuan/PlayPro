@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 
 /**
- * Created by gtgs on 2017/4/26.
+ * Created by  on 2017/4/26.
  */
 
 public interface IFollow {

@@ -34,6 +34,8 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 
 public class MessageListActivity extends AppCompatActivity {
     public static MessageListActivity instance;
@@ -69,17 +71,84 @@ public class MessageListActivity extends AppCompatActivity {
                 EMConversation conversation = adapter.getItem(i);
                 EMMessage lastMessage = conversation.getLastMessage();
                 Map<String, Object> map = lastMessage.ext();
-                String username = (String) map.get("user_name");
-                String avatar = (String) map.get("user_avatar");
+                String chatto=null,chattophoto=null,chattoname=null,phone_from=null,photo_from=null,name_from=null;
+                if (map.containsKey("phone_to"))
+                {
+                    chatto = (String) map.get("phone_to");
+                }
+                if (map.containsKey("photo_to"))
+                {
+                    chattophoto = (String) map.get("photo_to");
+                }
+                if (map.containsKey("name_to"))
+                {
+                    chattoname = (String) map.get("name_to");
+                }
+                if (map.containsKey("phone_from"))
+                {
+                    phone_from = (String) map.get("phone_from");
+                }
+                if (map.containsKey("photo_from"))
+                {
+                    photo_from = (String) map.get("photo_from");
+                }
+                if (map.containsKey("name_from"))
+                {
+                    name_from = (String) map.get("name_from");
+                }
+
                 // 进入聊天页面
                 Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("chatto", conversation.conversationId());
+                if (lastMessage.direct() == EMMessage.Direct.RECEIVE)
+                {
+                    if (StringUtils.isNotEmpty(phone_from))
+                    {
+                        intent.putExtra("chatto", phone_from);
+                    }
+                    else {
+                        ToastUtil.showToast("对方账号未知",MessageListActivity.this);
+                        return;
+                    }
+
+                    if (StringUtils.isNotEmpty(photo_from))
+                    {
+                        intent.putExtra("chattophoto", photo_from);
+                    }
+                    if (StringUtils.isNotEmpty(name_from))
+                    {
+                        intent.putExtra("chattoname", name_from);
+                    }
+
+
+                }else {
+                    if (StringUtils.isNotEmpty(chatto))
+                    {
+                        intent.putExtra("chatto", chatto);
+                    }
+                    else{
+                        ToastUtil.showToast("对方账号未知",MessageListActivity.this);
+                        return;
+                    }
+                    if (StringUtils.isNotEmpty(chattophoto))
+                    {
+                        intent.putExtra("chattophoto", chattophoto);
+                    }
+                    if (StringUtils.isNotEmpty(chattoname))
+                    {
+                        intent.putExtra("chattoname", chattoname);
+                    }
+
+
+
+                }
 //                if (map.containsKey("to_userName")) {
 //                    intent.putExtra("chatName", (String) map.get("to_userName"));
 //                } else {
 //                    intent.putExtra("chatName", conversation.conversationId());
 //                }
 //                intent.putExtra("chatName", conversation.());//TODO
+
+
                 startActivity(intent);
             }
         });
@@ -96,7 +165,7 @@ public class MessageListActivity extends AppCompatActivity {
         String userName = "111";
         String password = "111";
         if (null != loginInfo) {
-            userName = loginInfo.getMbId() + "";
+            userName = loginInfo.getMbPhone() + "";
             password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
         }
         F.e(userName + "  " + password);
@@ -140,7 +209,15 @@ public class MessageListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //加载聊天列表
-                conversations = loadConversationList();
+                try
+                {
+                    conversations = loadConversationList();
+
+                }catch (Exception e)
+                {
+                    F.e(e.toString());
+                }
+
                 adapter = new ListViewConversationsAdapter(context, 1, conversations);
                 lv_conversitions.setAdapter(adapter);
                 if (conversations.isEmpty()) {

@@ -39,8 +39,8 @@
             android:layout_toLeftOf="@+id/tv_login_sms"
             android:background="@color/colorwhite"
             android:drawablePadding="10dp"
+            android:inputType="textPassword"
             android:hint="输入您的密码"
-            android:inputType="number"
             android:paddingLeft="10dp" />
 
         <!--<TextView-->
@@ -80,5 +80,6 @@
         android:background="@color/colorBlue"
         android:text="注册"
         android:textColor="@color/colorwhite" />
+
 
 </LinearLayout>

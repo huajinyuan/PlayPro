@@ -102,6 +102,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.widget.PeriscopeLayout;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.WheelView;
@@ -112,7 +113,7 @@ import rx.Subscriber;
 import static android.widget.Toast.LENGTH_SHORT;
 
 /**
- * Created by jerikc on 15/7/6.
+ * Created by  on 15/7/6.
  */
 public class StreamingBaseActivity extends Activity implements
         View.OnLayoutChangeListener,
@@ -214,6 +215,9 @@ public class StreamingBaseActivity extends Activity implements
 
     @BindView(R.id.danmakuView)
     DanmakuView mDanmakuView;
+    @BindView(R.id.tv_play_toast_sys)
+    TextView mTvSysToast;
+
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -267,10 +271,22 @@ public class StreamingBaseActivity extends Activity implements
     public PeriscopeLayout periscopeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        } else {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//        } else {
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(Color.TRANSPARENT);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
@@ -316,20 +332,9 @@ public class StreamingBaseActivity extends Activity implements
         //-------------------------------------------------------------------
 
 
-//        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
-//                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_AAC,
-//                getApplicationInfo().nativeLibraryDir + "/libpldroid_streaming_aac_encoder_v7a.so");
-//
-//        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
-//                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_CORE, "pldroid_streaming_core");
-//
-//        SharedLibraryNameHelper.getInstance().renameSharedLibrary(
-//                SharedLibraryNameHelper.PLSharedLibraryType.PL_SO_TYPE_H264, "pldroid_streaming_h264_encoder_v7a");
-
         String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
 
 
-//        String publishUrlFromServer = "URL:rtmp://pili-publish.yequtv.cn/yequtv/3_LqFYnPfrruSsTseyLEyY?e=1493973247&token=rDcjA3sgmiUI8_uRZ8ZTJYW5o01YzkOr-RFlB1nc:ZwWdgVXSl_TSeGaGmHEK9Zoc_0U=";
         Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
 
         mContext = this;
@@ -763,6 +768,43 @@ public class StreamingBaseActivity extends Activity implements
 
 
         });
+
+        if (StringUtils.isNotEmpty(mF.getSysMsg()))
+        {
+            mTvSysToast.setVisibility(View.VISIBLE);
+            mTvSysToast.setText("系统消息："+mF.getSysMsg());
+            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
+            mTvSysToast.startAnimation(a);
+            a.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTvSysToast.getVisibility() == View.VISIBLE) {
+                                F.e("---------------------------------mTvGiftCount GONE");
+                                mTvSysToast.clearAnimation();
+                                mTvSysToast.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+
+
+
     }
 
     public void Shoufei(String price) {

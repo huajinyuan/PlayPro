@@ -22,7 +22,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 
 /**
- * Created by gtgs on 2017/4/25.
+ * Created by  on 2017/4/25.
  */
 
 public class EdtInfoDelegate extends AppDelegate {

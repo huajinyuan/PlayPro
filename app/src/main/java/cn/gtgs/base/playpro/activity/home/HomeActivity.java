@@ -30,6 +30,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
@@ -147,7 +148,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
                 @Override
                 public void onError(Throwable e) {
-
+                    ToastUtil.showToast("请求失败，请检查网络",HomeActivity.this);
                 }
 
                 @Override
@@ -156,25 +157,30 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                     HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     Follow follow = baseF.getData();
                     F.e("--------------" + follow.getWcPushAddress());
-                    Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
-                    try {
+                    if (StringUtils.isNotEmpty(follow.getIsRecommend())&&follow.getIsRecommend().equals("1"))
+                    {
+                        Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
+                        try {
 //                        .decode(follow.getWcPushAddress(), Des3.secretKey)
-                        intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
-                        intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
-                        intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
-                        startActivity(intent);
-                        Updatestatus();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                            intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
+                            intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
+                            intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
+                            startActivity(intent);
+                            Updatestatus();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }else
+                    {
+                        ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", HomeActivity.this);
                     }
-//                startPush("URL:"+follow.getWcPullAddress());
+
                 }
             });
         } else {
             ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", this);
         }
 
-//        PostRequest request = OkGo.post(Config.POST_ANCHOR_GET).params(params);
 
 
     }

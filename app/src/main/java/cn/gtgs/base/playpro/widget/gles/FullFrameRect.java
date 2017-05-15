@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.widget.gles;
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 
 import android.opengl.Matrix;

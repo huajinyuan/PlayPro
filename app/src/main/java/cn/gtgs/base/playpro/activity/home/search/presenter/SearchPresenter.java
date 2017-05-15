@@ -16,12 +16,12 @@ import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
-import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class SearchPresenter implements ISearch {
@@ -43,7 +43,7 @@ public class SearchPresenter implements ISearch {
     public void search() {
 
         String content = delegate.getSearchContent();
-        if (!StringUtils.isEmpty(content)) {
+//        if (!StringUtils.isEmpty(content)) {
             delegate.getmBtnSearch().setClickable(false);
             HttpParams params = new HttpParams();
             params.put("searchKey", content);
@@ -56,11 +56,14 @@ public class SearchPresenter implements ISearch {
 
                 @Override
                 public void onError(Throwable e) {
+                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                    delegate.hideProgressbar();
                     delegate.getmBtnSearch().setClickable(true);
                 }
 
                 @Override
                 public void onNext(Response response) {
+                    delegate.hideProgressbar();
                     delegate.getmBtnSearch().setClickable(true);
                     try {
                         F.e(response.body().toString());
@@ -71,7 +74,7 @@ public class SearchPresenter implements ISearch {
                     }
                 }
             });
-        }
+//        }
 
 
     }

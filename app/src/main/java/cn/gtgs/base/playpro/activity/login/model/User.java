@@ -4,7 +4,7 @@ package cn.gtgs.base.playpro.activity.login.model;
 import cn.gtgs.base.playpro.base.model.IModel;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class User implements IModel {

@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.utils;
 
 /**
- * Created by gtgs on 2017/3/3.
+ * Created by  on 2017/3/3.
  */
 
 public class ACacheKey {

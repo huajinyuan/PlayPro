@@ -14,7 +14,7 @@ import cn.gtgs.base.playpro.activity.center.model.Gold;
 import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
- * Created by gtgs on 2016/9/2.
+ * Created by  on 2016/9/2.
  */
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.AnchorHotViewHolder> {
     private ArrayList<Gold> mData;

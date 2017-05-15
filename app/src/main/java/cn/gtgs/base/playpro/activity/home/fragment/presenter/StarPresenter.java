@@ -20,11 +20,12 @@ import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public class StarPresenter implements IRecommented {
@@ -61,7 +62,7 @@ public class StarPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
             }
 
             @Override
@@ -102,7 +103,11 @@ public class StarPresenter implements IRecommented {
 
     private void getData() {
 
-        GetRequest request = OkGo.get(Config.POST_ANCHOR_TOP);
+        HttpParams params = new HttpParams();
+        params.put("page", "1");
+        params.put("count", "30");
+        GetRequest request = OkGo.get(Config.POST_ANCHOR_TOP).params(params);
+
 //        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
         HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
             @Override

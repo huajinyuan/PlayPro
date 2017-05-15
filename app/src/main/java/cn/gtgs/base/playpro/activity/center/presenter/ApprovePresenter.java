@@ -19,7 +19,7 @@ import okhttp3.Response;
 import rx.Subscriber;
 
 /**
- * Created by hjy on 17/5/6.
+ * Created by  on 17/5/6.
  */
 
 public class ApprovePresenter implements IApprove {
@@ -41,7 +41,13 @@ public class ApprovePresenter implements IApprove {
 
     @Override
     public void Submit() {
+        Follow follow = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        info = follow.getMember();
         HttpParams params = new HttpParams();
+        if(info.getAuditAnchor()==1&&StringUtils.isNotEmpty(follow.getAnId()))
+        {
+            params.put("anId",follow.getAnId());
+        }
         if (null != info) {
             if (null == path) {
                 ToastUtil.showToast("请设置头像", delegate.getActivity());
@@ -50,6 +56,10 @@ public class ApprovePresenter implements IApprove {
             if (StringUtils.isEmpty(delegate.getQQ())) {
                 ToastUtil.showToast("请填写QQ号", delegate.getActivity());
                 return;
+            }
+            if (StringUtils.isNotEmpty(delegate.getIntroduce()))
+            {
+                params.put("anRemark", delegate.getIntroduce());
             }
 
             params.put("mbId", info.getMbId());
@@ -67,7 +77,7 @@ public class ApprovePresenter implements IApprove {
 
                 @Override
                 public void onError(Throwable e) {
-
+                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
                 }
 
                 @Override

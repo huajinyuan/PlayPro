@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import com.qiniu.pili.droid.streaming.StreamingProfile;
 
 /**
- * Created by gtgs on 2017/2/16.
+ * Created by  on 2017/2/16.
  */
 
 public interface Config {

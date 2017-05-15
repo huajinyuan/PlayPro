@@ -6,7 +6,7 @@ package cn.gtgs.base.playpro.activity.login.presenter;//package cn.gtgs.base.pla
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public interface IRegisterListener {

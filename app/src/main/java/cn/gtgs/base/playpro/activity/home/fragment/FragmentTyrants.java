@@ -11,7 +11,7 @@ import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 
 /**
- * Created by gtgs on 2017/4/26.
+ * Created by  on 2017/4/26.
  */
 
 public class FragmentTyrants extends FragmentPresenter<TyrantsDelegate> implements IFollowItemListener, SwipeRefreshLayout.OnRefreshListener {

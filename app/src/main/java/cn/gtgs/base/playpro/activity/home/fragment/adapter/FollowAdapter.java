@@ -22,7 +22,7 @@ import cn.gtgs.base.playpro.utils.GlideCircleTransform;
 import cn.gtgs.base.playpro.utils.PixelUtil;
 
 /**
- * Created by gtgs on 2016/9/2.
+ * Created by  on 2016/9/2.
  */
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotViewHolder> {
     private ArrayList<Follow> mData;

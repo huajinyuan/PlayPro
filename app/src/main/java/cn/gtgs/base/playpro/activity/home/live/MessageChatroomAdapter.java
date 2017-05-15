@@ -18,7 +18,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.widget.EmoticonsTextView;
 
 /**
- * Created by zuoyun on 2016/8/3.
+ * Created by  on 2016/8/3.
  */
 public class MessageChatroomAdapter extends BaseAdapter {
     private List<EMMessage> msgs;

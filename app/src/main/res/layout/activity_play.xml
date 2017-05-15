@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
 
+    >
+    <!--android:fitsSystemWindows="true"-->
     <com.pili.pldroid.player.widget.PLVideoView
         android:id="@+id/vv_test"
         android:layout_width="match_parent"
@@ -22,11 +23,23 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
         android:layout_marginBottom="80dp"
+        android:layout_marginTop="200dp"
         android:background="@color/float_transparent"
         android:divider="@null" />
+    <TextView
+        android:id="@+id/tv_play_toast_sys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:textColor="@color/red_btn_bg_color"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tv_likes"
@@ -44,7 +57,7 @@
         android:id="@+id/lin_play_gift_send"
         layout="@layout/layout_play_gift_lin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/tv_likes"
         android:visibility="gone" />
 
@@ -61,13 +74,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:background="@drawable/selector_button_live_chat" />
-
-        <!--<Button-->
-        <!--android:id="@+id/bt_live_booking"-->
-        <!--android:layout_width="60dp"-->
-        <!--android:layout_height="60dp"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:background="@drawable/selector_button_live_booking" />-->
 
         <Button
             android:id="@+id/bt_live_like"
@@ -117,53 +123,12 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/frame_live_gifts"
+    <include
+        android:id="@+id/lin_play_gift_panel_bottom"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_230"
-        android:layout_alignParentBottom="true"
-        android:background="#9921272b"
-        android:orientation="vertical"
-        android:visibility="invisible">
+        android:layout_height="match_parent"
+        layout="@layout/layout_play_giftcontent_bottom"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_gifts"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_190"
-            android:layout_marginBottom="@dimen/dp_5" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:paddingLeft="@dimen/dp_8">
-
-            <TextView
-                android:id="@+id/tv_live_credits"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="@dimen/dp_8"
-                android:paddingTop="@dimen/dp_8"
-                android:text="钻石："
-                android:textColor="@color/colorBlue" />
-
-            <Button
-                android:id="@+id/bt_live_sendgift"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/selector_button_pink_noradius"
-                android:text="发送" />
-
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!--<View-->
-    <!--android:id="@+id/view_click"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_above="@+id/layout_play_bottom_dialog" />-->
 
     <include
         android:id="@+id/layout_live_icon_content"
@@ -218,7 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_play_bottom_dialog"
-            android:background="@color/colorBlue" />
+            />
 
         <include
             android:id="@+id/layout_play_bottom_dialog"

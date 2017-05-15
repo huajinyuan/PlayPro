@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/frame_live_gifts"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_230"
+        android:layout_alignParentBottom="true"
+        android:background="#9921272b"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_gifts"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_190"
+            android:layout_marginBottom="@dimen/dp_5" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingLeft="@dimen/dp_8">
+
+            <TextView
+                android:id="@+id/tv_live_credits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_8"
+                android:text="钻石："
+                android:textColor="@color/colorBlue" />
+
+            <Button
+                android:id="@+id/bt_live_sendgift"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_button_pink_noradius"
+                android:text="发送" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

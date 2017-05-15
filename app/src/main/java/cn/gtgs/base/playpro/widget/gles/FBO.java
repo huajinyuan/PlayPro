@@ -9,7 +9,7 @@ import cn.gtgs.base.playpro.widget.filter.CameraFilterBeauty;
 
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 public class FBO {
     private static final String TAG = "FBO";

@@ -4,7 +4,7 @@ package cn.gtgs.base.playpro.activity.login.presenter;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 
 /**
- * Created by gtgs on 2017/2/10.
+ * Created by  on 2017/2/10.
  */
 
 public interface ILoginListener {

@@ -1,7 +1,7 @@
 package cn.gtgs.base.playpro.widget;
 
 /**
- * Created by gtgs on 2017/5/5.
+ * Created by  on 2017/5/5.
  */
 
 public interface OnEmoticoSelectedListener {

@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.widget.filter;
 import java.nio.FloatBuffer;
 
 /**
- * Created by jerikc on 16/2/23.
+ * Created by  on 16/2/23.
  */
 public interface IFilter {
     int getTextureTarget();

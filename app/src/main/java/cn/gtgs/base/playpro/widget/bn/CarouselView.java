@@ -23,7 +23,7 @@ import cn.gtgs.base.playpro.R;
  *
  */
 /**
- * user: yangqiangyu on 1/18/16 10:32
+ * user:  on 1/18/16 10:32
  * csdn: http://blog.csdn.net/yissan
  */
 public class CarouselView extends FrameLayout implements ViewPager.OnPageChangeListener {

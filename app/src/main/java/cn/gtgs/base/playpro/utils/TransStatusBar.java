@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * Created by zuoyun on 2016/9/28.
+ * Created by  on 2016/9/28.
  */
 
 public class TransStatusBar {

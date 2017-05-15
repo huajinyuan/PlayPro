@@ -3,7 +3,7 @@ package cn.gtgs.base.playpro.http;
 import java.util.List;
 
 /**
- * Created by gtgs on 2017/5/4.
+ * Created by  on 2017/5/4.
  */
 
 public class BaseList<T> {

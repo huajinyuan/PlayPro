@@ -9,7 +9,7 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.widget.gles.GlUtil;
 
 /**
- * Created by shengwenhui on 16/3/3.
+ * Created by  on 16/3/3.
  */
 public class CameraFilterBeauty extends CameraFilter {
     private int singleStepOffset;

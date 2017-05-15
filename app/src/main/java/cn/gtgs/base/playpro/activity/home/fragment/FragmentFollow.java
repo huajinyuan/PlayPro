@@ -12,7 +12,7 @@ import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 
 /**
- * Created by gtgs on 2017/4/26.
+ * Created by  on 2017/4/26.
  */
 
 public class FragmentFollow extends FragmentPresenter<FollowDelegate> implements IFollowItemListener, SwipeRefreshLayout.OnRefreshListener {

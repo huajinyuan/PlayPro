@@ -6,7 +6,7 @@ import cn.gtgs.base.playpro.activity.login.view.LoginDelegate;
 import cn.gtgs.base.playpro.base.presenter.databind.DataBinder;
 
 /**
- * Created by gtgs on 2017/1/13.
+ * Created by  on 2017/1/13.
  */
 
 public class Student2MainBinder implements DataBinder<LoginDelegate,User> {

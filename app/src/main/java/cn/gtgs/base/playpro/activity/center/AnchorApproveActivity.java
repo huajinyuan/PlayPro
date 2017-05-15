@@ -52,6 +52,7 @@ public class AnchorApproveActivity extends ActivityPresenter<AnchorApproveDelega
     Context context;
     private UploadManager uploadManager;
 
+
     @Override
     protected void onInitPresenters() {
         presenter = new ApprovePresenter(viewDelegate);

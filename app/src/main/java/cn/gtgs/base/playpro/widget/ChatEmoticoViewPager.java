@@ -21,7 +21,6 @@ import cn.gtgs.base.playpro.R;
 /**
   * @ClassName: ChatEmoticoViewPager
   * @Description: 字符表情viewpager
-  * @author 4evercai
   * @date 2015年8月13日 上午11:15:55
   *
   */
