@@ -1271,8 +1271,6 @@ public class StreamingBaseActivity extends Activity implements
                                 });
                             }
                         });
-
-
                     }
 
                 } else {
@@ -1288,8 +1286,6 @@ public class StreamingBaseActivity extends Activity implements
                         }
                     });
                 }
-
-
             }
         }
 
