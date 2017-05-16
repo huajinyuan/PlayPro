@@ -178,6 +178,8 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
             });
         } else {
             ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", this);
+            viewDelegate.hidePro();
+            viewDelegate.getmPlayView().setClickable(true);
         }
 
 

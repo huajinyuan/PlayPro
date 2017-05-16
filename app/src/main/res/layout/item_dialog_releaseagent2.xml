@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@drawable/background_grey"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        >
+        <TextView
+            android:id="@+id/tv_dialog_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="是否确定解除经纪人关系？"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:textColor="@color/color_grey"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+           >
+            <Button
+                android:id="@+id/bt_dialog_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_button_grey_leftbottom"
+                android:text="取消"
+                android:textColor="@color/color_grey"/>
+            <Button
+                android:id="@+id/bt_dialog_yes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_button_pink_rightbottom"
+                android:text="确定解除"
+                android:textColor="@color/colorwhite"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

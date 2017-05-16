@@ -32,6 +32,11 @@
         tools:replace="android:icon">
 
         <!-- 设置环信应用的AppKey -->
+        <!--测试-->
+        <!--<meta-data-->
+            <!--android:name="EASEMOB_APPKEY"-->
+            <!--android:value="1164170515115835#webcast" />-->
+        <!--正式-->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1179170426178382#webcast" />
@@ -71,16 +76,15 @@
             android:configChanges="orientation|screenSize"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity
-            android:name=".activity.home.live.PlayActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+        <activity android:name=".activity.home.live.PlayActivity" />
+        <!-- android:windowSoftInputMode="adjustPan" -->
         <activity android:name=".activity.center.GetCoinActivity" />
         <activity android:name=".activity.home.mymessage.ChatActivity" />
         <activity android:name=".activity.home.mymessage.MessageListActivity" />
         <activity android:name=".activity.center.SettingActivity" />
         <activity android:name=".activity.home.search.SearchActivity" />
-        <activity android:name=".activity.center.EdtInfoActivity"/>
+        <activity android:name=".activity.center.EdtInfoActivity" />
+        <activity android:name=".activity.center.CSActivity"></activity>
     </application>
 
 </manifest>

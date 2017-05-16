@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
-    >
-    <!--android:fitsSystemWindows="true"-->
     <com.pili.pldroid.player.widget.PLVideoView
         android:id="@+id/vv_test"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/img_live_bg"
@@ -20,46 +15,60 @@
         android:layout_height="match_parent"
         android:background="@mipmap/living_bg_image" />
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        android:layout_marginTop="200dp"
-        android:background="@color/float_transparent"
-        android:divider="@null" />
+    <TextView
+        android:id="@+id/tv_play_level_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_play_toast_sys"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/shape_level"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/color_black_0D"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/tv_play_toast_sys"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/listView"
         android:paddingBottom="8dp"
         android:paddingLeft="20dp"
-        android:textColor="@color/red_btn_bg_color"
         android:paddingRight="20dp"
         android:paddingTop="8dp"
-        android:visibility="gone"
-        />
+        android:textColor="@color/warning_stroke_color"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:background="@color/float_transparent"
+        android:divider="@null" />
+
 
     <TextView
         android:id="@+id/tv_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/listView"
+        android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:background="@drawable/background_grey_trans"
         android:padding="5dp"
         android:textColor="@color/color_progress_end"
         android:visibility="invisible" />
 
-
     <include
         android:id="@+id/lin_play_gift_send"
         layout="@layout/layout_play_gift_lin"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@id/tv_likes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:visibility="gone" />
+
 
     <RelativeLayout
         android:id="@+id/frame_live_menu"
@@ -125,9 +134,9 @@
 
     <include
         android:id="@+id/lin_play_gift_panel_bottom"
+        layout="@layout/layout_play_giftcontent_bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/layout_play_giftcontent_bottom"/>
+        android:layout_height="match_parent" />
 
 
     <include
@@ -172,18 +181,8 @@
         android:paddingTop="8dp"
         android:textColor="@color/colorwhite"
         android:visibility="gone" />
-    <TextView
-        android:id="@+id/tv_play_level_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:background="@drawable/shape_level"
-        android:textColor="@color/color_black_0D"
-        android:layout_marginLeft="20dp"
-        android:textSize="14sp" />
+
+
     <RelativeLayout
         android:id="@+id/rel_layout_bottom_dialog"
         android:layout_width="match_parent"
@@ -193,8 +192,7 @@
             android:id="@+id/view_gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/layout_play_bottom_dialog"
-            />
+            android:layout_above="@+id/layout_play_bottom_dialog" />
 
         <include
             android:id="@+id/layout_play_bottom_dialog"

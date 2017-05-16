@@ -54,7 +54,6 @@ public class TyrantsPresenter implements IRecommented {
             @Override
             public void onError(Throwable e) {
                 ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
-
                 if (delegate.getmSwp().isRefreshing())
                 {
                     delegate.getmSwp().setRefreshing(false);
@@ -63,11 +62,12 @@ public class TyrantsPresenter implements IRecommented {
 
             @Override
             public void onNext(Response response) {
-
-//                        F.e(response.body().toString());
+                if (delegate.getmSwp().isRefreshing())
+                {
+                    delegate.getmSwp().setRefreshing(false);
+                }
                 try {
                     ArrayList<UserInfo> list = (ArrayList<UserInfo>) Parsing.getInstance().ResponseToList3(response, UserInfo.class).dataList;
-//                    HttpBase<ArrayList<AnchorItem>> lists = Parsing.getInstance().ResponseToList(response, AnchorItem.class);
                     delegate.setData(list, listener);
                 } catch (Exception e) {
                     e.printStackTrace();

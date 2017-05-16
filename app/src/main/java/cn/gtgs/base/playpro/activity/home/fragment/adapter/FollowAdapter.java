@@ -86,9 +86,8 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.AnchorHotV
             }
         });
         holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image2);
-        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
-        holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
-
+        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
+        holder.tv_item_g.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold())) + "");
         if (anchorItem.getMbGoldPay() == 0) {
             holder.tv_tyrants_sum.setText("暂无奉献");
         } else {

@@ -10,7 +10,6 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static android.os.Build.VERSION_CODES.N;
 
 /**
  * Created by gtgs on 2016/10/6.
@@ -102,6 +101,6 @@ public class AppUtil {
 //        context.startActivity(intent);
 //    }
     public static int getDJ(int gold) {
-        return (int) (Math.sqrt(N / 100 + 4) - 2);
+        return (int) (Math.sqrt(gold / 100 + 4) - 2);
     }
 }

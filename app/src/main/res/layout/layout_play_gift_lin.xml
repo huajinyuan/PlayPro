@@ -22,7 +22,6 @@
         android:id="@+id/iv_gift"
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
-        android:layout_above="@id/tv_likes"
         android:layout_marginLeft="@dimen/dp_8"
         android:adjustViewBounds="true" />
 
@@ -30,9 +29,7 @@
         android:id="@+id/tv_play_gift_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/iv_gift"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/iv_gift"
         android:textColor="@color/colorBlue"
         android:textSize="16sp" />
 

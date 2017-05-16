@@ -98,7 +98,9 @@ import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
+import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
@@ -274,14 +276,11 @@ public class StreamingBaseActivity extends Activity implements
     public TextView mTvLevel;
     @BindView(R.id.tv_camera_level_toast)
     public TextView mTvLevelToast;
+    @BindView(R.id.tv_gold_count)
+    public TextView mTvGoldCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-//        } else {
-//            requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -526,17 +525,6 @@ public class StreamingBaseActivity extends Activity implements
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         Log.i(TAG, "view!!!!:" + v);
     }
-//
-//    @Override
-//    public boolean onPreviewFrame(byte[] bytes, int width, int height) {
-////        deal with the yuv data.
-////        long start = System.currentTimeMillis();
-////        for (int i = 0; i < bytes.length; i++) {
-////            bytes[i] = 0x00;
-////        }
-////        Log.i(TAG, "old onPreviewFrame cost :" + (System.currentTimeMillis() - start));
-//        return true;
-//    }
 
     @Override
     public void onSurfaceCreated() {
@@ -768,7 +756,20 @@ public class StreamingBaseActivity extends Activity implements
                             public void onClick(DialogInterface dialog, int which) {
                                 String s = wv.getSeletedItem();
                                 Shoufei(s);
+                                Usercount = getChatRoomInfoCount();
                                 Updatestatus("3");
+                                if (temp2) {
+                                    timer2 = new MyTimer2(999999999, 60000);
+                                    timer2.start();
+                                    temp2 = false;
+                                } else {
+                                    timer2.cancel();
+                                    timer2 = null;
+                                    timer2 = new MyTimer2(999999999, 60000);
+                                    timer2.start();
+                                    temp2 = false;
+                                }
+
                             }
                         })
                         .show();
@@ -781,40 +782,45 @@ public class StreamingBaseActivity extends Activity implements
         if (StringUtils.isNotEmpty(mF.getSysMsg())) {
             mTvSysToast.setVisibility(View.VISIBLE);
             mTvSysToast.setText("系统消息：" + mF.getSysMsg());
-            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
-            mTvSysToast.startAnimation(a);
-            a.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mTvSysToast.getVisibility() == View.VISIBLE) {
-                                F.e("---------------------------------mTvGiftCount GONE");
-                                mTvSysToast.clearAnimation();
-                                mTvSysToast.setVisibility(View.GONE);
-                            }
-                        }
-                    });
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
+//            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
+//            mTvSysToast.startAnimation(a);
+//            a.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (mTvSysToast.getVisibility() == View.VISIBLE) {
+//                                F.e("---------------------------------mTvGiftCount GONE");
+//                                mTvSysToast.clearAnimation();
+//                                mTvSysToast.setVisibility(View.GONE);
+//                            }
+//                        }
+//                    });
+//
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//
+//                }
+//            });
         }
-
+        mTvGoldCount.setText(userInfo.getMbGold() + "");
 
     }
 
+    private int mPrice = 0;
+    private int Usercount = 0;
+    private boolean IsShouFei = false;
+
     public void Shoufei(String price) {
+        mPrice = Integer.valueOf(price);
         EMMessage message = EMMessage.createTxtSendMessage("[key]" + "Recharge", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(userInfo.getMbNickname());
@@ -1080,9 +1086,9 @@ public class StreamingBaseActivity extends Activity implements
 
         @Override
         public void onChatRoomDestroyed(String roomId, String roomName) {
-            if (roomId.equals(chatroomid)) {
-                showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
-            }
+//            if (roomId.equals(chatroomid)) {
+//                showChatroomToast(" room : " + roomId + " with room name : " + roomName + " was destroyed");
+//            }
         }
 
         @Override
@@ -1218,13 +1224,8 @@ public class StreamingBaseActivity extends Activity implements
                             tv_live_onlinenum.setText(mF.getFaCount() + "");
                         }
                     });
-
-//                    String name = null;
-//                    if (map.containsKey("user_name")) {
-//                        name = (String) map.get("user_name");
-//                    }
                     if (map.containsKey("level")) {
-                        final int level = Integer.valueOf((String) map.get("level"));
+                        final int level = Integer.valueOf((String)map.get("level"));
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -1355,6 +1356,12 @@ public class StreamingBaseActivity extends Activity implements
     String giftId = "";
 
     public void showGifts(String from, String icon, Gift gift) {
+        int gold = userInfo.getMbGold();
+        gold = gold + Integer.valueOf(gift.getCredits());
+        userInfo.setMbGold(gold);
+        mF.setMember(userInfo);
+        mTvGoldCount.setText(gold + "");
+
         linGiftSend.setVisibility(View.VISIBLE);
         Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
             @Override
@@ -1558,13 +1565,17 @@ public class StreamingBaseActivity extends Activity implements
         mDanmakuView.addItem(dm);
         mDanmakuView.setVisibility(View.VISIBLE);
         mDanmakuView.show();
+        int gold = userInfo.getMbGold();
+        gold = gold + 2;
+        userInfo.setMbGold(gold);
+        mF.setMember(userInfo);
+        mTvGoldCount.setText(gold + "");
     }
 
 
     private boolean temp = true;
 
     private class MyTimer extends CountDownTimer {
-
         private static final String TAG = "MyTimer";
 
         //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
@@ -1597,4 +1608,66 @@ public class StreamingBaseActivity extends Activity implements
         return 0;
     }
 
+    private MyTimer2 timer2;
+    private boolean temp2 = true;
+
+    private class MyTimer2 extends CountDownTimer {
+        private static final String TAG = "MyTimer";
+
+        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+        public MyTimer2(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        //每过你规定的时间间隔做的操作
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if (System.currentTimeMillis() - times > 5 * 60000) {
+                times = System.currentTimeMillis();
+                doRefresh();
+            } else {
+                int gold = userInfo.getMbGold();
+                int addGold = mPrice * Usercount;
+                userInfo.setMbGold(gold + addGold);
+                mTvGoldCount.setText(userInfo.getMbGold() + "");
+            }
+                Usercount = getChatRoomInfoCount();
+        }
+
+        //倒计时结束时做的操作↓↓
+        @Override
+        public void onFinish() {
+            temp = true;
+        }
+    }
+
+    long times = 0;
+
+    public void doRefresh() {
+        HttpParams params = new HttpParams();
+        params.put("mbId", userInfo.getMbId());
+        PostRequest request = OkGo.post(Config.POST_MEMBER_GET).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(Response response) {
+                HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                if (null != bs.getData()) {
+                    mF = bs.getData();
+                    aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
+                    userInfo = mF.getMember();
+                    mTvGoldCount.setText(userInfo.getMbGold() + "");
+                }
+            }
+        });
+
+    }
 }

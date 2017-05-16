@@ -20,6 +20,7 @@ import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.AppUtil;
+import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
  * Created by  on 2017/4/25.
@@ -75,15 +76,16 @@ public class CenterDelegate extends AppDelegate {
                 mIcon.setImageDrawable(circularBitmapDrawable);
             }
         });
-        tvLe.setText(AppUtil.getDJ(info.getMbGold()) + "");
-        tvg.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
+        tvLe.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
+        if (StringUtils.isNotEmpty(follow.getAnGold())) {
+            tvg.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold())));
+        }
+
         mGole.setText("今日收益" + follow.getDayGold() + "钻石");
         mImgSex.setImageResource(info.getMbSex() == 1 ? R.mipmap.global_male : R.mipmap.global_female);
-        if (info.getAuditAnchor()==1)
-        {
+        if (info.getAuditAnchor() == 1) {
             mTvisanditAnchor.setText("已认证");
-        }else
-        {
+        } else {
             mTvisanditAnchor.setText("未认证");
         }
     }

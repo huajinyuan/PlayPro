@@ -114,8 +114,8 @@ public class Follow_StarAdapter extends RecyclerView.Adapter<Follow_StarAdapter.
         } else {
             holder.img_tyrants_follow.setImageResource(R.mipmap.praise_photo_button_image);
         }
-        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGold()) + "");
-        holder.tv_item_g.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
+        holder.tv_item_l.setText(AppUtil.getDJ(anchorItem.getMbGoldPay()) + "");
+        holder.tv_item_g.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold())) + "");
         holder.tv_tyrants_sn.setText("收入黄钻");
         if (StringUtils.isEmpty(follow.getAnGold())||follow.getAnGold().equals("0")) {
             holder.tv_tyrants_sum.setText("暂无收入");

@@ -88,6 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+
         android:layout_margin="20dp"
         app:srcCompat="@mipmap/tab_launch_play" />
 

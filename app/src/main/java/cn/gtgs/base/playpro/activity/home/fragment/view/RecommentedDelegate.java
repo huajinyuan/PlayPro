@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.adapter.RecommentedAdapter;
+import cn.gtgs.base.playpro.activity.home.fragment.presenter.IRecommentedItemListener;
 import cn.gtgs.base.playpro.activity.home.model.ADInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
@@ -40,7 +41,7 @@ public class RecommentedDelegate extends AppDelegate {
         return R.layout.fragment_recommented;
     }
 
-    public void setData(ArrayList<Follow> follows) {
+    public void setData(ArrayList<Follow> follows, IRecommentedItemListener listener) {
         mDatas.clear();
         mDatas.addAll(follows);
         if (mSwp.isRefreshing()) {
@@ -51,6 +52,7 @@ public class RecommentedDelegate extends AppDelegate {
             mRecContent.setLayoutManager(gridLayoutManager);
 //            mRecContent.addItemDecoration(new DividerGridItemDecoration(getActivity()));
             adapter = new RecommentedAdapter(mDatas, getActivity());
+            adapter.setListener(listener);
             mRecContent.setAdapter(adapter);
             mRecContent.setLayoutManager(gridLayoutManager);
         } else {
@@ -84,6 +86,10 @@ public class RecommentedDelegate extends AppDelegate {
                 return ads.size();
             }
         });
+    }
+    public RecyclerView getmRecContent()
+    {
+        return mRecContent;
     }
 
 }

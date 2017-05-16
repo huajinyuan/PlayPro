@@ -38,7 +38,7 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> implements
         return CenterDelegate.class;
     }
 
-    @OnClick({R.id.rel_center_approve, R.id.rel_center_getcoin, R.id.rel_center_setting, R.id.img_topbar_back, R.id.rel_center_2edt, R.id.img_topbar_right})
+    @OnClick({R.id.rel_center_approve,R.id.rel_center_go2cs, R.id.rel_center_getcoin, R.id.rel_center_setting, R.id.img_topbar_back, R.id.rel_center_2edt, R.id.img_topbar_right})
     public void OnClick(View v) {
         Intent intent;
         switch (v.getId()) {
@@ -66,6 +66,11 @@ public class CenterActivity extends ActivityPresenter<CenterDelegate> implements
                 break;
             case R.id.img_topbar_right:
                 intent = new Intent(this, MessageListActivity.class);
+                startActivity(intent);
+
+                break;
+            case R.id.rel_center_go2cs:
+                intent = new Intent(this, CSActivity.class);
                 startActivity(intent);
 
                 break;

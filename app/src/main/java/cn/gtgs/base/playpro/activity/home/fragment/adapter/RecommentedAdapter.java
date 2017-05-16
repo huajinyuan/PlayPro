@@ -1,7 +1,6 @@
 package cn.gtgs.base.playpro.activity.home.fragment.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
-import cn.gtgs.base.playpro.activity.home.live.PlayActivity;
+import cn.gtgs.base.playpro.activity.home.fragment.presenter.IRecommentedItemListener;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.utils.PixelUtil;
@@ -26,6 +25,7 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
     private ArrayList<Follow> mData;
     private Context mContext;
     private int mWith = 0;
+    private IRecommentedItemListener listener;
 
     public RecommentedAdapter(ArrayList<Follow> data, Context context) {
         this.mData = data;
@@ -33,6 +33,10 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         this.mWith = PixelUtil.getWidth(mContext);
     }
 
+    public void setListener(IRecommentedItemListener listener)
+    {
+        this.listener = listener;
+    }
     @Override
     public AnchorHotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recommented_item_recycler,
@@ -47,14 +51,14 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         holder.pic.setLayoutParams(params);
         final Follow anchorItem = mData.get(position);
         Glide.with(mContext).load(null != anchorItem.getAnPhoto() ? Config.BASE + anchorItem.getAnPhoto() : R.drawable.circle_zhubo).into(holder.pic);
-        holder.tvName.setText(anchorItem.getAnRemark());
+        holder.tvName.setText(anchorItem.getMember().getMbNickname());
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, PlayActivity.class);
-                intent.putExtra("anchoritem", anchorItem);
-                intent.putExtra("IsMember", false);
-                mContext.startActivity(intent);
+                if (null!=listener){
+                    listener.itemCliclk(anchorItem);
+                }
+
             }
         });
         if (anchorItem.getLiveStatus().equals("2")) {

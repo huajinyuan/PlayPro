@@ -9,67 +9,26 @@ import com.qiniu.pili.droid.streaming.StreamingProfile;
  */
 
 public interface Config {
-    public static final boolean FILTER_ENABLED = false;
-    public static final int ENCODING_LEVEL = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
-    public static final int SCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    boolean FILTER_ENABLED = false;
+    int ENCODING_LEVEL = StreamingProfile.VIDEO_ENCODING_HEIGHT_480;
+    int SCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
-    public static final String EXTRA_PUBLISH_URL_PREFIX = "URL:";
-    public static final String EXTRA_PUBLISH_JSON_PREFIX = "JSON:";
+    String EXTRA_PUBLISH_URL_PREFIX = "URL:";
+    String EXTRA_PUBLISH_JSON_PREFIX = "JSON:";
 
-    public static final String VERSION_HINT = "v2.0.1";
+    String VERSION_HINT = "v2.0.1";
 
-    public static final String EXTRA_KEY_PUB_URL = "pub_url";
-    public static final String EXTRA_KEY_PUB_FOLLOW = "EXTRA_KEY_PUB_FOLLOW";
+    String EXTRA_KEY_PUB_URL = "pub_url";
+    String EXTRA_KEY_PUB_FOLLOW = "EXTRA_KEY_PUB_FOLLOW";
 
-    public static final String HINT_ENCODING_ORIENTATION_CHANGED =
+    String HINT_ENCODING_ORIENTATION_CHANGED =
             "Encoding orientation had been changed. Stop streaming first and restart streaming will take effect";
     /**
      * -------------------------------------------------------------------------------------------------------------------------
      */
-    /**
-     * 加入聊天室
-     */
-    public static final String URL_JOINCHAT = "https://api.yequtv.cn/v1/chatrooms/anchors/{id}/join";
-    //    //在线人数GET
-    public static final String URL_OnlineNum = "https://api.yequtv.cn/v1/chatrooms/anchors/{anchor_id}/online_count?key=z45CasVgh8K3q6300g0d95VkK197291A";
-    //    //订台列表
-    public static final String URL_BookingValid = "https://api.yequtv.cn/v1/anchor/bookings/valid?key=z45CasVgh8K3q6300g0d95VkK197291A";
-//    public static final String URL_SMS = "https://api.yequtv.cn/v1/sms";
-//    public static final String URL_LOGIN = "https://api.yequtv.cn/v1/anchors/login";
 
-//    String BASE_URL = "http://foruo2o.com";
-//    String REGISTER_URL = BASE_URL + "/wp-json/login/v1/wordpress/register";
-//    String LOGIN_URL = BASE_URL + "/wp-json/login/v1/wordpress";
-//    /**
-//     * 产品列表
-//     * */
-//    String PRODUCTS_LIST_URL = BASE_URL + "/wp-json/wc/v1/products";
-//    /**
-//    * 单个产品
-//    * */
-//    String PRODUCTS_URL = PRODUCTS_LIST_URL + "/{id}";
-//    /**
-//     * 购物车
-//     * */
-//    String SHOPPINGCAR_URL = BASE_URL + "/wp-json/wc/v1/cart";
-//    /**
-//     * 当前用户
-//     * */
-//    String CURRENT_URL = BASE_URL + "/wp-json/wc/v1/customers/current";
-//    /**
-//     * 订单
-//     * */
-//    String ORDER_URL = BASE_URL + "/wp-json/wc/v1/orders";
-//    /**
-//     * 地址列表
-//     */
-//    String ADDRESS_URL = BASE_URL + "/wp-json/wc/v1/customers/address";
-//    /**
-//     * 单个地址
-//     */
-//    String ADDRESS_ACTION_URL = ADDRESS_URL + "/{id}";
-
-    String BASE = "http://www.jsonlan.com:8080/webcast/";
+    String BASE = "http://www.vip177.cn:8080/webcast";
+//    String BASE = "http://www.jsonlan.com:8080/webcast/";
 
     String BASE_URL = BASE + "api/";
     /**
@@ -146,10 +105,12 @@ public interface Config {
      */
     String GET_ADVERTS = BASE_URL + "common/adverts";
     /**
-     *添加好友
+     * 添加好友
      * userName=1&friendName=2
-     * */
+     */
     String MEMBER_ADDFRIEND = BASE_URL + "member/addFriend";
     String MEMBER_LIVESTATUS = BASE_URL + "anchor/liveStatus";
+    /***/
+    String MEMBER_CSLIST = BASE_URL + "common/attendants";
 
 }

@@ -29,9 +29,11 @@ import rx.Subscriber;
 
 public class RecommentedPresenter implements IRecommented {
     RecommentedDelegate delegate;
+    IRecommentedItemListener listener;
 
-    public RecommentedPresenter(RecommentedDelegate delegate) {
+    public RecommentedPresenter(RecommentedDelegate delegate, IRecommentedItemListener listener) {
         this.delegate = delegate;
+        this.listener = listener;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class RecommentedPresenter implements IRecommented {
                 F.e("-----------------------------" + bList.toString());
                 ArrayList<Follow> follows = (ArrayList<Follow>) bList.getDataList();
                 F.e("-----------------------------" + follows.toString());
-                delegate.setData(follows);
+                delegate.setData(follows,listener);
             }
         });
 

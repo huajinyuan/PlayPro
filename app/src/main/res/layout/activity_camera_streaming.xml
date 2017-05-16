@@ -25,14 +25,6 @@
     </com.qiniu.pili.droid.streaming.widget.AspectFrameLayout>
 
     <TextView
-        android:id="@+id/log_info"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:contentDescription="cd_tv_log_info" />
-
-    <TextView
         android:id="@+id/streamingStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,7 +121,7 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="180dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:divider="@null" />
@@ -223,25 +215,56 @@
         android:id="@+id/tv_camera_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/shape_level"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:background="@drawable/shape_level"
         android:textColor="@color/color_black_0D"
-        android:layout_marginLeft="20dp"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tv_camera_level_toast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:id="@+id/tv_camera_level_toast"
+        android:background="@drawable/shape_rec_org"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:textSize="14sp"
         android:textColor="@color/colorwhite"
-        android:visibility="gone"
-        android:background="@drawable/shape_rec_org"
-        />
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_live_onlinenum"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="钻石:"
+            android:textColor="@color/colorBlue" />
+
+        <TextView
+            android:id="@+id/tv_gold_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/colorBlue" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/log_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:contentDescription="cd_tv_log_info" />
 </RelativeLayout>
