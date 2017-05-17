@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro.activity.login.view;
 
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ public class RegisterDelegate extends AppDelegate {
     TextView mTvSms;
     @BindView(R.id.tv_topbar_title)
     TextView mTvtitle;
+    @BindView(R.id.btn_register)
+    Button mBtnRegister;
 
     @Override
     public int getRootLayoutId() {
@@ -47,4 +50,9 @@ public class RegisterDelegate extends AppDelegate {
     public void setTitle() {
         mTvtitle.setText("注册");
     }
+
+    public Button getmBtnRegister() {
+        return mBtnRegister;
+    }
+
 }

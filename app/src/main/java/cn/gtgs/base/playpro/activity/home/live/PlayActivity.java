@@ -11,10 +11,12 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
@@ -245,8 +247,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public boolean onError(PLMediaPlayer plMediaPlayer, int i) {
                 F.e("播放中错误状态===============================" + i);
-                if (i == -2002)
-                {
+                if (i == -2002) {
                     //TODO
                     showCenelDialog();
                 }
@@ -325,7 +326,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (et_huanxin_content.isEmpty()) {
             Log.e("main", "isempty");
         } else {
-
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
             EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatroomid);
             //如果是群聊，设置chattype，默认是单聊
@@ -368,7 +368,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             temp = false;
         }
 
-
     }
 
     private Gift mGetGift;
@@ -379,6 +378,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onChatRoomDestroyed(String roomId, String roomName) {
+                F.e("================onChatRoomDestroyed");
                 if (roomId.equals(chatroomid)) {
                 }
             }
@@ -387,6 +387,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             public void onMemberJoined(String roomId, String participant) {
                 getCountOnline();
 
+//TODO 成员加入聊天室
 //                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
 //                message.setChatType(EMMessage.ChatType.ChatRoom);
 //                message.setFrom("动态");
@@ -423,13 +424,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
+                F.e("================onRemovedFromChatRoom");
                 if (roomId.equals(chatroomid)) {
-                    String curUser = EMClient.getInstance().getCurrentUser();
-                    if (curUser.equals(participant)) {
-                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
-                    } else {
-//                        showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
-                    }
+                    login();
+//                    String curUser = EMClient.getInstance().getCurrentUser();
+//                    if (curUser.equals(participant)) {
+//                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//                    } else {
+////                        showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
+//                    }
                 }
             }
 
@@ -450,7 +453,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onAdminRemoved(String chatRoomId, String admin) {
-
+                F.e("================onAdminRemoved");
             }
 
             @Override
@@ -871,6 +874,28 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
             }
         });
+        et_content.addTextChangedListener(new TextWatcher() {
+            String digits = "0123456789";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                for (int i = str.length() - 1; i >= 0; i--) {
+                    if (digits.indexOf(str.charAt(i)) > 0) {
+                        s.delete(i, i + 1);
+                    }
+                }
+            }
+        });
     }
 
     @OnClick({R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
@@ -1101,7 +1126,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setAttribute("JOIN_CHATROOM", chatroomid);
         message.setAttribute("user_name", loginInfo.getMbNickname());
-        message.setAttribute("level", loginInfo.getMbLevel()+"");
+        message.setAttribute("level", loginInfo.getMbLevel() + "");
         //发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
     }
@@ -1644,4 +1669,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             }
         });
     }
+
+
 }

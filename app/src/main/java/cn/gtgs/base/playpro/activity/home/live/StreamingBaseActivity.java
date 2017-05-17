@@ -404,6 +404,7 @@ public class StreamingBaseActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
+        login();
         mMediaStreamingManager.resume();
     }
 
@@ -1006,7 +1007,7 @@ public class StreamingBaseActivity extends Activity implements
     public void login() {
         Log.e("sdad", "start login...");
 //        41240285948    xnPPr2xCgR
-        EMClient.getInstance().login(userInfo.getMbId() + "", MD5Util.getMD5("webcast" + userInfo.getMbId()), new EMCallBack() {//回调
+        EMClient.getInstance().login(userInfo.getMbPhone() + "", MD5Util.getMD5("webcast" + userInfo.getMbId()), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();

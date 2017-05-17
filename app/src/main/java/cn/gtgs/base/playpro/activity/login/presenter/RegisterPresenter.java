@@ -54,7 +54,7 @@ public class RegisterPresenter implements IRegisterPresenter {
             ToastUtil.showToast("输入正确的验证码", delegate.getActivity());
             return;
         }
-
+        delegate.getmBtnRegister().setClickable(false);
         HttpParams params = HttpMethods.getInstance().getHttpParams();
         params.put("mbPhone", phone);
         params.put("smsAuthCode", code);
@@ -75,12 +75,13 @@ public class RegisterPresenter implements IRegisterPresenter {
 
             @Override
             public void onError(Throwable e) {
-
-                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                delegate.getmBtnRegister().setClickable(true);
+                ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
             }
 
             @Override
             public void onNext(Response response) {
+                delegate.getmBtnRegister().setClickable(true);
                 HttpBase<Follow> u = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 if (u.getCode() == 1) {
                     if (null != listener) {
@@ -106,6 +107,7 @@ public class RegisterPresenter implements IRegisterPresenter {
             Toast.makeText(delegate.getActivity(), "输入您的手机号", Toast.LENGTH_SHORT).show();
         else {
             delegate.getSmsView().setClickable(false);
+            delegate.getSmsView().setClickable(false);
             HttpParams params = new HttpParams();
 //            HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbPhone", phone);
@@ -118,12 +120,13 @@ public class RegisterPresenter implements IRegisterPresenter {
 
                 @Override
                 public void onError(Throwable e) {
-                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                    delegate.getSmsView().setClickable(true);
+                    ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
                 }
 
                 @Override
                 public void onNext(Response response) {
-
+                    delegate.getSmsView().setClickable(true);
                     SimpleResponse base = Parsing.getInstance().ResponseToSimPle(response, SimpleResponse.class);
                     if (base.code == 1) {
                         timecount();

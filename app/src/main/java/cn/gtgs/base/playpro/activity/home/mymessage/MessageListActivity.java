@@ -71,73 +71,57 @@ public class MessageListActivity extends AppCompatActivity {
                 EMConversation conversation = adapter.getItem(i);
                 EMMessage lastMessage = conversation.getLastMessage();
                 Map<String, Object> map = lastMessage.ext();
-                String chatto=null,chattophoto=null,chattoname=null,phone_from=null,photo_from=null,name_from=null;
-                if (map.containsKey("phone_to"))
-                {
+                String chatto = null, chattophoto = null, chattoname = null, phone_from = null, photo_from = null, name_from = null;
+                if (map.containsKey("phone_to")) {
                     chatto = (String) map.get("phone_to");
                 }
-                if (map.containsKey("photo_to"))
-                {
+                if (map.containsKey("photo_to")) {
                     chattophoto = (String) map.get("photo_to");
                 }
-                if (map.containsKey("name_to"))
-                {
+                if (map.containsKey("name_to")) {
                     chattoname = (String) map.get("name_to");
                 }
-                if (map.containsKey("phone_from"))
-                {
+                if (map.containsKey("phone_from")) {
                     phone_from = (String) map.get("phone_from");
                 }
-                if (map.containsKey("photo_from"))
-                {
+                if (map.containsKey("photo_from")) {
                     photo_from = (String) map.get("photo_from");
                 }
-                if (map.containsKey("name_from"))
-                {
+                if (map.containsKey("name_from")) {
                     name_from = (String) map.get("name_from");
                 }
 
                 // 进入聊天页面
                 Intent intent = new Intent(context, ChatActivity.class);
-                if (lastMessage.direct() == EMMessage.Direct.RECEIVE)
-                {
-                    if (StringUtils.isNotEmpty(phone_from))
-                    {
+                if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                    if (StringUtils.isNotEmpty(phone_from)) {
                         intent.putExtra("chatto", phone_from);
-                    }
-                    else {
-                        ToastUtil.showToast("对方账号未知",MessageListActivity.this);
+                    } else {
+                        ToastUtil.showToast("对方账号未知", MessageListActivity.this);
                         return;
                     }
 
-                    if (StringUtils.isNotEmpty(photo_from))
-                    {
+                    if (StringUtils.isNotEmpty(photo_from)) {
                         intent.putExtra("chattophoto", photo_from);
                     }
-                    if (StringUtils.isNotEmpty(name_from))
-                    {
+                    if (StringUtils.isNotEmpty(name_from)) {
                         intent.putExtra("chattoname", name_from);
                     }
 
 
-                }else {
-                    if (StringUtils.isNotEmpty(chatto))
-                    {
+                } else {
+                    if (StringUtils.isNotEmpty(chatto)) {
                         intent.putExtra("chatto", chatto);
-                    }
-                    else{
-                        ToastUtil.showToast("对方账号未知",MessageListActivity.this);
+                    } else {
+                        ToastUtil.showToast("对方账号未知", MessageListActivity.this);
                         return;
                     }
-                    if (StringUtils.isNotEmpty(chattophoto))
-                    {
+                    if (StringUtils.isNotEmpty(chattophoto)) {
                         intent.putExtra("chattophoto", chattophoto);
                     }
-                    if (StringUtils.isNotEmpty(chattoname))
-                    {
+                    if (StringUtils.isNotEmpty(chattoname)) {
                         intent.putExtra("chattoname", chattoname);
                     }
-
 
 
                 }
@@ -184,9 +168,7 @@ public class MessageListActivity extends AppCompatActivity {
                 if (code == 200) {
                     EMClient.getInstance().logout(true);
                     login();
-                }
-                else
-                {
+                } else {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -209,12 +191,10 @@ public class MessageListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //加载聊天列表
-                try
-                {
+                try {
                     conversations = loadConversationList();
 
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     F.e(e.toString());
                 }
 
@@ -247,8 +227,11 @@ public class MessageListActivity extends AppCompatActivity {
         synchronized (conversations) {
             for (EMConversation conversation : conversations.values()) {
                 if (conversation.getAllMessages().size() != 0) {
-                    sortList.add(
-                            new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+                    EMMessage message = conversation.getLastMessage();
+                    if (message.getChatType() == EMMessage.ChatType.Chat) {
+                        sortList.add(
+                                new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+                    }
 
                 }
             }

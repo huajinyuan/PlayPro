@@ -33,10 +33,10 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         this.mWith = PixelUtil.getWidth(mContext);
     }
 
-    public void setListener(IRecommentedItemListener listener)
-    {
+    public void setListener(IRecommentedItemListener listener) {
         this.listener = listener;
     }
+
     @Override
     public AnchorHotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recommented_item_recycler,
@@ -46,16 +46,23 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
 
     @Override
     public void onBindViewHolder(final AnchorHotViewHolder holder, final int position) {
+//        if (mData.size()>0)
+//        {
+//            final Follow anchorItem = mData.get(position);
+//            Glide.with(mContext).load(null != anchorItem.getAnPhoto() ? Config.BASE + anchorItem.getAnPhoto() : R.drawable.circle_zhubo).into(holder.pic);
+//
+//        }
         ViewGroup.LayoutParams params = holder.pic.getLayoutParams();
         params.height = mWith / 2;
         holder.pic.setLayoutParams(params);
         final Follow anchorItem = mData.get(position);
         Glide.with(mContext).load(null != anchorItem.getAnPhoto() ? Config.BASE + anchorItem.getAnPhoto() : R.drawable.circle_zhubo).into(holder.pic);
+
         holder.tvName.setText(anchorItem.getMember().getMbNickname());
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null!=listener){
+                if (null != listener) {
                     listener.itemCliclk(anchorItem);
                 }
 
@@ -75,6 +82,7 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
     @Override
     public int getItemCount() {
         return mData.size();
+//        return 10;
     }
 
     @Override

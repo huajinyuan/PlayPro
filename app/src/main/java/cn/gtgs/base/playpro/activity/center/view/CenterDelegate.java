@@ -78,7 +78,7 @@ public class CenterDelegate extends AppDelegate {
         });
         tvLe.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
         if (StringUtils.isNotEmpty(follow.getAnGold())) {
-            tvg.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold())));
+            tvg.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold()))+"");
         }
 
         mGole.setText("今日收益" + follow.getDayGold() + "钻石");

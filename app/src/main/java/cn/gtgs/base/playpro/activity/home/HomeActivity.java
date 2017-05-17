@@ -119,8 +119,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                 setTab(2);
                 break;
             case R.id.img_home_play:
-                viewDelegate.showPro();
-                viewDelegate.getmPlayView().setClickable(false);
+
                 getAnchorInfo();
                 break;
             case R.id.img_home_top_userinfo:
@@ -138,8 +137,9 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         HttpParams params = new HttpParams();
         if (null != userInfo && null != userInfo.getAnId()) {
             params.put("anId", userInfo.getAnId());
-
             PostRequest request = OkGo.post(Config.POST_ANCHOR_OPEN).params(params);
+            viewDelegate.showPro();
+            viewDelegate.getmPlayView().setClickable(false);
             HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
@@ -155,11 +155,12 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
                 @Override
                 public void onNext(Response response) {
-
+                    viewDelegate.hidePro();
+                    viewDelegate.getmPlayView().setClickable(true);
                     HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     Follow follow = baseF.getData();
                     F.e("--------------" + follow.toString());
-                    if (StringUtils.isNotEmpty(follow.getIsRecommend()) && follow.getIsRecommend().equals("1")) {
+                    if (StringUtils.isNotEmpty(follow.getAnStatus()) && follow.getAnStatus().equals("0")) {
                         Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
                         try {
                             intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
@@ -171,6 +172,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                             e.printStackTrace();
                         }
                     } else {
+
                         ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", HomeActivity.this);
                     }
 
@@ -178,8 +180,6 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
             });
         } else {
             ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", this);
-            viewDelegate.hidePro();
-            viewDelegate.getmPlayView().setClickable(true);
         }
 
 

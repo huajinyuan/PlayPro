@@ -37,21 +37,19 @@ public class LoginPresenter implements ILoginPresenter {
     @Override
     public void login() {
         String pwd = delegate.getPwd();
-        if(!CheckUtil.IsPhone(delegate.getPhone()))
-        {
-            ToastUtil.showToast("手机号码格式不正确",delegate.getActivity());
+        if (!CheckUtil.IsPhone(delegate.getPhone())) {
+            ToastUtil.showToast("手机号码格式不正确", delegate.getActivity());
             return;
         }
 
-        if (StringUtils.isEmpty(pwd))
-        {
+        if (StringUtils.isEmpty(pwd)) {
             Toast.makeText(delegate.getActivity(), "输入您的验证码", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             HttpParams params = HttpMethods.getInstance().getHttpParams();
             params.put("mbPhone", delegate.getPhone());
             params.put("mbPwd", MD5Util.getMD5(pwd));
             final PostRequest request = OkGo.post(Config.POST_LOGIN).params(params);
+            delegate.getmBtnLogin().setClickable(false);
             HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
@@ -60,11 +58,13 @@ public class LoginPresenter implements ILoginPresenter {
 
                 @Override
                 public void onError(Throwable e) {
-                    ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                    delegate.getmBtnLogin().setClickable(true);
+                    ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
                 }
 
                 @Override
                 public void onNext(Response response) {
+                    delegate.getmBtnLogin().setClickable(true);
                     HttpBase<Follow> u = Parsing.getInstance().ResponseToObject(response, Follow.class);
                     if (u.getCode() == 1) {
                         if (null != listener) {

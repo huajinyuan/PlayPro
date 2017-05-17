@@ -84,7 +84,7 @@
         <activity android:name=".activity.center.SettingActivity" />
         <activity android:name=".activity.home.search.SearchActivity" />
         <activity android:name=".activity.center.EdtInfoActivity" />
-        <activity android:name=".activity.center.CSActivity"></activity>
+        <activity android:name=".activity.center.CSActivity"/>
     </application>
 
 </manifest>

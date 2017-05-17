@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro.activity.login.view;
 
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ public class LoginDelegate extends AppDelegate {
     @BindView(R.id.et_pwd)
     EditText mEdtPwd;
     @BindView(R.id.bt_login)
-    TextView mBtnLogin;
+    Button mBtnLogin;
     @BindView(R.id.tv_topbar_title)
     TextView mTvTitle;
 
@@ -35,8 +36,11 @@ public class LoginDelegate extends AppDelegate {
         return mEdtPwd.getText().toString();
     }
 
-    public void setTitle()
-    {
+    public void setTitle() {
         mTvTitle.setText("登录");
+    }
+
+    public Button getmBtnLogin() {
+        return mBtnLogin;
     }
 }

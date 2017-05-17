@@ -30,7 +30,7 @@ public class FollowDelegate extends AppDelegate {
 
     @Override
     public int getRootLayoutId() {
-        return R.layout.fragment_recommented;
+        return R.layout.fragment_follow;
     }
 
     public void setData(ArrayList<Follow> data, IFollowItemListener listener) {
