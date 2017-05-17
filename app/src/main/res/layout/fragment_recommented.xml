@@ -11,7 +11,12 @@
         android:layout_height="180dp"
         android:visibility="gone" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+    <!--android:id="@+id/swp_pull_comment"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <cn.gtgs.base.playpro.widget.view.SwipyRefreshLayout
         android:id="@+id/swp_pull_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,5 +25,6 @@
             android:id="@+id/rec_recomment_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </cn.gtgs.base.playpro.widget.view.SwipyRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>
