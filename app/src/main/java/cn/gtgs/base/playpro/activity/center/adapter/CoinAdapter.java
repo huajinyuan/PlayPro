@@ -42,6 +42,9 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.AnchorHotViewH
         {
             holder.tv_gold_gifts.setText("再送"+gold.getGifts()+"钻");
         }
+        else{
+            holder.tv_gold_gifts.setVisibility(View.INVISIBLE);
+        }
 
 
     }

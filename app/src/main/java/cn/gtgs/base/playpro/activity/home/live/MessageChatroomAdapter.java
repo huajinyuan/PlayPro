@@ -14,7 +14,9 @@ import com.hyphenate.chat.EMTextMessageBody;
 import java.util.List;
 import java.util.Map;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.widget.EmoticonsTextView;
 
 /**
@@ -24,7 +26,6 @@ public class MessageChatroomAdapter extends BaseAdapter {
     private List<EMMessage> msgs;
     private Context context;
     private LayoutInflater inflater;
-
     public MessageChatroomAdapter(List<EMMessage> msgs, Context context_) {
         this.msgs = msgs;
         this.context = context_;
@@ -70,10 +71,12 @@ public class MessageChatroomAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
 
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-        viewHolder.tv_content.setText(txtBody.getMessage());
+
         viewHolder.tv_username.setText(message.getFrom());
 
+
         Map<String, Object> map = message.ext();
+        String content= txtBody.getMessage();
         if (map != null) {
             if (map.get("level") != null) {
                 viewHolder.tv_level.setVisibility(View.VISIBLE);
@@ -81,8 +84,16 @@ public class MessageChatroomAdapter extends BaseAdapter {
             } else {
                 viewHolder.tv_level.setVisibility(View.GONE);
             }
+            if(map.containsKey("Gift"))
+            {
+                Gift gift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
+                if (null!= gift)
+                {
+                        content = "送了一个:【"+gift.getName()+"】";
+                }
+            }
         }
-
+        viewHolder.tv_content.setText(content);
         return convertView;
     }
 

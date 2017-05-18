@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -54,6 +59,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 import com.opendanmaku.DanmakuItem;
 import com.opendanmaku.DanmakuView;
+import com.opendanmaku.IDanmakuItem;
 import com.qiniu.android.dns.DnsManager;
 import com.qiniu.android.dns.IResolver;
 import com.qiniu.android.dns.NetworkInfo;
@@ -89,6 +95,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -137,7 +145,7 @@ public class StreamingBaseActivity extends Activity implements
     MessageChatroomAdapter adapter;
     private EMConversation conversation;
     private boolean isJoined = false;
-
+    private int FACE_SIZE;// 表情大小
     String message_from, message_content;
     Timer timer_hide = new Timer();
     ImageView iv_gift;
@@ -295,6 +303,7 @@ public class StreamingBaseActivity extends Activity implements
         }
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
+        FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         aCache = ACache.get(this);
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
         userInfo = mF.getMember();
@@ -782,7 +791,7 @@ public class StreamingBaseActivity extends Activity implements
 
         if (StringUtils.isNotEmpty(mF.getSysMsg())) {
             mTvSysToast.setVisibility(View.VISIBLE);
-            mTvSysToast.setText("系统消息：" + mF.getSysMsg());
+            mTvSysToast.setText(mF.getSysMsg());
 //            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
 //            mTvSysToast.startAnimation(a);
 //            a.setAnimationListener(new Animation.AnimationListener() {
@@ -812,7 +821,7 @@ public class StreamingBaseActivity extends Activity implements
 //                }
 //            });
         }
-        mTvGoldCount.setText(userInfo.getMbGold() + "");
+        mTvGoldCount.setText(mF.getAnGold() + "");
 
     }
 
@@ -1200,6 +1209,19 @@ public class StreamingBaseActivity extends Activity implements
                             showGifts(message_from, icon, mGetGift);
                         }
                     });
+                    msgList.add(message);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            if (msgList.size() > 0) {
+                                listView.setSelection(listView.getCount() - 1);
+                                Log.e("sad", "setselection");
+                            }
+                        }
+                    });
+
+
                 } else if (map.containsKey("DianZan")) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1357,10 +1379,9 @@ public class StreamingBaseActivity extends Activity implements
     String giftId = "";
 
     public void showGifts(String from, String icon, Gift gift) {
-        int gold = userInfo.getMbGold();
+        int gold = Integer.valueOf(mF.getAnGold());
         gold = gold + Integer.valueOf(gift.getCredits());
-        userInfo.setMbGold(gold);
-        mF.setMember(userInfo);
+        mF.setAnGold(gold+"");
         mTvGoldCount.setText(gold + "");
 
         linGiftSend.setVisibility(View.VISIBLE);
@@ -1444,6 +1465,8 @@ public class StreamingBaseActivity extends Activity implements
 
             }
         });
+
+        //TODO 收到礼物
 
 
     }
@@ -1561,16 +1584,36 @@ public class StreamingBaseActivity extends Activity implements
     }
 
     public void doDanmu(String message) {
-        DanmakuItem dm = new DanmakuItem(this, message, mDanmakuView.getWidth());
-        dm.setTextColor(Color.parseColor("#49C3B8"));
-        mDanmakuView.addItem(dm);
+//        DanmakuItem dm = new DanmakuItem(this, message, mDanmakuView.getWidth());
+//        dm.setTextColor(Color.parseColor("#49C3B8"));
+//        mDanmakuView.addItem(dm);
+//        mDanmakuView.setVisibility(View.VISIBLE);
+//        mDanmakuView.show();
+        int gold = Integer.valueOf(mF.getAnGold());
+        gold = gold + 2;
+        mF.setAnGold(gold+"");
+        mTvGoldCount.setText(gold + "");
+
+        Pattern pattern = buildPattern();
+        Matcher matcher = pattern.matcher(message);
+        SpannableString spannableString = new SpannableString(message);
+        while (matcher.find()) {
+            if (PApplication.emoticonsIdMap.containsKey(matcher.group())) {
+                int id = PApplication.emoticonsIdMap.get(matcher.group());
+
+                Drawable drawable = this.getResources().getDrawable(id);
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, FACE_SIZE, FACE_SIZE);
+                    ImageSpan span = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BOTTOM);
+                    spannableString.setSpan(span, matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+        IDanmakuItem item = new DanmakuItem(this, spannableString, mDanmakuView.getWidth(), 0, R.color.colorBlue, 0, 1.5f);
+        mDanmakuView.addItem(item);
         mDanmakuView.setVisibility(View.VISIBLE);
         mDanmakuView.show();
-        int gold = userInfo.getMbGold();
-        gold = gold + 2;
-        userInfo.setMbGold(gold);
-        mF.setMember(userInfo);
-        mTvGoldCount.setText(gold + "");
+
     }
 
 
@@ -1628,10 +1671,12 @@ public class StreamingBaseActivity extends Activity implements
                 times = System.currentTimeMillis();
                 doRefresh();
             } else {
-                int gold = userInfo.getMbGold();
+                int gold = Integer.valueOf(mF.getAnGold());
                 int addGold = mPrice * Usercount;
-                userInfo.setMbGold(gold + addGold);
-                mTvGoldCount.setText(userInfo.getMbGold() + "");
+                int g = gold + addGold;
+                mF.setAnGold(g+"");
+//                userInfo.setMbGold(gold + addGold);
+                mTvGoldCount.setText(g + "");
             }
                 Usercount = getChatRoomInfoCount();
         }
@@ -1671,4 +1716,17 @@ public class StreamingBaseActivity extends Activity implements
         });
 
     }
+    private Pattern buildPattern() {
+        StringBuilder patternString = new StringBuilder(
+                PApplication.emoticonKeyList.size() * 3);
+        patternString.append('(');
+        for (int i = 0; i < PApplication.emoticonKeyList.size(); i++) {
+            String s = PApplication.emoticonKeyList.get(i);
+            patternString.append(Pattern.quote(s));
+            patternString.append('|');
+        }
+        patternString.replace(patternString.length() - 1, patternString.length(), ")");
+        return Pattern.compile(patternString.toString());
+    }
+
 }

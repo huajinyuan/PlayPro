@@ -94,6 +94,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                 fragmentTransaction.hide(mFollow);
                 fragmentTransaction.hide(mRanking);
                 fragmentTransaction.show(mRecommented);
+
                 break;
             case 2:
                 viewDelegate.setStatus(2);
@@ -114,6 +115,10 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                 break;
             case R.id.btn_recommented:
                 setTab(1);
+                if (null != mRecommented)
+                {
+                    mRecommented.getPresend().initData();
+                }
                 break;
             case R.id.btn_follow:
                 setTab(2);

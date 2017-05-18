@@ -51,8 +51,14 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
     }
 
 
+    public RecommentedPresenter getPresend()
+    {
+        return presenter;
+    }
     @Override
     public void itemCliclk(Follow follow) {
+        mF = (Follow) ACache.get(getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        info = mF.getMember();
         if (follow.getLiveStatus().equals("3") || follow.getAnPrice() != 0) {
             showShoufeiDialog(follow);
         } else {

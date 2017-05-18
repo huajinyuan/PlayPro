@@ -193,6 +193,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvSysToast;
     @BindView(R.id.tv_play_level_1)
     TextView mTvLevel_2;
+    @BindView(R.id.tv_gold_count)
+    TextView mTvAnchorGold;
     @BindView(R.id.rel_layout_bottom_dialog)
     View rel_layout_bottom_dialog;
     ACache aCache;
@@ -707,7 +709,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void giftPost() {
-        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "Gift" + gift.id, chatroomid);
+        EMMessage message = EMMessage.createTxtSendMessage("送了一个:【"+gift.getName()+"】", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(loginInfo.getMbNickname());
         message.setAttribute("Gift", gift.getId());
@@ -716,6 +718,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setAttribute("user_url", loginInfo.getMbPhoto());
         EMClient.getInstance().chatManager().sendMessage(message);
         showGifts("我", loginInfo.getMbPhoto(), gift);
+        msgList.add(message);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                if (msgList.size() > 0) {
+                    listView.setSelection(listView.getCount() - 1);
+                    Log.e("sad", "setselection");
+                }
+            }
+        });
+
+        //TODO 发送礼物消息
     }
 
     @BindView(R.id.tv_play_gift_count)
@@ -732,6 +747,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     String giftId = "";
 
     public void showGifts(String from, String icon, Gift gift) {
+
+
+        if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
+        {
+            int gold = Integer.valueOf(anchorItem.getAnGold());
+            gold = gold +Integer.valueOf(gift.getCredits());
+            anchorItem.setAnGold(gold+"");
+                    mTvAnchorGold.setText(gold+"");//TODO 钻石
+        }
 
         linGiftSend.setVisibility(View.VISIBLE);
         Glide.with(this).load(null != icon ? Config.BASE + icon : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(img_play_gift_send_icon) {
@@ -896,6 +920,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
             }
         });
+        if (!isMember)
+        {
+            if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
+            {
+                mTvAnchorGold.setText(anchorItem.getAnGold()+"");//TODO 钻石
+            }
+
+        }
     }
 
     @OnClick({R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
@@ -1171,6 +1203,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             showGifts(message_from, icon, mGetGift);
                         }
                     });
+                    msgList.add(message);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            if (msgList.size() > 0) {
+                                listView.setSelection(listView.getCount() - 1);
+                                Log.e("sad", "setselection");
+                            }
+                        }
+                    });
 
                 } else if (map.containsKey("DianZan")) {
                     runOnUiThread(new Runnable() {
@@ -1184,50 +1227,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
-//                            mTvToast.setVisibility(View.VISIBLE);
-//                            mTvToast.setText("主播开启收费模式：" + (String) map.get("Recharge") + "钻石/分钟");
-//                            a.setFillAfter(true);
-//                            mTvToast.startAnimation(a);
-//                            a.setAnimationListener(new Animation.AnimationListener() {
-//                                @Override
-//                                public void onAnimationStart(Animation animation) {
-//
-//                                }
-//
-//                                @Override
-//                                public void onAnimationEnd(Animation animation) {
-//                                    runOnUiThread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            if (mTvToast.getVisibility() == View.VISIBLE) {
-//                                                F.e("---------------------------------mTvGiftCount GONE");
-//                                                mTvToast.clearAnimation();
-//                                                mTvToast.setVisibility(View.GONE);
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//
-//                                @Override
-//                                public void onAnimationRepeat(Animation animation) {
-//
-//                                }
-//                            });
-//                            if (null != timer2) {
-//                                timer2.cancel();
-//                                timer2 = null;
-//                                timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
-//                                temp2 = true;
-//                            } else {
-//                                timer2 = new MyTimer2(999999999, 60000, (String) map.get("Recharge"));
-//                                temp2 = true;
-//                            }
-//                            if (temp2) {
-//                                timer2.start();
-//                                temp2 = false;
-//                            }
                             showShoufeiDialog(Integer.valueOf((String) map.get("Recharge")));
+                            vv_test.pause();
                         }
                     });
 
@@ -1337,6 +1338,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     };
 
     public void doDanmu(String message) {
+        if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
+        {
+            int gold = Integer.valueOf(anchorItem.getAnGold());
+            gold = gold +2;
+            anchorItem.setAnGold(gold+"");
+            mTvAnchorGold.setText(gold+"");//TODO 钻石
+        }
 
 //        SpannableStringBuilder builder = new SpannableStringBuilder(message);
         Pattern pattern = buildPattern();
@@ -1492,35 +1500,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 chatroomid = anchorItem.getChatRoomId();
                 if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
                     mTvSysToast.setVisibility(View.VISIBLE);
-                    mTvSysToast.setText("系统消息：" + anchorItem.getSysMsg());
-//                    Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
-//                    mTvSysToast.startAnimation(a);
-//                    a.setAnimationListener(new Animation.AnimationListener() {
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    if (mTvSysToast.getVisibility() == View.VISIBLE) {
-//                                        F.e("---------------------------------mTvGiftCount GONE");
-//                                        mTvSysToast.clearAnimation();
-//                                        mTvSysToast.setVisibility(View.GONE);
-//                                    }
-//                                }
-//                            });
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//
-//                        }
-//                    });
+                    mTvSysToast.setText(anchorItem.getSysMsg());
+
                 }
 
                 if (StringUtils.isNotEmpty(anchorItem.getWordLimit())) {
@@ -1529,6 +1510,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
                 if (null != bf.getData().getFaCount()) {
                     mTvCount.setText(bf.getData().getFaCount());
+                }
+                if (StringUtils.isNotEmpty(bf.getData().getAnGold()))
+                {
+                    mTvAnchorGold.setText(bf.getData().getAnGold()+"");
                 }
                 if (anchorItem.getLiveStatus().equals("3") && anchorItem.getAnPrice() != 0) {
                     if (null != timer2) {
@@ -1544,7 +1529,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         timer2.start();
                         temp2 = false;
                     }
-//                    showShoufeiDialog(anchorItem.getAnPrice());
                 }
 
                 doPlay();
@@ -1626,6 +1610,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         timer2.start();
                         temp2 = false;
                     }
+                }
+                if (!isMember) {
+                    try {
+                        vv_test.setVideoPath(new DESUtil().decrypt(anchorItem.getWcPullAddress()));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    vv_test.start();
                 }
                 mydialog.dismiss();
             }
