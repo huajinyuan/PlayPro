@@ -1782,6 +1782,7 @@ public class StreamingBaseActivity extends Activity implements
         //每过你规定的时间间隔做的操作
         @Override
         public void onTick(long millisUntilFinished) {
+
             long time = System.currentTimeMillis() - StartPlay;
             long hour = time / 1000 / 60 / 60;
             long min = (time - hour * 60 * 60 * 1000) / 1000 / 60;
