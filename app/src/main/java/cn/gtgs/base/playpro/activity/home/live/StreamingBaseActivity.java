@@ -489,8 +489,6 @@ public class StreamingBaseActivity extends Activity implements
     @Override
     public boolean onRestartStreamingHandled(int err) {
         F.e("==========================onRestartStreamingHandled" + err);
-        mMediaStreamingManager.pause();
-        mMediaStreamingManager.resume();
         return mMediaStreamingManager.startStreaming();
     }
 
@@ -640,11 +638,14 @@ public class StreamingBaseActivity extends Activity implements
 //                mLogContent += "IOERROR\n";
 //                mStatusMsgContent = getString(R.string.string_state_ready);
 
-                if (System.currentTimeMillis() - errorTime < 10000) {
-                    F.e("============================ reStart");
-                    mMediaStreamingManager.pause();
-                    mMediaStreamingManager.resume();
-                    mMediaStreamingManager.startStreaming();
+                if (System.currentTimeMillis() - errorTime < 50000) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            mMediaStreamingManager.startStreaming();
+                            Log.e("aaa", "trying reStart");
+                        }
+                    }, 1000);
                 } else {
                     mStatusMsgContent = "无法直播！";
                     runOnUiThread(new Runnable() {
