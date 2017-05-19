@@ -68,6 +68,8 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
 
             }
         });
+        holder.tvStatus.setText("暂无直播");
+        holder.tvStatus.setBackgroundResource(R.drawable.timestampe_bg);
         if (anchorItem.getLiveStatus().equals("2")) {
             holder.tvStatus.setText("直播");
             holder.tvStatus.setBackgroundResource(R.drawable.timestampe_bg);

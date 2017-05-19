@@ -196,6 +196,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         if (null != userInfo && null != userInfo.getAnId()) {
             params.put("anId", userInfo.getAnId());
             params.put("status", "2");
+            params.put("anPrice", 0);
             PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
             HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
                 @Override

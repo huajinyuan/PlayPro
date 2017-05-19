@@ -28,7 +28,6 @@ public interface Config {
      */
 
     String BASE = "http://www.vip177.cn:8080/webcast/";
-//    String BASE = "http://www.jsonlan.com:8080/webcast/";
 
     String BASE_URL = BASE + "api/";
     /**

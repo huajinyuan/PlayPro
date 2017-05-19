@@ -47,7 +47,7 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
 
     @Override
     public void onRefresh() {
-        presenter.initData();
+        presenter.refresh();
     }
 
 

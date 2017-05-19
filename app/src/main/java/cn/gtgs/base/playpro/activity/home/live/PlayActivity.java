@@ -195,6 +195,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvLevel_2;
     @BindView(R.id.tv_gold_count)
     TextView mTvAnchorGold;
+    @BindView(R.id.tv_play_gold_hz)
+    TextView mTvGoldhz;
+    @BindView(R.id.tv_play_fock_count)
+    TextView mTvfock;
+    @BindView(R.id.tv_play_follow_count)
+    TextView mTvFollow;
     @BindView(R.id.rel_layout_bottom_dialog)
     View rel_layout_bottom_dialog;
     ACache aCache;
@@ -389,6 +395,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             public void onMemberJoined(String roomId, String participant) {
                 getCountOnline();
 
+                final int count = getChatRoomInfoCount();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvCount.setText(count + "");
+                    }
+                });
 //TODO 成员加入聊天室
 //                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
 //                message.setChatType(EMMessage.ChatType.ChatRoom);
@@ -927,7 +940,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 mTvAnchorGold.setText(anchorItem.getAnGold()+"");//TODO 钻石
             }
 
+        }else
+        {
+            mTvGoldhz.setText(anchorItem.getMember().getMbGold()+"");
         }
+
+        if(StringUtils.isNotEmpty(anchorItem.getFaCount()))
+        {
+            mTvfock.setText(anchorItem.getFaCount());
+            mTvFollow.setText(anchorItem.getFaCount());
+        }
+
+
+
     }
 
     @OnClick({R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
@@ -1014,18 +1039,24 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         JSONObject ob = JSON.parseObject(Str);
                         if (ob.containsKey("code")) {
                             int i = ob.getIntValue("code");
+                            int faCount = Integer.valueOf(anchorItem.getFaCount());
                             if (i == 1) {
+
                                 int a = ob.getInteger("data");
                                 ArrayList<String> gs = PApplication.getInstance().getmFList();
                                 if (a == 1) {
+                                    faCount = faCount+1;
                                     gs.add(anchorItem.getAnId());
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
                                 } else {
+                                    faCount = faCount-1;
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
                                     gs.remove(anchorItem.getAnId());
                                 }
                                 String str = JSON.toJSONString(gs);
                                 aCache.put(ACacheKey.CURRENT_FOLLOW, str);
+                                anchorItem.setFaCount(faCount+"");
+                                initviews();
                             }
                         }
                     } catch (Exception e) {
@@ -1132,6 +1163,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     Log.e("adad", "JoinChatRoom succeed");
                     sendJoinMSG();
                     isJoined = true;
+
                 } else {
                     Log.e("dasda", "JoinChatRoom Failed!");
                 }
@@ -1140,6 +1172,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     @Override
                     public void run() {
                         loadsomes();
+                    }
+                });
+                final int count =getChatRoomInfoCount();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvCount.setText(count + "");
                     }
                 });
             }
@@ -1161,6 +1200,16 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         message.setAttribute("level", loginInfo.getMbLevel() + "");
         //发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+
+        final int count = getChatRoomInfoCount();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvCount.setText(count+ "");
+            }
+        });
+        F.e("=================聊天室人数"+count);
+        //TODO
     }
 
     public void loadsomes() {
@@ -1245,11 +1294,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     //TODO 新人加入聊天室消息
                     message_from = (String) map.get("user_name");
 //                    int count = Integer.valueOf(anchorItem.getFaCount()) + 1;
-                    anchorItem.setFaCount(getChatRoomInfoCount() + "");
+//                    anchorItem.setFaCount(getChatRoomInfoCount() + "");
+                    final int count = getChatRoomInfoCount();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mTvCount.setText(anchorItem.getFaCount() + "");
+                            mTvCount.setText(count+ "");
                         }
                     });
                     if (map.containsKey("level")) {
@@ -1508,12 +1558,26 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
                     et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxlenth)});
                 }
-                if (null != bf.getData().getFaCount()) {
-                    mTvCount.setText(bf.getData().getFaCount());
-                }
+//                if (null != bf.getData().getFaCount()) {
+//                    mTvCount.setText(bf.getData().getFaCount());
+//                }
+                //TODO
                 if (StringUtils.isNotEmpty(bf.getData().getAnGold()))
                 {
                     mTvAnchorGold.setText(bf.getData().getAnGold()+"");
+                }
+                if (!isMember)
+                {
+                    if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
+                    {
+                        int gold = Integer.valueOf(anchorItem.getAnGold());
+                        mTvGoldhz.setText(gold +"");
+                    }
+                }
+                if(StringUtils.isNotEmpty(anchorItem.getFaCount()))
+                {
+                    mTvfock.setText(anchorItem.getFaCount());
+                    mTvFollow.setText(anchorItem.getFaCount());
                 }
                 if (anchorItem.getLiveStatus().equals("3") && anchorItem.getAnPrice() != 0) {
                     if (null != timer2) {

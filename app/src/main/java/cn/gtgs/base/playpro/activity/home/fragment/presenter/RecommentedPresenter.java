@@ -14,10 +14,14 @@ import java.util.ArrayList;
 import cn.gtgs.base.playpro.activity.home.fragment.view.RecommentedDelegate;
 import cn.gtgs.base.playpro.activity.home.model.ADInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.BaseList;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
@@ -30,22 +34,37 @@ import rx.Subscriber;
 public class RecommentedPresenter implements IRecommented {
     RecommentedDelegate delegate;
     IRecommentedItemListener listener;
+    ACache aCache;
+    Follow follow;
+    UserInfo info;
 
     public RecommentedPresenter(RecommentedDelegate delegate, IRecommentedItemListener listener) {
         this.delegate = delegate;
         this.listener = listener;
+        aCache = ACache.get(delegate.getActivity());
+        follow = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        info = follow.getMember();
     }
 
     @Override
     public void initData() {
+        doRefresh();
         getData();
         getAdverts();
     }
+
 
     @Override
     public void doFollow(String anId) {
 
     }
+
+    public void refresh()
+    {
+        doRefresh();
+        getData();
+    }
+
 
     private void getData() {
 
@@ -117,5 +136,41 @@ public class RecommentedPresenter implements IRecommented {
 
             }
         });
+    }
+
+    public void doRefresh() {
+        HttpParams params = new HttpParams();
+        params.put("mbId", info.getMbId());
+        PostRequest request = OkGo.post(Config.POST_MEMBER_GET).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+                if (delegate.getmSwp().isRefreshing()) {
+                    delegate.getmSwp().setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                if (delegate.getmSwp().isRefreshing()) {
+                    delegate.getmSwp().setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onNext(Response response) {
+                if (delegate.getmSwp().isRefreshing()) {
+                    delegate.getmSwp().setRefreshing(false);
+                }
+                HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                if (null != bs.getData()) {
+                    follow = bs.getData();
+                    aCache.put(ACacheKey.CURRENT_ACCOUNT, bs.getData());
+                }
+            }
+        });
+
+
     }
 }

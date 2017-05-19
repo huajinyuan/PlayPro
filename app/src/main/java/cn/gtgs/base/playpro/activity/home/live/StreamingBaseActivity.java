@@ -430,7 +430,7 @@ public class StreamingBaseActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         mMediaStreamingManager.destroy();
-        Updatestatus("1");
+        Updatestatus("1",0);
         //-----------------------------------以下为环信
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
@@ -441,11 +441,12 @@ public class StreamingBaseActivity extends Activity implements
     }
 
 
-    public void Updatestatus(String status) {
+    public void Updatestatus(String status,int price) {
 
         HttpParams params = new HttpParams();
         params.put("anId", mAnchor.getAnId());
         params.put("status", status);
+        params.put("anPrice", price);
         PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
         HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
@@ -578,7 +579,7 @@ public class StreamingBaseActivity extends Activity implements
 //                mStreamStatus.setText("bitrate:" + streamStatus.totalAVBitrate / 1024 + " kbps"
 //                        + "\naudio:" + streamStatus.audioFps + " fps"
 //                        + "\nvideo:" + streamStatus.videoFps + " fps");
-                mStreamStatus.setText("fps:" + streamStatus.audioFps);
+                mStreamStatus.setText("fps:" + streamStatus.audioFps+"帧/秒");
             }
         });
     }
@@ -767,7 +768,7 @@ public class StreamingBaseActivity extends Activity implements
                                 String s = wv.getSeletedItem();
                                 Shoufei(s);
                                 Usercount = getChatRoomInfoCount();
-                                Updatestatus("3");
+                                Updatestatus("3",Integer.valueOf(s));
                                 if (temp2) {
                                     timer2 = new MyTimer2(999999999, 60000);
                                     timer2.start();

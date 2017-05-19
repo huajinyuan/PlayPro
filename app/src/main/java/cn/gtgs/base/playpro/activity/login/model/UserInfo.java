@@ -99,7 +99,7 @@ public class UserInfo implements Serializable {
     }
 
     public int getMbLevel() {
-        return AppUtil.getDJ(getMbGold());
+        return AppUtil.getDJ(getMbGoldPay());
     }
 
     public void setMbLevel(int mbLevel) {

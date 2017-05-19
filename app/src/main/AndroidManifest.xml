@@ -31,11 +31,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
 
-        <!-- 设置环信应用的AppKey -->
-        <!--测试-->
-        <!--<meta-data-->
-        <!--android:name="EASEMOB_APPKEY"-->
-        <!--android:value="1164170515115835#webcast" />-->
         <!--正式-->
         <meta-data
             android:name="EASEMOB_APPKEY"
