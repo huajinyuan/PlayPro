@@ -1766,6 +1766,47 @@ public class StreamingBaseActivity extends Activity implements
         }
     }
 
+    private MyTimer3 timer3;
+    private boolean temp3 = true;
+    private long StartPlay = 0;
+
+    private class MyTimer3 extends CountDownTimer {
+        private static final String TAG = "MyTimer";
+
+        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+        public MyTimer3(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        //每过你规定的时间间隔做的操作
+        @Override
+        public void onTick(long millisUntilFinished) {
+            long time = System.currentTimeMillis() - StartPlay;
+            long hour = time / 1000 / 60 / 60;
+            long min = (time - hour * 60 * 60 * 1000) / 1000 / 60;
+            long scen = (time - hour * 60 * 60 * 1000 - min * 60 * 1000) / 1000;
+            String h = hour > 0 ? hour < 10 ? "0" + hour : hour + "" : "00";
+            String m = min > 0 ? min < 10 ? "0" + min : min + "" : "00";
+            String s = scen > 0 ? scen < 10 ? "0" + scen : scen + "" : "00";
+            final String showTimes = "在线时长:" + h + ":" + m + ":" + s;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTvTime.setText(showTimes);
+                }
+            });
+
+        }
+
+        //倒计时结束时做的操作↓↓
+        @Override
+        public void onFinish() {
+            temp = true;
+        }
+    }
+
     long times = 0;
 
     public void doRefresh() {

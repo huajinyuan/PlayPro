@@ -2,6 +2,7 @@ package cn.gtgs.base.playpro.activity.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -28,11 +29,15 @@ import com.gt.okgo.request.PostRequest;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.HomeActivity;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.login.model.Appinfo;
 import cn.gtgs.base.playpro.http.BaseList;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.http.Parsing;
+import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.ToastUtil;
@@ -61,23 +66,23 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation arg0) {
                 F.e("启动页面动画执行完毕...");
-                load();
-//                ACache aCache = ACache.get(SplashActivity.this);
-//                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-//                Intent intent;
-//                if (null != info) {
-//                    SplashActivity.this.finish();
-//                    overridePendingTransition(0, 0);
+//                load();
+                ACache aCache = ACache.get(SplashActivity.this);
+                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                Intent intent;
+                if (null != info) {
+                    SplashActivity.this.finish();
+                    overridePendingTransition(0, 0);
+                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                } else {
+                    overridePendingTransition(0, 0);
 //                    intent = new Intent(SplashActivity.this, HomeActivity.class);
-//                    startActivity(intent);
-//                    SplashActivity.this.finish();
-//                } else {
-//                    overridePendingTransition(0, 0);
-////                    intent = new Intent(SplashActivity.this, HomeActivity.class);
-//                    intent = new Intent(SplashActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                    SplashActivity.this.finish();
-//                }
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }
             }
 
             @Override
