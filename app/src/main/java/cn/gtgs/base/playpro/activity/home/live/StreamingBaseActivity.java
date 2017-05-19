@@ -345,13 +345,18 @@ public class StreamingBaseActivity extends Activity implements
         //-------------------------------------------------------------------
         //-------------------------------------------------------------------
 
+        mContext = this;
+        doPlay();
+        initUIs();
+    }
 
+
+    public void doPlay() {
         String publishUrlFromServer = getIntent().getStringExtra(Config.EXTRA_KEY_PUB_URL);
 
 
         Log.i(TAG, "publishUrlFromServer:" + publishUrlFromServer);
 
-        mContext = this;
 
         StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
         StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
@@ -405,10 +410,7 @@ public class StreamingBaseActivity extends Activity implements
         mIsNeedFB = true;
         mMicrophoneStreamingSetting = new MicrophoneStreamingSetting();
         mMicrophoneStreamingSetting.setBluetoothSCOEnabled(false);
-
-        initUIs();
     }
-
 
     @Override
     protected void onResume() {
@@ -430,7 +432,7 @@ public class StreamingBaseActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         mMediaStreamingManager.destroy();
-        Updatestatus("1",0);
+        Updatestatus("1", 0);
         //-----------------------------------以下为环信
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
@@ -441,7 +443,7 @@ public class StreamingBaseActivity extends Activity implements
     }
 
 
-    public void Updatestatus(String status,int price) {
+    public void Updatestatus(String status, int price) {
 
         HttpParams params = new HttpParams();
         params.put("anId", mAnchor.getAnId());
@@ -478,6 +480,7 @@ public class StreamingBaseActivity extends Activity implements
 
     @Override
     public boolean onRecordAudioFailedHandled(int err) {
+        F.e("==========================onRecordAudioFailedHandled" + err);
         mMediaStreamingManager.updateEncodingType(AVCodecType.SW_VIDEO_CODEC);
         mMediaStreamingManager.startStreaming();
         return true;
@@ -485,7 +488,9 @@ public class StreamingBaseActivity extends Activity implements
 
     @Override
     public boolean onRestartStreamingHandled(int err) {
-        Log.i(TAG, "onRestartStreamingHandled");
+        F.e("==========================onRestartStreamingHandled" + err);
+        mMediaStreamingManager.pause();
+        mMediaStreamingManager.resume();
         return mMediaStreamingManager.startStreaming();
     }
 
@@ -579,10 +584,12 @@ public class StreamingBaseActivity extends Activity implements
 //                mStreamStatus.setText("bitrate:" + streamStatus.totalAVBitrate / 1024 + " kbps"
 //                        + "\naudio:" + streamStatus.audioFps + " fps"
 //                        + "\nvideo:" + streamStatus.videoFps + " fps");
-                mStreamStatus.setText("fps:" + streamStatus.audioFps+"帧/秒");
+                mStreamStatus.setText("fps:" + streamStatus.audioFps + "帧/秒");
             }
         });
     }
+
+    long errorTime = 0;
 
     @Override
     public void onStateChanged(StreamingState streamingState, Object extra) {
@@ -607,6 +614,8 @@ public class StreamingBaseActivity extends Activity implements
                 break;
             case CONNECTING:
 //                mStatusMsgContent = getString(R.string.string_state_connecting);
+                F.e("===================SENDING_BUFFER_EMPTY");
+
                 mStatusMsgContent = "连接中";
                 break;
             case STREAMING:
@@ -630,28 +639,86 @@ public class StreamingBaseActivity extends Activity implements
             case IOERROR:
 //                mLogContent += "IOERROR\n";
 //                mStatusMsgContent = getString(R.string.string_state_ready);
-                mStatusMsgContent = "无法直播！";
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ll_live_onlinenum.setVisibility(View.INVISIBLE);
-                    }
-                });
+
+                if (System.currentTimeMillis() - errorTime < 10000) {
+                    F.e("============================ reStart");
+                    mMediaStreamingManager.pause();
+                    mMediaStreamingManager.resume();
+                    mMediaStreamingManager.startStreaming();
+                } else {
+                    mStatusMsgContent = "无法直播！";
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ll_live_onlinenum.setVisibility(View.INVISIBLE);
+                            //TODO 直播超时
+                            final AlertDialog mydialog;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(StreamingBaseActivity.this, R.style.DialogTransBackGround);
+                            mydialog = builder.create();
+                            mydialog.setCanceledOnTouchOutside(false);
+                            View view = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                            TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
+                            Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
+                            Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
+                            tv_content.setText("网络连接超时，请退出检查网络后再直播");
+                            bt_yes.setText("退出直播");
+                            mydialog.setCancelable(true);
+                            mydialog.show();
+                            mydialog.setContentView(view);
+                            // dialog内部的点击事件
+                            bt_yes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    StreamingBaseActivity.this.finish();
+                                    mydialog.dismiss();
+                                }
+                            });
+                            bt_cancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    StreamingBaseActivity.this.finish();
+                                    mydialog.dismiss();
+                                }
+                            });
+
+
+
+
+                        }
+                    });
+
+
+
+
+                }
+
+
                 break;
             case UNKNOWN:
                 mStatusMsgContent = "READY";
                 break;
             case SENDING_BUFFER_EMPTY:
+                F.e("===================SENDING_BUFFER_EMPTY");
                 break;
             case SENDING_BUFFER_FULL:
+                F.e("===================SENDING_BUFFER_FULL");
                 break;
             case AUDIO_RECORDING_FAIL:
+                F.e("===================AUDIO_RECORDING_FAIL");
                 break;
             case OPEN_CAMERA_FAIL:
                 Log.e(TAG, "Open Camera Fail. id:" + extra);
                 break;
-            case DISCONNECTED:
-                mLogContent += "DISCONNECTED\n";
+            case DISCONNECTED://TODO 网络重连或失败
+                F.e("===================DISCONNECTED");
+//                mLogContent += "DISCONNECTED\n";
+                errorTime = System.currentTimeMillis();
+//                stopStreaming();
+//                startStreaming();
+//                mMediaStreamingManager.updateEncodingType(AVCodecType.SW_VIDEO_CODEC);
+//                mMediaStreamingManager.startStreaming();
+//                mMediaStreamingManager.pause();
+//                mMediaStreamingManager.resume();
                 break;
             case INVALID_STREAMING_URL:
                 Log.e(TAG, "Invalid streaming url:" + extra);
@@ -768,7 +835,7 @@ public class StreamingBaseActivity extends Activity implements
                                 String s = wv.getSeletedItem();
                                 Shoufei(s);
                                 Usercount = getChatRoomInfoCount();
-                                Updatestatus("3",Integer.valueOf(s));
+                                Updatestatus("3", Integer.valueOf(s));
                                 if (temp2) {
                                     timer2 = new MyTimer2(999999999, 60000);
                                     timer2.start();
@@ -1249,7 +1316,7 @@ public class StreamingBaseActivity extends Activity implements
                         }
                     });
                     if (map.containsKey("level")) {
-                        final int level = Integer.valueOf((String)map.get("level"));
+                        final int level = Integer.valueOf((String) map.get("level"));
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -1382,7 +1449,7 @@ public class StreamingBaseActivity extends Activity implements
     public void showGifts(String from, String icon, Gift gift) {
         int gold = Integer.valueOf(mF.getAnGold());
         gold = gold + Integer.valueOf(gift.getCredits());
-        mF.setAnGold(gold+"");
+        mF.setAnGold(gold + "");
         mTvGoldCount.setText(gold + "");
 
         linGiftSend.setVisibility(View.VISIBLE);
@@ -1592,7 +1659,7 @@ public class StreamingBaseActivity extends Activity implements
 //        mDanmakuView.show();
         int gold = Integer.valueOf(mF.getAnGold());
         gold = gold + 2;
-        mF.setAnGold(gold+"");
+        mF.setAnGold(gold + "");
         mTvGoldCount.setText(gold + "");
 
         Pattern pattern = buildPattern();
@@ -1675,11 +1742,11 @@ public class StreamingBaseActivity extends Activity implements
                 int gold = Integer.valueOf(mF.getAnGold());
                 int addGold = mPrice * Usercount;
                 int g = gold + addGold;
-                mF.setAnGold(g+"");
+                mF.setAnGold(g + "");
 //                userInfo.setMbGold(gold + addGold);
                 mTvGoldCount.setText(g + "");
             }
-                Usercount = getChatRoomInfoCount();
+            Usercount = getChatRoomInfoCount();
         }
 
         //倒计时结束时做的操作↓↓
@@ -1717,6 +1784,7 @@ public class StreamingBaseActivity extends Activity implements
         });
 
     }
+
     private Pattern buildPattern() {
         StringBuilder patternString = new StringBuilder(
                 PApplication.emoticonKeyList.size() * 3);
