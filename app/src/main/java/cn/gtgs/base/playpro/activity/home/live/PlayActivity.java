@@ -364,6 +364,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void bt_likes(View v) {
+        v.setClickable(false);
         EMMessage message = EMMessage.createTxtSendMessage("[key]" + "DianZan", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(loginInfo.getMbNickname());

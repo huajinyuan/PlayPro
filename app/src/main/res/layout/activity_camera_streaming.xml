@@ -49,28 +49,27 @@
         android:textColor="@color/colorwhite"
         android:textSize="12sp" />
 
-
+    <!--android:background="@drawable/background_grey_trans"-->
     <LinearLayout
         android:id="@+id/ll_live_onlinenum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/streamingStatus"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/background_grey_trans"
+        android:layout_marginLeft="8dp"
         android:orientation="horizontal"
-        android:padding="3dp"
         android:visibility="invisible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="在线"
+            android:text="在线:"
             android:textColor="@color/color_progress_end" />
 
         <TextView
             android:id="@+id/tv_live_onlinenum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:text=""
             android:textColor="@color/color_pink" />
     </LinearLayout>
@@ -237,6 +236,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/tv_lin_zs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_live_onlinenum"
@@ -246,7 +246,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="8dp"
             android:text="钻石:"
             android:textColor="@color/colorBlue" />
 
@@ -254,7 +254,7 @@
             android:id="@+id/tv_gold_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="3dp"
             android:textColor="@color/colorBlue" />
 
     </LinearLayout>
@@ -267,4 +267,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:contentDescription="cd_tv_log_info" />
+
+    <TextView
+        android:id="@+id/tv_stream_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_lin_zs"
+        android:layout_marginLeft="8dp"
+        android:text="在线时长：00:00:00"
+        android:textColor="@color/colorBlue" />
 </RelativeLayout>

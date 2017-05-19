@@ -286,6 +286,8 @@ public class StreamingBaseActivity extends Activity implements
     public TextView mTvLevelToast;
     @BindView(R.id.tv_gold_count)
     public TextView mTvGoldCount;
+    @BindView(R.id.tv_stream_time)
+    public TextView mTvTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -489,6 +491,8 @@ public class StreamingBaseActivity extends Activity implements
     @Override
     public boolean onRestartStreamingHandled(int err) {
         F.e("==========================onRestartStreamingHandled" + err);
+        mMediaStreamingManager.pause();
+        mMediaStreamingManager.resume();
         return mMediaStreamingManager.startStreaming();
     }
 
@@ -582,7 +586,8 @@ public class StreamingBaseActivity extends Activity implements
 //                mStreamStatus.setText("bitrate:" + streamStatus.totalAVBitrate / 1024 + " kbps"
 //                        + "\naudio:" + streamStatus.audioFps + " fps"
 //                        + "\nvideo:" + streamStatus.videoFps + " fps");
-                mStreamStatus.setText("fps:" + streamStatus.audioFps + "帧/秒");
+                mStreamStatus.setText(streamStatus.totalAVBitrate / 1024 / 8 + "kb/s");
+//                mStreamStatus.setText("fps:" + streamStatus.audioFps + "帧/秒");
             }
         });
     }
@@ -618,6 +623,17 @@ public class StreamingBaseActivity extends Activity implements
                 break;
             case STREAMING:
 //                mStatusMsgContent = getString(R.string.string_state_streaming);
+                if (temp3) {
+                    StartPlay = System.currentTimeMillis();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new MyTimer3(999999999, 1000).start();
+                            temp3 = false;
+                        }
+                    });
+
+                }
                 mStatusMsgContent = "正在直播";
                 runOnUiThread(new Runnable() {
                     @Override
@@ -639,13 +655,10 @@ public class StreamingBaseActivity extends Activity implements
 //                mStatusMsgContent = getString(R.string.string_state_ready);
 
                 if (System.currentTimeMillis() - errorTime < 50000) {
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            mMediaStreamingManager.startStreaming();
-                            Log.e("aaa", "trying reStart");
-                        }
-                    }, 1000);
+                    F.e("============================ reStart");
+                    mMediaStreamingManager.pause();
+                    mMediaStreamingManager.resume();
+                    mMediaStreamingManager.startStreaming();
                 } else {
                     mStatusMsgContent = "无法直播！";
                     runOnUiThread(new Runnable() {
@@ -683,12 +696,8 @@ public class StreamingBaseActivity extends Activity implements
                             });
 
 
-
-
                         }
                     });
-
-
 
 
                 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -15,6 +16,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,6 +80,9 @@ public class PApplication extends Application {
         EMClient.getInstance().init(applicationContext, initChatOptions());
         EMClient.getInstance().setDebugMode(true);
         initEmotions();
+        String ROOT_DIR = Environment.getExternalStorageDirectory().getPath() + "/jujing/";
+        File dir = new File(ROOT_DIR);
+        dir.mkdirs();
     }
 
     public static PApplication getInstance() {
@@ -225,7 +230,6 @@ public class PApplication extends Application {
         getMF();
         return mF;
     }
-
 
 
 }

@@ -35,7 +35,7 @@ public class Follow implements Serializable {
     public String sysMsg;
     public String wordLimit;
     public int dayGold = 0;
-    public int anGoldAble;
+    public double anGoldAble = 0;
     public int anPrice;
 
     public UserInfo member;
@@ -232,11 +232,11 @@ public class Follow implements Serializable {
         this.anPhoto = anPhoto;
     }
 
-    public int getAnGoldAble() {
+    public double getAnGoldAble() {
         return anGoldAble;
     }
 
-    public void setAnGoldAble(int anGoldAble) {
+    public void setAnGoldAble(double anGoldAble) {
         this.anGoldAble = anGoldAble;
     }
 

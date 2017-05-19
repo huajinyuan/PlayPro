@@ -3,6 +3,8 @@ package cn.gtgs.base.playpro.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.inputmethod.InputMethodManager;
 
@@ -100,6 +102,17 @@ public class AppUtil {
 //        intent.setAction(Intent.ACTION_DIAL);// 拨号盘
 //        context.startActivity(intent);
 //    }
+    /**
+     * 获取版本号
+     */
+    public static int getVersionCode(Context context) {
+        try {
+            PackageInfo mPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return mPackageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return 1;
+    }
     public static int getDJ(int gold) {
         return (int) (Math.sqrt(gold / 100 + 4) - 2);
     }

@@ -44,7 +44,7 @@
     <color name="color_black_background">#212121</color>
     <!-- 橙色 -->
     <color name="color_base_orange">#73CD1E</color>
-    <!--<color name="color_base_orange">#FE9C01</color>-->
+    <color name="color_text_chat_item">#8685F8</color>
     <!-- 菜单栏黑背景色 -->
     <color name="color_base_black_bg">#21292C</color>
     <color name="color_black">#212121</color>

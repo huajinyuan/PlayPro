@@ -111,5 +111,7 @@ public interface Config {
     String MEMBER_LIVESTATUS = BASE_URL + "anchor/liveStatus";
     /***/
     String MEMBER_CSLIST = BASE_URL + "common/attendants";
+//    ?appType=2
+    String CHECK_VERSION = BASE_URL + "app/update";
 
 }

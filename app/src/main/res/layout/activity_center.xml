@@ -68,7 +68,6 @@
                     </LinearLayout>
 
 
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -105,6 +104,7 @@
                             android:textSize="@dimen/sp_12" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -168,17 +168,6 @@
             </LinearLayout>
 
 
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.5dp"-->
-            <!--android:background="@color/gray_btn_bg_color" />-->
-
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.5dp"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:background="@color/gray_btn_bg_color" />-->
-
             <RelativeLayout
                 android:id="@+id/rel_center_getcoin"
                 android:layout_width="match_parent"
@@ -191,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-                    android:text="我的金币" />
+                    android:text="我的钻石" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -207,15 +196,35 @@
                     android:textSize="12sp" />
 
             </RelativeLayout>
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.5dp"-->
-            <!--android:background="@color/gray_btn_bg_color" />-->
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.5dp"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:background="@color/gray_btn_bg_color" />-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="0.5dp"
+                android:background="@color/colorwhite"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="可用钻石" />
+
+
+                <TextView
+                    android:id="@+id/tv_center_zs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="23dp"
+                    android:text="0"
+                    android:textColor="@color/colorBlue" />
+                <!--android:layout_toLeftOf="@+id/img_center_zs_right"-->
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/rel_center_approve"
@@ -295,29 +304,6 @@
             <!--android:layout_marginTop="10dp"-->
             <!--android:background="@color/gray_btn_bg_color" />-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="0.5dp"
-                android:visibility="gone"
-                android:background="@color/colorwhite">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:text="用户反馈" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    app:srcCompat="@mipmap/icon_home_classify_more" />
-
-            </RelativeLayout>
 
             <!--<View-->
             <!--android:layout_width="match_parent"-->

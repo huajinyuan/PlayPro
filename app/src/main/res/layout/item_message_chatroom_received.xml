@@ -47,7 +47,7 @@
             android:layout_toRightOf="@id/tv_username"
             android:lineSpacingExtra="2dp"
             android:maxWidth="210.0dp"
-            android:textColor="@color/color_background_gray"
+            android:textColor="@color/color_text_chat_item"
             android:textSize="15sp" />
 
         <TextView

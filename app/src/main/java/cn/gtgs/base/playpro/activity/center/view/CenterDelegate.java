@@ -50,6 +50,8 @@ public class CenterDelegate extends AppDelegate {
     SwipeRefreshLayout mSwp;
     @BindView(R.id.tv_center_isauditAnchor)
     TextView mTvisanditAnchor;
+    @BindView(R.id.tv_center_zs)
+    TextView mTvzs;
     UserInfo info;
 
     @Override
@@ -78,7 +80,7 @@ public class CenterDelegate extends AppDelegate {
         });
         tvLe.setText(AppUtil.getDJ(info.getMbGoldPay()) + "");
         if (StringUtils.isNotEmpty(follow.getAnGold())) {
-            tvg.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold()))+"");
+            tvg.setText(AppUtil.getDJ(Integer.valueOf(follow.getAnGold())) + "");
         }
 
         mGole.setText("今日收益" + follow.getDayGold() + "钻石");
@@ -87,6 +89,10 @@ public class CenterDelegate extends AppDelegate {
             mTvisanditAnchor.setText("已认证");
         } else {
             mTvisanditAnchor.setText("未认证");
+        }
+        if (follow.getAnGoldAble() > 0) {
+            int i = (int) follow.getAnGoldAble();
+            mTvzs.setText(i + "");
         }
     }
 
