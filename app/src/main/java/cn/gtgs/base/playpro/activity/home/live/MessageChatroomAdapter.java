@@ -2,6 +2,11 @@ package cn.gtgs.base.playpro.activity.home.live;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +31,7 @@ public class MessageChatroomAdapter extends BaseAdapter {
     private List<EMMessage> msgs;
     private Context context;
     private LayoutInflater inflater;
+
     public MessageChatroomAdapter(List<EMMessage> msgs, Context context_) {
         this.msgs = msgs;
         this.context = context_;
@@ -63,6 +69,7 @@ public class MessageChatroomAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         EMMessage message = getItem(position);
+        boolean isGift = false;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_message_chatroom_received, parent, false);
             viewHolder = new ViewHolder(convertView);
@@ -72,32 +79,65 @@ public class MessageChatroomAdapter extends BaseAdapter {
 
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
 
-        viewHolder.tv_username.setText(message.getFrom());
-
-
-        Map<String, Object> map = message.ext();
-        String content= txtBody.getMessage();
-        if (map != null) {
-            if (null!=map.get("user_name"))
-            {
-                viewHolder.tv_username.setText((String)map.get("user_name"));
-            }
-            if (map.get("level") != null) {
-                viewHolder.tv_level.setVisibility(View.VISIBLE);
-                viewHolder.tv_level.setText("lv" + map.get("level") + "");
-            } else {
-                viewHolder.tv_level.setVisibility(View.GONE);
-            }
-            if(map.containsKey("Gift"))
-            {
-                Gift gift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
-                if (null!= gift)
-                {
-                        content = "送了一个:【"+gift.getName()+"】";
+        if (message.getFrom().equals("-999")) {
+            viewHolder.tv_content.setText(txtBody.getMessage());
+            viewHolder.tv_content.setTextColor(ContextCompat.getColor(context, R.color.colorBlue));
+            viewHolder.tv_level.setVisibility(View.GONE);
+            viewHolder.tv_username.setVisibility(View.GONE);
+        } else {
+            viewHolder.tv_level.setVisibility(View.VISIBLE);
+            viewHolder.tv_username.setVisibility(View.VISIBLE);
+            Map<String, Object> map = message.ext();
+            String content = txtBody.getMessage();
+            if (map != null) {
+                if (null != map.get("user_name")) {
+                    viewHolder.tv_username.setText((String) map.get("user_name"));
+                }
+                if (map.get("level") != null) {
+                    viewHolder.tv_level.setVisibility(View.VISIBLE);
+                    viewHolder.tv_level.setText("Lv" + map.get("level") + "");
+                    int level = (int) map.get("level");
+                    int drawableId = 0;
+                    int colorId = 0;
+                    if (level <= 5) {
+                        drawableId = R.drawable.shape_rec_1;
+                        colorId = R.color.color_level_1;
+                    } else if (level <= 10) {
+                        drawableId = R.drawable.shape_rec_2;
+                        colorId = R.color.color_level_2;
+                    } else if (level <= 15) {
+                        drawableId = R.drawable.shape_rec_3;
+                        colorId = R.color.color_level_3;
+                    } else if (level <= 20) {
+                        drawableId = R.drawable.shape_rec_4;
+                        colorId = R.color.color_level_4;
+                    } else {
+                        drawableId = R.drawable.shape_rec_5;
+                        colorId = R.color.color_level_5;
+                    }
+                    viewHolder.tv_level.setBackgroundResource(drawableId);
+                    viewHolder.tv_username.setTextColor(ContextCompat.getColor(context, colorId));
+                } else {
+                    viewHolder.tv_level.setVisibility(View.GONE);
+                }
+                if (map.containsKey("Gift")) {
+                    isGift = true;
+                    Gift gift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
+                    if (null != gift) {
+                        content = "送了一个:【" + gift.getName() + "】";
+                    }
                 }
             }
+            SpannableStringBuilder style = new SpannableStringBuilder(content);
+            if (isGift) {
+                int bstart = content.indexOf("【");
+                style.setSpan(new ForegroundColorSpan(Color.RED), bstart, content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            }
+            viewHolder.tv_content.setText(style);
+            viewHolder.tv_content.setTextColor(ContextCompat.getColor(context, R.color.color_text_chat_item));
         }
-        viewHolder.tv_content.setText(content);
+
+
         return convertView;
     }
 

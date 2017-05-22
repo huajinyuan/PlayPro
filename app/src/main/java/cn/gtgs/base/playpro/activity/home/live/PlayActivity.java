@@ -723,7 +723,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void giftPost() {
-        EMMessage message = EMMessage.createTxtSendMessage("送了一个:【"+gift.getName()+"】", chatroomid);
+        EMMessage message = EMMessage.createTxtSendMessage("送了一个:【" + gift.getName() + "】", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setFrom(loginInfo.getMbPhone());
         message.setAttribute("Gift", gift.getId());
@@ -763,12 +763,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void showGifts(String from, String icon, Gift gift) {
 
 
-        if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
-        {
+        if (StringUtils.isNotEmpty(anchorItem.getAnGold())) {
             int gold = Integer.valueOf(anchorItem.getAnGold());
-            gold = gold +Integer.valueOf(gift.getCredits());
-            anchorItem.setAnGold(gold+"");
-                    mTvAnchorGold.setText(gold+"");//TODO 钻石
+            gold = gold + Integer.valueOf(gift.getCredits());
+            anchorItem.setAnGold(gold + "");
+            mTvAnchorGold.setText(gold + "");//TODO 钻石
         }
 
         linGiftSend.setVisibility(View.VISIBLE);
@@ -934,29 +933,24 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 }
             }
         });
-        if (!isMember)
-        {
-            if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
-            {
-                mTvAnchorGold.setText(anchorItem.getAnGold()+"");//TODO 钻石
+        if (!isMember) {
+            if (StringUtils.isNotEmpty(anchorItem.getAnGold())) {
+                mTvAnchorGold.setText(anchorItem.getAnGold() + "");//TODO 钻石
             }
 
-        }else
-        {
-            mTvGoldhz.setText(anchorItem.getMember().getMbGold()+"");
+        } else {
+            mTvGoldhz.setText(anchorItem.getMember().getMbGold() + "");
         }
 
-        if(StringUtils.isNotEmpty(anchorItem.getFaCount()))
-        {
+        if (StringUtils.isNotEmpty(anchorItem.getFaCount())) {
             mTvfock.setText(anchorItem.getFaCount());
             mTvFollow.setText(anchorItem.getFaCount());
         }
 
 
-
     }
 
-    @OnClick({R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+    @OnClick({R.id.tv_layout_content_follow, R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
             case R.id.bt_send:
@@ -989,7 +983,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 setgifts();
                 break;
             case R.id.lin_anchor_info_action_follow://关注
-                follow();
+                if (!isMember) {
+                    follow();
+                }
+                break;
+            case R.id.tv_layout_content_follow:
+                if (!isMember) {
+                    follow();
+                }
                 break;
             case R.id.frame_live_chat:
                 if (!isMember) {
@@ -1046,17 +1047,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 int a = ob.getInteger("data");
                                 ArrayList<String> gs = PApplication.getInstance().getmFList();
                                 if (a == 1) {
-                                    faCount = faCount+1;
+                                    faCount = faCount + 1;
                                     gs.add(anchorItem.getAnId());
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
                                 } else {
-                                    faCount = faCount-1;
+                                    faCount = faCount - 1;
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
                                     gs.remove(anchorItem.getAnId());
                                 }
                                 String str = JSON.toJSONString(gs);
                                 aCache.put(ACacheKey.CURRENT_FOLLOW, str);
-                                anchorItem.setFaCount(faCount+"");
+                                anchorItem.setFaCount(faCount + "");
                                 initviews();
                             }
                         }
@@ -1175,7 +1176,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         loadsomes();
                     }
                 });
-                final int count =getChatRoomInfoCount();
+                final int count = getChatRoomInfoCount();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1206,16 +1207,22 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTvCount.setText(count+ "");
+                mTvCount.setText(count + "");
             }
         });
-        F.e("=================聊天室人数"+count);
+        F.e("=================聊天室人数" + count);
         //TODO
     }
 
     public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
+        if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
+            EMMessage sysMsg = EMMessage.createTxtSendMessage("进来逛逛", chatroomid);
+            sysMsg.setChatType(EMMessage.ChatType.ChatRoom);
+            sysMsg.setFrom("-999");
+            msgList.add(sysMsg);
+        }
         adapter = new MessageChatroomAdapter(msgList, PlayActivity.this);
         listView.setAdapter(adapter);
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
@@ -1302,7 +1309,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mTvCount.setText(count+ "");
+                            mTvCount.setText(count + "");
                         }
                     });
                     if (map.containsKey("level")) {
@@ -1391,12 +1398,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     };
 
     public void doDanmu(String message) {
-        if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
-        {
+        if (StringUtils.isNotEmpty(anchorItem.getAnGold())) {
             int gold = Integer.valueOf(anchorItem.getAnGold());
-            gold = gold +2;
-            anchorItem.setAnGold(gold+"");
-            mTvAnchorGold.setText(gold+"");//TODO 钻石
+            gold = gold + 2;
+            anchorItem.setAnGold(gold + "");
+            mTvAnchorGold.setText(gold + "");//TODO 钻石
         }
 
 //        SpannableStringBuilder builder = new SpannableStringBuilder(message);
@@ -1551,11 +1557,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 HttpBase<Follow> bf = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
-                if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
-                    mTvSysToast.setVisibility(View.VISIBLE);
-                    mTvSysToast.setText(anchorItem.getSysMsg());
-
-                }
+//                if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
+//                    mTvSysToast.setVisibility(View.VISIBLE);
+//                    mTvSysToast.setText(anchorItem.getSysMsg());
+//
+//                }
 
                 if (StringUtils.isNotEmpty(anchorItem.getWordLimit())) {
                     int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
@@ -1565,20 +1571,16 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //                    mTvCount.setText(bf.getData().getFaCount());
 //                }
                 //TODO
-                if (StringUtils.isNotEmpty(bf.getData().getAnGold()))
-                {
-                    mTvAnchorGold.setText(bf.getData().getAnGold()+"");
+                if (StringUtils.isNotEmpty(bf.getData().getAnGold())) {
+                    mTvAnchorGold.setText(bf.getData().getAnGold() + "");
                 }
-                if (!isMember)
-                {
-                    if (StringUtils.isNotEmpty(anchorItem.getAnGold()))
-                    {
+                if (!isMember) {
+                    if (StringUtils.isNotEmpty(anchorItem.getAnGold())) {
                         int gold = Integer.valueOf(anchorItem.getAnGold());
-                        mTvGoldhz.setText(gold +"");
+                        mTvGoldhz.setText(gold + "");
                     }
                 }
-                if(StringUtils.isNotEmpty(anchorItem.getFaCount()))
-                {
+                if (StringUtils.isNotEmpty(anchorItem.getFaCount())) {
                     mTvfock.setText(anchorItem.getFaCount());
                     mTvFollow.setText(anchorItem.getFaCount());
                 }
@@ -1624,7 +1626,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public int getChatRoomInfoCount() {
         try {
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-            return chatRoom.getMemberCount()*3;
+            return chatRoom.getMemberCount() * 3;
         } catch (HyphenateException e) {
             e.printStackTrace();
         }

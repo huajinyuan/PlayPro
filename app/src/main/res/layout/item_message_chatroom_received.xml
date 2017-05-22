@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/timestamp"
@@ -13,31 +13,38 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/shape_rec_org"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorwhite"
+            android:background="@drawable/shape_rec_3"
+            android:drawableLeft="@mipmap/icon_hg48"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:textColor="@color/colorwhite"
+            android:text="Lv5"
             android:textSize="@dimen/sp_12" />
 
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
             android:layout_toRightOf="@id/tv_level"
             android:text="用户名:"
             android:textColor="@color/colorBlue"
-            android:textSize="15sp" />
+            android:textSize="@dimen/sp_12" />
+
 
         <cn.gtgs.base.playpro.widget.EmoticonsTextView
             android:id="@+id/tv_chatcontent"
@@ -45,10 +52,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/tv_username"
-            android:lineSpacingExtra="2dp"
             android:maxWidth="210.0dp"
             android:textColor="@color/color_text_chat_item"
-            android:textSize="15sp" />
+            android:textSize="@dimen/sp_12" />
 
         <TextView
             android:id="@+id/tv_userid"
@@ -57,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/tv_chatcontent" />
-    </RelativeLayout>
+    </LinearLayout>
+
 
 </LinearLayout>

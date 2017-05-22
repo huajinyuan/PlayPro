@@ -4,151 +4,153 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-            <com.pili.pldroid.player.widget.PLVideoView
-                android:id="@+id/vv_test"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+    <com.pili.pldroid.player.widget.PLVideoView
+        android:id="@+id/vv_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-            <ImageView
-                android:id="@+id/img_live_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@mipmap/living_bg_image" />
+    <ImageView
+        android:id="@+id/img_live_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/living_bg_image" />
 
-            <TextView
-                android:id="@+id/tv_play_level_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/tv_play_toast_sys"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/shape_level"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:textColor="@color/color_black_0D"
-                android:textSize="14sp"
-                android:visibility="gone" />
+    <TextView
+        android:id="@+id/tv_play_level_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_play_toast_sys"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/shape_level"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/color_black_0D"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tv_play_toast_sys"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/listView"
-                android:paddingBottom="8dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="8dp"
-                android:textColor="@color/warning_stroke_color"
-                android:visibility="gone" />
+    <TextView
+        android:id="@+id/tv_play_toast_sys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listView"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/warning_stroke_color"
+        android:visibility="gone" />
 
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="80dp"
-                android:background="@color/float_transparent"
-                android:divider="@null" />
-
-
-            <TextView
-                android:id="@+id/tv_likes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_margin="10dp"
-                android:background="@drawable/background_grey_trans"
-                android:padding="5dp"
-                android:textColor="@color/color_progress_end"
-                android:visibility="invisible" />
-
-            <include
-                android:id="@+id/lin_play_gift_send"
-                layout="@layout/layout_play_gift_lin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="gone" />
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:background="@color/float_transparent"
+        android:divider="@null" />
 
 
+    <TextView
+        android:id="@+id/tv_likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/background_grey_trans"
+        android:padding="5dp"
+        android:textColor="@color/color_progress_end"
+        android:visibility="invisible" />
 
-            <RelativeLayout
-                android:id="@+id/frame_live_menu"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_alignParentBottom="true">
-
-                <Button
-                    android:id="@+id/bt_live_chat"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/selector_button_live_chat" />
-
-                <Button
-                    android:id="@+id/bt_live_like"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/selector_button_live_like"
-                    android:onClick="bt_likes" />
-
-                <Button
-                    android:id="@+id/bt_live_gifts"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/bt_live_like"
-                    android:background="@drawable/selector_button_live_gifts" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/frame_live_chat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#88F1F1F1">
-
-                    <include
-                        layout="@layout/layout_input_bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+    <include
+        android:id="@+id/lin_play_gift_send"
+        layout="@layout/layout_play_gift_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lin_play_gift_zs"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/dp_80"
+        android:visibility="gone" />
 
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/vp_emoji"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:visibility="gone" />
-            </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/frame_live_menu"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true">
 
-            <include
-                android:id="@+id/lin_play_gift_panel_bottom"
-                layout="@layout/layout_play_giftcontent_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/bt_live_chat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/selector_button_live_chat" />
 
+        <Button
+            android:id="@+id/bt_live_like"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_button_live_like"
+            android:onClick="bt_likes" />
 
-            <include
-                android:id="@+id/layout_live_icon_content"
-                layout="@layout/layout_content_live_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dp_10" />
+        <Button
+            android:id="@+id/bt_live_gifts"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/bt_live_like"
+            android:background="@drawable/selector_button_live_gifts" />
+    </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/frame_live_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#88F1F1F1">
+
+            <include
+                layout="@layout/layout_input_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/lin_play_gift_panel_bottom"
+        layout="@layout/layout_play_giftcontent_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <include
+        android:id="@+id/layout_live_icon_content"
+        layout="@layout/layout_content_live_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10" />
+
+    <LinearLayout
+        android:id="@+id/lin_play_gift_zs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_live_icon_content"
@@ -171,69 +173,64 @@
             android:textColor="@color/colorBlue" />
 
     </LinearLayout>
-            <com.opendanmaku.DanmakuView
-                android:id="@+id/danmakuView"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:visibility="gone"
-                app:end_Y_offset="0.8"
-                app:max_row="4"
-                app:max_running_per_row="2"
-                app:pick_interval="1000"
-                app:show_debug="false"
-                app:start_Y_offset="0.2" />
 
-            <cn.gtgs.base.playpro.widget.PeriscopeLayout
-                android:id="@+id/periscope"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="70dp"
-                android:layout_marginTop="@dimen/dp_50" />
+    <com.opendanmaku.DanmakuView
+        android:id="@+id/danmakuView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        app:end_Y_offset="0.8"
+        app:max_row="4"
+        app:max_running_per_row="2"
+        app:pick_interval="1000"
+        app:show_debug="false"
+        app:start_Y_offset="0.2" />
 
-            <TextView
-                android:id="@+id/tv_play_toast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/background_green"
-                android:paddingBottom="8dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="8dp"
-                android:textColor="@color/colorwhite"
-                android:visibility="gone" />
+    <cn.gtgs.base.playpro.widget.PeriscopeLayout
+        android:id="@+id/periscope"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginTop="@dimen/dp_50" />
 
-
-            <RelativeLayout
-                android:id="@+id/rel_layout_bottom_dialog"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <RelativeLayout
-                    android:id="@+id/view_gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/layout_play_bottom_dialog" />
-
-                <include
-                    android:id="@+id/layout_play_bottom_dialog"
-                    layout="@layout/layout_dialog_play"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:visibility="invisible" />
-
-            </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_play_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_green"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/colorwhite"
+        android:visibility="gone" />
 
 
+    <RelativeLayout
+        android:id="@+id/rel_layout_bottom_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/view_gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout_play_bottom_dialog" />
 
+        <include
+            android:id="@+id/layout_play_bottom_dialog"
+            layout="@layout/layout_dialog_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
 
-
+    </RelativeLayout>
 
 
 </RelativeLayout>

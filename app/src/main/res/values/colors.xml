@@ -10,7 +10,7 @@
     <color name="colorred">#DB2F29</color>
     <color name="divider">#ffd2d2d2</color>
     <color name="color_text_gray_80">#808080</color>
-    <color name="color_trans_80">#80000000</color>
+    <color name="color_trans_80">#50000000</color>
     <color name="color_yellow_B1">#B1E427</color>
     <color name="color_background_gray">#f0f0f0</color>
     <color name="color_grey">#999</color>
@@ -48,4 +48,10 @@
     <!-- 菜单栏黑背景色 -->
     <color name="color_base_black_bg">#21292C</color>
     <color name="color_black">#212121</color>
+    <color name="color_level_1">#1ADA8A</color>
+    <color name="color_level_2">#F7994D</color>
+    <color name="color_level_3">#F53CB1</color>
+    <color name="color_level_4">#9292F8</color>
+    <color name="color_level_5">#9C48CA</color>
+
 </resources>
