@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.home;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.gt.okgo.model.HttpParams;
 import com.gt.okgo.request.PostRequest;
 
 import butterknife.OnClick;
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.center.CenterActivity;
 import cn.gtgs.base.playpro.activity.home.fragment.FragmentFollow;
@@ -64,6 +66,9 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
 
     @Override
     protected void initData() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            PApplication.getInstance().verifyStoragePermissions(this);
+        }
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_home_content, mRanking);

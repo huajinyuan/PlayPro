@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.Spannable;
@@ -30,6 +32,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -320,6 +323,9 @@ public class StreamingBaseActivity extends Activity implements
         }
         setRequestedOrientation(Config.SCREEN_ORIENTATION);
         setContentView(R.layout.activity_camera_streaming);
+        if (Build.VERSION.SDK_INT >= 23) {
+            PApplication.getInstance().verifyStoragePermissions(this);
+        }
 
         ButterKnife.bind(this);
         //----------------------------------------------------------以下为环信
@@ -1159,6 +1165,61 @@ public class StreamingBaseActivity extends Activity implements
 //        msgList = conversation.getAllMessages();
         adapter = new MessageChatroomAdapter(msgList, StreamingBaseActivity.this);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+
+                //TODO 发起禁言
+                EMMessage msg =adapter.getItem(position);
+                final List<String> members = new ArrayList<>();
+                members.add(msg.getFrom());
+                Map<String, Object> map = msg.ext();
+
+                final String user_name = (String) map.get("user_name");
+runOnUiThread(new Runnable() {
+    @Override
+    public void run() {
+        final AlertDialog mydialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(StreamingBaseActivity.this, R.style.DialogTransBackGround);
+        mydialog = builder.create();
+        mydialog.setCanceledOnTouchOutside(false);
+        View views = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+        TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
+        Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
+        Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
+        tv_content.setText("是否禁止 "+user_name+" 发言？");
+        bt_yes.setText("禁言");
+        mydialog.setCancelable(true);
+        mydialog.show();
+        mydialog.setContentView(views);
+        // dialog内部的点击事件
+        bt_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    EMClient.getInstance().chatroomManager().muteChatRoomMembers( chatroomid,  members,  999999999) ;
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+
+                mydialog.dismiss();
+            }
+        });
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mydialog.dismiss();
+            }
+        });
+    }
+});
+
+
+
+
+
+            }
+        });
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
         if (msgList.size() > 0)
             listView.setSelection(listView.getCount() - 1);
@@ -1723,7 +1784,7 @@ public class StreamingBaseActivity extends Activity implements
     public int getChatRoomInfoCount() {
         try {
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-            return chatRoom.getMemberCount();
+            return chatRoom.getMemberCount()*3;
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
@@ -1848,6 +1909,26 @@ public class StreamingBaseActivity extends Activity implements
         }
         patternString.replace(patternString.length() - 1, patternString.length(), ")");
         return Pattern.compile(patternString.toString());
+    }
+
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE","android.permission.RECORD_AUDIO" ,"android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE"};
+    public static void verifyStoragePermissions(Activity activity) {
+
+        try {
+            //检测是否有写的权限
+            int permission = ActivityCompat.checkSelfPermission(activity,
+                    "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，会弹出对话框
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

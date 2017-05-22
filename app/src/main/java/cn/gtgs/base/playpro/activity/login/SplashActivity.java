@@ -3,8 +3,9 @@ package cn.gtgs.base.playpro.activity.login;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,19 +16,17 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gt.okgo.OkGo;
-import com.gt.okgo.download.DownloadInfo;
-import com.gt.okgo.download.DownloadManager;
-import com.gt.okgo.download.DownloadService;
-import com.gt.okgo.listener.DownloadListener;
+import com.gt.okgo.callback.FileCallback;
 import com.gt.okgo.model.HttpParams;
-import com.gt.okgo.request.GetRequest;
+import com.gt.okgo.request.BaseRequest;
 import com.gt.okgo.request.PostRequest;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.HomeActivity;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
@@ -41,6 +40,7 @@ import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.ToastUtil;
+import okhttp3.Call;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -49,6 +49,7 @@ public class SplashActivity extends AppCompatActivity {
     Context context;
     RelativeLayout layout;
     private static final int sleepTime = 2000;
+    View mDialogTip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,12 @@ public class SplashActivity extends AppCompatActivity {
         //hide the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+        if (Build.VERSION.SDK_INT >= 23) {
+            PApplication.getInstance().verifyStoragePermissions(this);
+        }
         context = this;
         layout = (RelativeLayout) findViewById(R.id.activity_splash);
+        mDialogTip = findViewById(R.id.rel_splash_dialog);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 1.0f);
         alphaAnimation.setDuration(2000);
         layout.startAnimation(alphaAnimation);
@@ -66,23 +71,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation arg0) {
                 F.e("启动页面动画执行完毕...");
-//                load();
-                ACache aCache = ACache.get(SplashActivity.this);
-                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-                Intent intent;
-                if (null != info) {
-                    SplashActivity.this.finish();
-                    overridePendingTransition(0, 0);
-                    intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    SplashActivity.this.finish();
-                } else {
-                    overridePendingTransition(0, 0);
-//                    intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    SplashActivity.this.finish();
-                }
+                chackVersion();
             }
 
             @Override
@@ -98,7 +87,9 @@ public class SplashActivity extends AppCompatActivity {
         });
 
     }
-
+    AlertDialog mydialog;
+    Button bt_yes ;
+    int version = 1;
     public void chackVersion() {
         HttpParams parmas = new HttpParams();
         parmas.put("appType", "1");
@@ -118,26 +109,49 @@ public class SplashActivity extends AppCompatActivity {
             public void onNext(Response response) {
                 BaseList<Appinfo> bs = Parsing.getInstance().ResponseToList3(response, Appinfo.class);
                 ArrayList<Appinfo> apps = (ArrayList<Appinfo>) bs.getDataList();
-                Appinfo appinfo = apps.get(0);
-                int version = 1;
+                final Appinfo appinfo = apps.get(0);
+
                 if (null != appinfo) {
-                    version = Integer.valueOf(appinfo.getAppVersion());
+                    String v = appinfo.getAppVersion();
+                    String[] s = v.split("\\.");
+                    version = Integer.valueOf(s[s.length-1]);
+
+                }
+                else
+                {
+                    //TODO
+                                    ACache aCache = ACache.get(SplashActivity.this);
+                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                Intent intent;
+                if (null != info) {
+                    SplashActivity.this.finish();
+                    overridePendingTransition(0, 0);
+                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                } else {
+                    overridePendingTransition(0, 0);
+//                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }
                 }
                 int i = AppUtil.getVersionCode(SplashActivity.this);
-                if (version > i) {
+                if (version >i) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            final AlertDialog mydialog;
                             AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this, R.style.DialogTransBackGround);
                             mydialog = builder.create();
                             View view = LayoutInflater.from(SplashActivity.this).inflate(R.layout.item_dialog_releaseagent2, null);
                             TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
                             Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
-                            Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
-                            tv_content.setText("有新版本更新，是否更新？");
+                             bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
+                            tv_content.setText("有新版本更新（1.0."+version+"），是否更新？");
                             bt_yes.setText("更新");
                             mydialog.setCancelable(true);
+                            mydialog.setCanceledOnTouchOutside(false);
                             mydialog.show();
                             mydialog.setContentView(view);
 
@@ -146,7 +160,17 @@ public class SplashActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     //TODO 开始下载
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mDialogTip.setVisibility(View.VISIBLE);
+                                            bt_yes.setClickable(false);
+                                            mydialog.dismiss();
+                                        }
+                                    });
 
+
+                                    load(Config.BASE+appinfo.getAppFile());
 
                                 }
                             });
@@ -158,11 +182,26 @@ public class SplashActivity extends AppCompatActivity {
                                 }
                             });
 
-
                         }
                     });
 
-
+                }
+                else{
+                                    ACache aCache = ACache.get(SplashActivity.this);
+                Follow info = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+                Intent intent;
+                if (null != info) {
+                    SplashActivity.this.finish();
+                    overridePendingTransition(0, 0);
+                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                } else {
+                    overridePendingTransition(0, 0);
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }
                 }
 
 
@@ -170,40 +209,66 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private DownloadManager downloadManager;
 
-    public void load() {
+    public void load(final String Path) {
+        Thread thread=new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // TODO Auto-generated method stub
+                OkGo.get(Path)//
+                        .tag(this)//
+                        .execute(new FileCallback("living.apk") {
+                            @Override
+                            public void onBefore(BaseRequest request) {
+                            }
 
-//    public void load(Appinfo appinfo) {
-        DownloadInfo downloadInfo = new DownloadInfo();
-        downloadManager = DownloadService.getDownloadManager();
-        downloadManager.setTargetFolder(Environment.getExternalStorageDirectory().getAbsolutePath() + "/jujing/");
-        GetRequest request = OkGo.get("https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk");
-//        GetRequest request = OkGo.get(Config.BASE + appinfo.getAppFile());
-        DownloadListener downloadListener = new MyDownloadListener();
-        downloadManager.addTask("https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk", request, downloadListener);
-//        downloadManager.addTask(Config.BASE + appinfo.getAppFile(), request, downloadListener);
+                            @Override
+                            public void onSuccess(final File file, Call call, Response response) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        bt_yes.setClickable(true);
+                                        mDialogTip.setVisibility(View.GONE);
+//
+                                        AppUtil.installAPK(SplashActivity.this,file.getPath());
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void downloadProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
+                                System.out.println("downloadProgress -- " + totalSize + "  " + currentSize + "  " + progress + "  " + networkSpeed);
+                            }
+
+                            @Override
+                            public void onError(Call call, @Nullable Response response, @Nullable Exception e) {
+                                super.onError(call, response, e);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mDialogTip.setVisibility(View.GONE);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                            mydialog.show();
+                                            bt_yes.setClickable(true);
+
+                                            }
+                                        });
+                                        bt_yes.setClickable(true);
+                                        ToastUtil.showToast("下载出错",SplashActivity.this);
+                                    }
+                                });
+
+                            }
+                        });
+            }
+        });
+        thread.start();
+
     }
 
-    private class MyDownloadListener extends DownloadListener {
-
-        @Override
-        public void onProgress(DownloadInfo downloadInfo) {
-            if (getUserTag() == null) return;
-//            ViewHolder holder = (ViewHolder) getUserTag();
-//            holder.refresh();  //这里不能使用传递进来的 DownloadInfo，否者会出现条目错乱的问题
-        }
-
-        @Override
-        public void onFinish(DownloadInfo downloadInfo) {
-            Toast.makeText(SplashActivity.this, "下载完成:" + downloadInfo.getTargetPath(), Toast.LENGTH_SHORT).show();
-
-        }
-
-        @Override
-        public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
-            if (errorMsg != null)
-                Toast.makeText(SplashActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-        }
-    }
 }

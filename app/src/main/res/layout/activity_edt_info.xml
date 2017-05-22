@@ -37,6 +37,7 @@
                 android:layout_marginLeft="8dp"
                 android:background="@null"
                 android:ems="10"
+                android:maxLength="4"
                 android:inputType="textPersonName"
                 android:hint="请输入昵称"
                 />

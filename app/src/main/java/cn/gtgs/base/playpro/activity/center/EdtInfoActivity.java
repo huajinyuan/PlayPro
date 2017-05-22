@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -30,6 +31,7 @@ import com.gt.okgo.upload.UploadManager;
 import java.io.File;
 
 import butterknife.OnClick;
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.center.presenter.EdtInfoPresenter;
 import cn.gtgs.base.playpro.activity.center.view.EdtInfoDelegate;
@@ -56,6 +58,9 @@ public class EdtInfoActivity extends ActivityPresenter<EdtInfoDelegate> {
 
     @Override
     protected void initData() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            PApplication.getInstance().verifyStoragePermissions(this);
+        }
         viewDelegate.init();
         uploadManager = UploadManager.getInstance();
         avatarPath = getFilesDir().getPath() + "/icon.png";

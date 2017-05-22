@@ -78,6 +78,10 @@ public class MessageChatroomAdapter extends BaseAdapter {
         Map<String, Object> map = message.ext();
         String content= txtBody.getMessage();
         if (map != null) {
+            if (null!=map.get("user_name"))
+            {
+                viewHolder.tv_username.setText((String)map.get("user_name"));
+            }
             if (map.get("level") != null) {
                 viewHolder.tv_level.setVisibility(View.VISIBLE);
                 viewHolder.tv_level.setText("lv" + map.get("level") + "");

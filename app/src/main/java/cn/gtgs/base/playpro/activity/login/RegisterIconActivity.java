@@ -1,14 +1,18 @@
 package cn.gtgs.base.playpro.activity.login;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -68,18 +72,29 @@ public class RegisterIconActivity extends AppCompatActivity {
     String avatarPath;
     String urlPath;
     private UploadManager uploadManager;
+    @BindView(R.id.rel_register_icon)
+    View mView;
+    /**
+     * Id to identify a camera permission request.
+     */
+    private static final int REQUEST_CAMERA = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
         setContentView(R.layout.activity_register_icon);
+
         instance = this;
         ButterKnife.bind(this);
         uploadManager = UploadManager.getInstance();
         context = this;
         avatarPath = getFilesDir().getPath() + "/icon.png";
         mTitle.setText("信息完善");
+        if (Build.VERSION.SDK_INT >= 23) {
+            PApplication.getInstance().verifyStoragePermissions(this);
+        }
+
     }
 
     @OnClick(R.id.iv_register_icon)
@@ -142,8 +157,24 @@ public class RegisterIconActivity extends AppCompatActivity {
         view.findViewById(R.id.bt_dialog_capture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ActivityCompat.checkSelfPermission(RegisterIconActivity.this, Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            PApplication.getInstance().verifyStoragePermissions(RegisterIconActivity.this);
+                        }
+
+                    } else {
+
+                        takePicture();
+                    }
+
+                } else {
+                    takePicture();
+                }
+
                 mydialog.dismiss();
-                takePicture();
+
             }
         });
         view.findViewById(R.id.bt_dialog_cancel).setOnClickListener(new View.OnClickListener() {
@@ -259,5 +290,6 @@ public class RegisterIconActivity extends AppCompatActivity {
             return response.body().string();
         }
     }
+
 
 }

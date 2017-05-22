@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rel_register_icon"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:background="@null"
+            android:maxLength="4"
             android:drawableBottom="@drawable/shape_login_et"
             android:drawablePadding="10dp"
             android:gravity="center"

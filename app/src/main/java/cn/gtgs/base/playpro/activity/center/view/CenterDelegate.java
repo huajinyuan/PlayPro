@@ -52,6 +52,8 @@ public class CenterDelegate extends AppDelegate {
     TextView mTvisanditAnchor;
     @BindView(R.id.tv_center_zs)
     TextView mTvzs;
+    @BindView(R.id.tv_center_share)
+    TextView mTvshare;
     UserInfo info;
 
     @Override
@@ -96,6 +98,10 @@ public class CenterDelegate extends AppDelegate {
         }
     }
 
+    public String getShareStr()
+    {
+        return  mTvshare.getText().toString().trim();
+    }
     public SwipeRefreshLayout getmSwp() {
         return mSwp;
     }

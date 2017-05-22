@@ -337,7 +337,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
             EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatroomid);
             //如果是群聊，设置chattype，默认是单聊
-            message.setFrom(loginInfo.getMbNickname());
+            message.setFrom(loginInfo.getMbPhone());
             message.setChatType(EMMessage.ChatType.ChatRoom);
             message.setAttribute("user_name", loginInfo.getMbNickname());
             message.setAttribute("level", loginInfo.getMbLevel());//
@@ -367,7 +367,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         v.setClickable(false);
         EMMessage message = EMMessage.createTxtSendMessage("[key]" + "DianZan", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
-        message.setFrom(loginInfo.getMbNickname());
+        message.setFrom(loginInfo.getMbPhone());
         message.setAttribute("user_name", loginInfo.getMbNickname());
         message.setAttribute("DianZan", "DianZan");
         message.setAttribute("level", loginInfo.getMbLevel());
@@ -725,7 +725,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void giftPost() {
         EMMessage message = EMMessage.createTxtSendMessage("送了一个:【"+gift.getName()+"】", chatroomid);
         message.setChatType(EMMessage.ChatType.ChatRoom);
-        message.setFrom(loginInfo.getMbNickname());
+        message.setFrom(loginInfo.getMbPhone());
         message.setAttribute("Gift", gift.getId());
         message.setAttribute("level", loginInfo.getMbLevel());
         message.setAttribute("user_name", loginInfo.getMbNickname());
@@ -1194,7 +1194,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void sendJoinMSG() {
         //TODO 发送加入消息
         EMMessage message = EMMessage.createTxtSendMessage("进来逛逛", chatroomid);
-        message.setFrom(loginInfo.getMbNickname());
+        message.setFrom(loginInfo.getMbPhone());
         message.setChatType(EMMessage.ChatType.ChatRoom);
         message.setAttribute("JOIN_CHATROOM", chatroomid);
         message.setAttribute("user_name", loginInfo.getMbNickname());
@@ -1266,6 +1266,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     });
 
                 } else if (map.containsKey("DianZan")) {
+
+                    message_from = (String) map.get("user_name");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1622,7 +1624,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public int getChatRoomInfoCount() {
         try {
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-            return chatRoom.getMemberCount();
+            return chatRoom.getMemberCount()*3;
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
