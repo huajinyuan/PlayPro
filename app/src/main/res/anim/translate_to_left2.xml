@@ -6,6 +6,6 @@
         android:fromXDelta="0"
         android:fromYDelta="0"
         android:repeatCount="infinite"
-        android:toXDelta="-2000"
+        android:toXDelta="-1500"
         android:toYDelta="0" />
 </set>
