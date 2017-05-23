@@ -21,10 +21,12 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -203,6 +205,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvFollow;
     @BindView(R.id.rel_layout_bottom_dialog)
     View rel_layout_bottom_dialog;
+    @BindView(R.id.rel_play_content)
+    RelativeLayout mRelContent;
     ACache aCache;
 
     @Override
@@ -248,6 +252,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             mTvCancel.setVisibility(View.GONE);
         }
 
+
     }
 
     public void doPlay() {
@@ -285,6 +290,46 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         vv_test.setAVOptions(options);
         vv_test.setVideoPath(MYURL);
         vv_test.start();
+
+    }
+
+    float mW = 0;
+
+    //TODO 滑动监听
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mW = event.getX();
+//                        mH = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+
+                float moveX = mW - event.getX();
+
+                // 左滑
+                if (moveX > 150 && moveX < 5000) {
+                    // mDesignClothesBackground
+                    // .setBackgroundResource(idClothesBackground[0]);
+                    if (!isMember) {
+                        mRelContent.setVisibility(View.VISIBLE);
+                    }
+                }
+                // 右滑
+                else if (moveX < -150 && moveX > -5000) {
+                    // mDesignClothesBackground
+                    // .setBackgroundResource(idClothesBackground[1]);
+                    if (!isMember) {
+                        mRelContent.setVisibility(View.GONE);
+                    }
+                }
+
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
 
@@ -319,8 +364,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     protected void onDestroy() {
         super.onDestroy();
         //-----------------------------------以下为环信
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+//        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
         if (null != timer2) {
             timer2.cancel();
         }
@@ -396,13 +441,32 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             public void onMemberJoined(String roomId, String participant) {
                 getCountOnline();
 
-                final int count = getChatRoomInfoCount();
-                runOnUiThread(new Runnable() {
+//                final int count = getChatRoomInfoCount();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mTvCount.setText(count + "");
+//                    }
+//                });
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mTvCount.setText(count + "");
+                        try {
+                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+//            return chatRoom.getMemberCount() * 3;
+                            final int count = chatRoom.getMemberCount() * 3;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mTvCount.setText(count + "");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                     }
-                });
+                }).start();
+
 //TODO 成员加入聊天室
 //                EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
 //                message.setChatType(EMMessage.ChatType.ChatRoom);
@@ -912,25 +976,45 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             }
         });
         et_content.addTextChangedListener(new TextWatcher() {
-            String digits = "0123456789";
+//            String digits = "0123456789";
+
+            String temp = "";
+            boolean istrue = true;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                temp = s.toString();
+                istrue = true;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String str = s.toString();
+                for (int i = str.length() - 1; i >= 0; i--) {
+                    if (!isEmojiCharacter(str.charAt(i))) {
+                        if (!StringUtils.isChinese(str.charAt(i)) || str.charAt(i) == '夜' || str.charAt(i) == '狼') {
+                            istrue = false;
+                        }
+                    }
+                }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = s.toString();
-                for (int i = str.length() - 1; i >= 0; i--) {
-                    if (digits.indexOf(str.charAt(i)) > 0) {
-                        s.delete(i, i + 1);
-                    }
+
+                if (!istrue) {
+                    s.clear();
+//                    s.append(temp);
                 }
+//                String str = s.toString();
+//                for (int i = str.length() - 1; i >= 0; i--) {
+//                    if (!isEmojiCharacter(str.charAt(i))) {
+//                        if (!StringUtils.isChinese(str.charAt(i)) || str.charAt(i) == '夜' || str.charAt(i) == '狼') {
+//                            s.delete(i, i + 1);
+//                        }
+//                    }
+//                }
             }
         });
         if (!isMember) {
@@ -946,8 +1030,25 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             mTvfock.setText(anchorItem.getFaCount());
             mTvFollow.setText(anchorItem.getFaCount());
         }
+        ImageView img = (ImageView) findViewById(R.id.img_play_set_anim);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+            }
+        });
+        Animation translateAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_to_left);
+        img.setAnimation(translateAnimation);
+        img.startAnimation(translateAnimation);
+        Animation translateAnimation2 = AnimationUtils.loadAnimation(this, R.anim.translate_to_left2);
+        TextView t = (TextView) findViewById(R.id.tv_play_pmd);
+        t.setAnimation(translateAnimation2);
+        t.startAnimation(translateAnimation2);
 
+    }
 
+    private static boolean isEmojiCharacter(char codePoint) {
+        return !((codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA) || (codePoint == 0xD) || ((codePoint >= 0x20) && codePoint <= 0xD7FF)) || ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) || ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF));
     }
 
     @OnClick({R.id.tv_layout_content_follow, R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
@@ -1006,7 +1107,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 setsendgift();
                 break;
             case R.id.bt_live_booking_tochat:
-                settochat();
+//                settochat();
                 break;
             case R.id.layout_live_icon_content:
                 contentAction();
@@ -1043,7 +1144,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             int i = ob.getIntValue("code");
                             int faCount = Integer.valueOf(anchorItem.getFaCount());
                             if (i == 1) {
-
+                                ToastUtil.showToast("您已成功关注该主播", PlayActivity.this);
                                 int a = ob.getInteger("data");
                                 ArrayList<String> gs = PApplication.getInstance().getmFList();
                                 if (a == 1) {
@@ -1051,6 +1152,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                     gs.add(anchorItem.getAnId());
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
                                 } else {
+                                    ToastUtil.showToast("您已成功取消关注", PlayActivity.this);
                                     faCount = faCount - 1;
                                     mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
                                     gs.remove(anchorItem.getAnId());
@@ -1058,7 +1160,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 String str = JSON.toJSONString(gs);
                                 aCache.put(ACacheKey.CURRENT_FOLLOW, str);
                                 anchorItem.setFaCount(faCount + "");
-                                initviews();
+//                                initviews();
                             }
                         }
                     } catch (Exception e) {
@@ -1176,13 +1278,32 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         loadsomes();
                     }
                 });
-                final int count = getChatRoomInfoCount();
-                runOnUiThread(new Runnable() {
+//                final int count = getChatRoomInfoCount();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mTvCount.setText(count + "");
+//                    }
+//                });
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mTvCount.setText(count + "");
+                        try {
+                            EMClient.getInstance().chatroomManager().addChatRoomAdmin(chatroomid, "13506075307");
+                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                            final int count = chatRoom.getMemberCount() * 3;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mTvCount.setText(count + "");
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                     }
-                });
+                }).start();
             }
 
             @Override
@@ -1203,26 +1324,127 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         //发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
 
-        final int count = getChatRoomInfoCount();
-        runOnUiThread(new Runnable() {
+//        final int count = getChatRoomInfoCount();
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mTvCount.setText(count + "");
+//            }
+//        });
+//        F.e("=================聊天室人数" + count);
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                mTvCount.setText(count + "");
+                try {
+                    EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+//            return chatRoom.getMemberCount() * 3;
+                    final int count = chatRoom.getMemberCount() * 3;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvCount.setText(count + "");
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
             }
-        });
-        F.e("=================聊天室人数" + count);
+        }).start();
         //TODO
     }
 
     public void loadsomes() {
         Log.e("dsz", "start loadsomes..");
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
-        if (StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
-            EMMessage sysMsg = EMMessage.createTxtSendMessage("进来逛逛", chatroomid);
+        if (msgList.isEmpty() && StringUtils.isNotEmpty(anchorItem.getSysMsg())) {
+            EMMessage sysMsg = EMMessage.createTxtSendMessage(anchorItem.getSysMsg(), chatroomid);
             sysMsg.setChatType(EMMessage.ChatType.ChatRoom);
             sysMsg.setFrom("-999");
             msgList.add(sysMsg);
         }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EMMessage msg = msgList.get(position);
+                if (msg.getFrom().equals("-999")) {
+                    return;
+                }
+                final List<String> members = new ArrayList<>();
+                members.add(msg.getFrom());
+                Map<String, Object> map = msg.ext();
+                final String user_name = (String) map.get("user_name");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                            if (chatRoom.getAdminList().contains(loginInfo.getMbPhone())) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final AlertDialog mydialog;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
+                                        mydialog = builder.create();
+                                        mydialog.setCanceledOnTouchOutside(false);
+                                        View views = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                                        TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
+                                        Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
+                                        Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
+                                        tv_content.setText("是否禁止 " + user_name + " 发言，或提出直播间？");
+                                        bt_yes.setText("禁言");
+                                        bt_cancel.setText("踢出");
+                                        mydialog.setCancelable(true);
+                                        mydialog.show();
+                                        mydialog.setContentView(views);
+                                        // dialog内部的点击事件
+                                        bt_yes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                new Thread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                                                            F.e("聊天室聊天室创建者" + chatRoom.getOwner());
+                                                            EMClient.getInstance().chatroomManager().muteChatRoomMembers(chatroomid, members, 2147483647);
+                                                        } catch (HyphenateException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }).start();
+
+
+                                                mydialog.dismiss();
+                                            }
+                                        });
+                                        bt_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                new Thread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+                                                        } catch (HyphenateException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }).start();
+
+
+                                                mydialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
         adapter = new MessageChatroomAdapter(msgList, PlayActivity.this);
         listView.setAdapter(adapter);
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
@@ -1305,13 +1527,31 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     message_from = (String) map.get("user_name");
 //                    int count = Integer.valueOf(anchorItem.getFaCount()) + 1;
 //                    anchorItem.setFaCount(getChatRoomInfoCount() + "");
-                    final int count = getChatRoomInfoCount();
-                    runOnUiThread(new Runnable() {
+//                    final int count = getChatRoomInfoCount();
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mTvCount.setText(count + "");
+//                        }
+//                    });
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            mTvCount.setText(count + "");
+                            try {
+                                EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+//            return chatRoom.getMemberCount() * 3;
+                                final int count = chatRoom.getMemberCount() * 3;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mTvCount.setText(count + "");
+                                    }
+                                });
+                            } catch (HyphenateException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    });
+                    }).start();
                     if (map.containsKey("level")) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -1473,6 +1713,31 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         public void onTick(long millisUntilFinished) {
 //            periscopeLayout.addHeart();
             sendGift2(sum, false);
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+////            return chatRoom.getMemberCount() * 3;
+//                        final int count = chatRoom.getMemberCount();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //TODO
+//                                int gold = Integer.valueOf(anchorItem.getAnGold());
+//                                gold = gold + Integer.valueOf(sum) * (count - 1);
+//                                anchorItem.setAnGold(gold + "");
+//                                mTvAnchorGold.setText(gold + "");
+//
+////                                mTvCount.setText(count + "");
+//                            }
+//                        });
+//                    } catch (HyphenateException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }).start();
+
         }
 
         //倒计时结束时做的操作↓↓
@@ -1623,14 +1888,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         return Pattern.compile(patternString.toString());
     }
 
-    public int getChatRoomInfoCount() {
+    public void getChatRoomInfoCount() {
         try {
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-            return chatRoom.getMemberCount() * 3;
+//            return chatRoom.getMemberCount() * 3;
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
-        return 0;
+//        return 0;
     }
 
     AlertDialog mydialog;
@@ -1638,12 +1903,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     public void showShoufeiDialog(final int num) {
 
         View view = null;
-        if (null == mydialog) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTransBackGround);
-            mydialog = builder.create();
-            mydialog.setCanceledOnTouchOutside(false);
-            view = LayoutInflater.from(this).inflate(R.layout.item_dialog_releaseagent2, null);
-        }
+//        if (null == mydialog) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTransBackGround);
+        mydialog = builder.create();
+        mydialog.setCanceledOnTouchOutside(false);
+        view = LayoutInflater.from(this).inflate(R.layout.item_dialog_releaseagent2, null);
+//        }
         TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
         Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
         Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);

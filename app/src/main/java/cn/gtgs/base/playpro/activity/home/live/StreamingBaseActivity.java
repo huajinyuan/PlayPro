@@ -25,6 +25,7 @@ import android.text.SpannableString;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -117,6 +118,7 @@ import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
 import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import cn.gtgs.base.playpro.widget.PeriscopeLayout;
 import cn.gtgs.base.playpro.widget.RotateLayout;
 import cn.gtgs.base.playpro.widget.WheelView;
@@ -203,7 +205,7 @@ public class StreamingBaseActivity extends Activity implements
 
     protected String mLogContent = "\n";
 
-    private View mRootView;
+    private RelativeLayout mRootView;
 
     protected MediaStreamingManager mMediaStreamingManager;
     protected CameraStreamingSetting mCameraStreamingSetting;
@@ -231,6 +233,7 @@ public class StreamingBaseActivity extends Activity implements
     DanmakuView mDanmakuView;
     @BindView(R.id.tv_play_toast_sys)
     TextView mTvSysToast;
+    private GestureDetector gestureDetector;
 
     protected Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -308,6 +311,8 @@ public class StreamingBaseActivity extends Activity implements
         }
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
+
+        gestureDetector = new GestureDetector(this, onGestureListener);
         FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         aCache = ACache.get(this);
         mF = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
@@ -769,14 +774,15 @@ public class StreamingBaseActivity extends Activity implements
     }
 
     private ArrayList<String> PLANETS = new ArrayList<>();
+    private float mW;
+
 
     private void initUIs() {
-        mRootView = findViewById(R.id.content);
+        mRootView = (RelativeLayout) findViewById(R.id.content);
         mRootView.addOnLayoutChangeListener(this);
         for (int i = 5; i <= 25; i++) {
             PLANETS.add(i + "");
         }
-
         initDialogSettings();
         iv_live_option = (ImageView) findViewById(R.id.iv_live_option);
         mSatusTextView = (TextView) findViewById(R.id.streamingStatus);
@@ -850,19 +856,20 @@ public class StreamingBaseActivity extends Activity implements
                             public void onClick(DialogInterface dialog, int which) {
                                 String s = wv.getSeletedItem();
                                 Shoufei(s);
-                                Usercount = getChatRoomInfoCount();
+//                                Usercount = getChatRoomInfoCount();
                                 Updatestatus("3", Integer.valueOf(s));
-                                if (temp2) {
-                                    timer2 = new MyTimer2(999999999, 60000);
-                                    timer2.start();
-                                    temp2 = false;
-                                } else {
-                                    timer2.cancel();
-                                    timer2 = null;
-                                    timer2 = new MyTimer2(999999999, 60000);
-                                    timer2.start();
-                                    temp2 = false;
-                                }
+//                                if (null != timer2) {
+//                                    timer2.cancel();
+//                                    timer2 = null;
+//                                    temp2 = true;
+//                                    timer2 = new MyTimer2(999999999, 60000);
+//                                    timer2.start();
+//                                    temp2 = false;
+//                                } else {
+//                                    timer2 = new MyTimer2(999999999, 60000);
+//                                    timer2.start();
+//                                    temp2 = false;
+//                                }
 
                             }
                         })
@@ -873,38 +880,38 @@ public class StreamingBaseActivity extends Activity implements
 
         });
 
-        if (StringUtils.isNotEmpty(mF.getSysMsg())) {
-            mTvSysToast.setVisibility(View.VISIBLE);
-            mTvSysToast.setText(mF.getSysMsg());
-//            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
-//            mTvSysToast.startAnimation(a);
-//            a.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (mTvSysToast.getVisibility() == View.VISIBLE) {
-//                                F.e("---------------------------------mTvGiftCount GONE");
-//                                mTvSysToast.clearAnimation();
-//                                mTvSysToast.setVisibility(View.GONE);
-//                            }
-//                        }
-//                    });
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//
-//                }
-//            });
-        }
+//        if (StringUtils.isNotEmpty(mF.getSysMsg())) {
+//            mTvSysToast.setVisibility(View.VISIBLE);
+//            mTvSysToast.setText(mF.getSysMsg());
+////            Animation a = AnimationUtils.loadAnimation(this, R.anim.scalebig2);
+////            mTvSysToast.startAnimation(a);
+////            a.setAnimationListener(new Animation.AnimationListener() {
+////                @Override
+////                public void onAnimationStart(Animation animation) {
+////
+////                }
+////
+////                @Override
+////                public void onAnimationEnd(Animation animation) {
+////                    runOnUiThread(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            if (mTvSysToast.getVisibility() == View.VISIBLE) {
+////                                F.e("---------------------------------mTvGiftCount GONE");
+////                                mTvSysToast.clearAnimation();
+////                                mTvSysToast.setVisibility(View.GONE);
+////                            }
+////                        }
+////                    });
+////
+////                }
+////
+////                @Override
+////                public void onAnimationRepeat(Animation animation) {
+////
+////                }
+////            });
+//        }
         mTvGoldCount.setText(mF.getAnGold() + "");
 
     }
@@ -1163,6 +1170,12 @@ public class StreamingBaseActivity extends Activity implements
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
 //        conversation = EMClient.getInstance().chatManager().getConversation(chatroomid, EMConversation.EMConversationType.ChatRoom ,true);//chatroom:226122948862280132
 //        msgList = conversation.getAllMessages();
+        if (msgList.isEmpty()&&StringUtils.isNotEmpty(mF.getSysMsg())) {
+            EMMessage sysMsg = EMMessage.createTxtSendMessage(mF.getSysMsg(), chatroomid);
+            sysMsg.setChatType(EMMessage.ChatType.ChatRoom);
+            sysMsg.setFrom("-999");
+            msgList.add(sysMsg);
+        }
         adapter = new MessageChatroomAdapter(msgList, StreamingBaseActivity.this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1170,53 +1183,73 @@ public class StreamingBaseActivity extends Activity implements
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 
                 //TODO 发起禁言
-                EMMessage msg =adapter.getItem(position);
+                EMMessage msg = adapter.getItem(position);
+                if (msg.getFrom().equals("-999")) {
+                    return;
+                }
                 final List<String> members = new ArrayList<>();
                 members.add(msg.getFrom());
                 Map<String, Object> map = msg.ext();
 
                 final String user_name = (String) map.get("user_name");
-runOnUiThread(new Runnable() {
-    @Override
-    public void run() {
-        final AlertDialog mydialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(StreamingBaseActivity.this, R.style.DialogTransBackGround);
-        mydialog = builder.create();
-        mydialog.setCanceledOnTouchOutside(false);
-        View views = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
-        TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
-        Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
-        Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
-        tv_content.setText("是否禁止 "+user_name+" 发言？");
-        bt_yes.setText("禁言");
-        mydialog.setCancelable(true);
-        mydialog.show();
-        mydialog.setContentView(views);
-        // dialog内部的点击事件
-        bt_yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    EMClient.getInstance().chatroomManager().muteChatRoomMembers( chatroomid,  members,  999999999) ;
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-
-                mydialog.dismiss();
-            }
-        });
-        bt_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mydialog.dismiss();
-            }
-        });
-    }
-});
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final AlertDialog mydialog;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(StreamingBaseActivity.this, R.style.DialogTransBackGround);
+                        mydialog = builder.create();
+                        mydialog.setCanceledOnTouchOutside(false);
+                        View views = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                        TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
+                        Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
+                        Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
+                        tv_content.setText("是否禁止 " + user_name + " 发言，或提出直播间？");
+                        bt_yes.setText("禁言");
+                        bt_cancel.setText("踢出");
+                        mydialog.setCancelable(true);
+                        mydialog.show();
+                        mydialog.setContentView(views);
+                        // dialog内部的点击事件
+                        bt_yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                                            F.e("聊天室聊天室创建者" + chatRoom.getOwner());
+                                            EMClient.getInstance().chatroomManager().muteChatRoomMembers(chatroomid, members, 2147483647);
+                                        } catch (HyphenateException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
 
 
+                                mydialog.dismiss();
+                            }
+                        });
+                        bt_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+                                        } catch (HyphenateException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
 
 
+                                mydialog.dismiss();
+                            }
+                        });
+                    }
+                });
 
             }
         });
@@ -1379,7 +1412,24 @@ runOnUiThread(new Runnable() {
                 } else if (map.containsKey("JOIN_CHATROOM")) {
                     //TODO 新人加入聊天室消息
                     message_from = (String) map.get("user_name");
-                    mF.setFaCount(getChatRoomInfoCount() + "");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                final EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mF.setFaCount(chatRoom.getMemberCount() * 3 + "");
+                                    }
+                                });
+//                    return chatRoom.getMemberCount() * 3;
+                            } catch (HyphenateException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+//                    mF.setFaCount(getChatRoomInfoCount() + "");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1781,51 +1831,84 @@ runOnUiThread(new Runnable() {
         }
     }
 
-    public int getChatRoomInfoCount() {
-        try {
-            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-            return chatRoom.getMemberCount()*3;
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    private MyTimer2 timer2;
-    private boolean temp2 = true;
-
-    private class MyTimer2 extends CountDownTimer {
-        private static final String TAG = "MyTimer";
-
-        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
-        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
-        public MyTimer2(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        //每过你规定的时间间隔做的操作
-        @Override
-        public void onTick(long millisUntilFinished) {
-            if (System.currentTimeMillis() - times > 5 * 60000) {
-                times = System.currentTimeMillis();
-                doRefresh();
-            } else {
-                int gold = Integer.valueOf(mF.getAnGold());
-                int addGold = mPrice * Usercount;
-                int g = gold + addGold;
-                mF.setAnGold(g + "");
-//                userInfo.setMbGold(gold + addGold);
-                mTvGoldCount.setText(g + "");
+    public void getChatRoomInfoCount() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+//                    return chatRoom.getMemberCount() * 3;
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
             }
-            Usercount = getChatRoomInfoCount();
-        }
-
-        //倒计时结束时做的操作↓↓
-        @Override
-        public void onFinish() {
-            temp = true;
-        }
+        }).start();
     }
+
+//    private MyTimer2 timer2;
+//    private boolean temp2 = true;
+//
+//    private class MyTimer2 extends CountDownTimer {
+//        private static final String TAG = "MyTimer";
+//
+//        //millisInFuture为你设置的此次倒计时的总时长，比如60秒就设置为60000
+//        //countDownInterval为你设置的时间间隔，比如一般为1秒,根据需要自定义。
+//        public MyTimer2(long millisInFuture, long countDownInterval) {
+//            super(millisInFuture, countDownInterval);
+//        }
+//
+//        //每过你规定的时间间隔做的操作
+//        @Override
+//        public void onTick(long millisUntilFinished) {
+////            if (System.currentTimeMillis() - times > 5 * 60000) {
+////                times = System.currentTimeMillis();
+////                doRefresh();
+////            } else {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+////                    return chatRoom.getMemberCount() * 3;
+//                        Usercount = chatRoom.getMemberCount();
+//                        int gold = Integer.valueOf(mF.getAnGold());
+//                        F.e("=================" + gold);
+//                        int addGold = mPrice * (Usercount - 1);
+//                        final int g = gold + addGold;
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mF.setAnGold(g + "");
+//                                mTvGoldCount.setText(g + "");
+//                            }
+//                        });
+//
+//                    } catch (HyphenateException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }).start();
+////            Usercount = getChatRoomInfoCount();
+//            F.e("=================" + Usercount);
+//            F.e("=================" + mF.getAnGold());
+//            int gold = Integer.valueOf(mF.getAnGold());
+//            F.e("=================" + gold);
+//            int addGold = mPrice * Usercount;
+//            int g = gold + addGold;
+//            mF.setAnGold(g + "");
+////                userInfo.setMbGold(gold + addGold);
+//            mTvGoldCount.setText(g + "");
+////            }
+//
+////            Usercount = getChatRoomInfoCount();
+//        }
+//
+//        //倒计时结束时做的操作↓↓
+//        @Override
+//        public void onFinish() {
+//            temp = true;
+//        }
+//    }
 
     private MyTimer3 timer3;
     private boolean temp3 = true;
@@ -1915,7 +1998,8 @@ runOnUiThread(new Runnable() {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE","android.permission.RECORD_AUDIO" ,"android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE"};
+            "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.RECORD_AUDIO", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
     public static void verifyStoragePermissions(Activity activity) {
 
         try {
@@ -1924,10 +2008,51 @@ runOnUiThread(new Runnable() {
                     "android.permission.WRITE_EXTERNAL_STORAGE");
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // 没有写的权限，去申请写的权限，会弹出对话框
-                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    final int RIGHT = 0;
+    final int LEFT = 1;
+    private GestureDetector.OnGestureListener onGestureListener =
+            new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                       float velocityY) {
+                    float x = e2.getX() - e1.getX();
+                    float y = e2.getY() - e1.getY();
+
+                    if (x > 0) {
+                        doResult(RIGHT);
+                    } else if (x < 0) {
+                        doResult(LEFT);
+                    }
+                    return true;
+                }
+            };
+
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    public void doResult(int action) {
+
+        switch (action) {
+            case RIGHT:
+                System.out.println("go right");
+                ToastUtil.showToast("go right", this);
+
+                break;
+
+            case LEFT:
+                System.out.println("go left");
+                ToastUtil.showToast("go left", this);
+                break;
+
         }
     }
 

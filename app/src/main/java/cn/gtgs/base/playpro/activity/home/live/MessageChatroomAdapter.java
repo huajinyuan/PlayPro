@@ -96,7 +96,12 @@ public class MessageChatroomAdapter extends BaseAdapter {
                 if (map.get("level") != null) {
                     viewHolder.tv_level.setVisibility(View.VISIBLE);
                     viewHolder.tv_level.setText("Lv" + map.get("level") + "");
-                    int level = (int) map.get("level");
+                    int level = 0;
+                    if (map.get("level") instanceof Integer) {
+                        level = (int) map.get("level");
+                    } else if (map.get("level") instanceof String) {
+                        level = Integer.valueOf((String) map.get("level"));
+                    }
                     int drawableId = 0;
                     int colorId = 0;
                     if (level <= 5) {

@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.center.view;
 
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.StringUtils;
+import cn.gtgs.base.playpro.widget.GoodProgressView;
 
 /**
  * Created by  on 2017/4/25.
@@ -54,6 +56,12 @@ public class CenterDelegate extends AppDelegate {
     TextView mTvzs;
     @BindView(R.id.tv_center_share)
     TextView mTvshare;
+    @BindView(R.id.tv_center_curren_gold)
+    TextView mTvGoldCurren;
+    @BindView(R.id.tv_center_next_gold)
+    TextView mTvGoldNext;
+    @BindView(R.id.goodprogress_conter_pro)
+    GoodProgressView progressView;
     UserInfo info;
 
     @Override
@@ -66,6 +74,8 @@ public class CenterDelegate extends AppDelegate {
     }
 
     public void init() {
+        progressView.setColors(randomColors());
+
         Follow follow = (Follow) ACache.get(this.getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = follow.getMember();
         mTvName.setText(null != info.getMbNickname() ? info.getMbNickname() : info.getMbPhone());
@@ -96,13 +106,38 @@ public class CenterDelegate extends AppDelegate {
             int i = (int) follow.getAnGoldAble();
             mTvzs.setText(i + "");
         }
+        if (StringUtils.isNotEmpty(follow.getAnStatus()) && follow.getAnStatus().equals("0")) {
+            if (StringUtils.isNotEmpty(follow.getAnGold())) {
+                setProGold(Integer.valueOf(follow.getAnGold()));
+            }
+        } else {
+            setProGold(info.getMbGoldPay());
+        }
+
+
     }
 
-    public String getShareStr()
-    {
-        return  mTvshare.getText().toString().trim();
+    public String getShareStr() {
+        return mTvshare.getText().toString().trim();
     }
+
     public SwipeRefreshLayout getmSwp() {
         return mSwp;
+    }
+
+    private int[] randomColors() {
+        int[] colors = new int[2];
+
+        colors[0] = ContextCompat.getColor(this.getActivity(), R.color.colorBlue);
+        colors[1] = ContextCompat.getColor(this.getActivity(), R.color.color_pink);
+        return colors;
+    }
+
+    public void setProGold(int gold) {
+        int c = AppUtil.getDJ(Integer.valueOf(gold));
+        int nextGold = AppUtil.getNextGold(c + 1);
+        mTvGoldCurren.setText(gold + "");
+        mTvGoldNext.setText(nextGold + "");
+        progressView.setProgressValue((gold * 100) / nextGold);
     }
 }

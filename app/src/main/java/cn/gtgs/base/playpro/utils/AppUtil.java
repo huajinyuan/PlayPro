@@ -102,6 +102,7 @@ public class AppUtil {
 //        intent.setAction(Intent.ACTION_DIAL);// 拨号盘
 //        context.startActivity(intent);
 //    }
+
     /**
      * 获取版本号
      */
@@ -113,7 +114,12 @@ public class AppUtil {
         }
         return 1;
     }
+
     public static int getDJ(int gold) {
         return (int) (Math.sqrt(gold / 100 + 4) - 2);
+    }
+
+    public static int getNextGold(int level) {
+        return ((level + 2) * (level + 2) - 4) * 100;
     }
 }

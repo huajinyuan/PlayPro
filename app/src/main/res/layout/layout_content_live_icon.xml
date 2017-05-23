@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:descendantFocusability="afterDescendants"
     android:background="@drawable/shape_live_content_icon"
     android:gravity="center_vertical"
     android:orientation="horizontal">
@@ -107,7 +108,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <Button
         android:id="@+id/tv_layout_content_follow"
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
