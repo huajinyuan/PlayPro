@@ -45,7 +45,9 @@ public class GetCoinActivity extends ActivityPresenter<GetCoinDelegate> {
                 this.finish();
                 break;
             case R.id.tv_getcoin_go2cs:
-                Intent intent = new Intent(this, CSActivity.class);
+//                Intent intent = new Intent(this, CSActivity.class);
+//                startActivity(intent);
+                Intent intent = new Intent(this, QrCzhActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -157,11 +157,15 @@
 
         <LinearLayout
             android:id="@+id/lin_play_gift_zs"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_live_icon_content"
             android:layout_marginTop="8dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
             android:gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shape_rec_zs"
             android:orientation="horizontal">
 
             <TextView
@@ -169,14 +173,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:text="钻石:"
-                android:textColor="@color/colorBlue" />
+                android:textColor="@color/color_level_2" />
 
             <TextView
                 android:id="@+id/tv_gold_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:textColor="@color/colorBlue" />
+                android:drawablePadding="8dp"
+                android:textColor="@color/color_level_5"
+                android:drawableRight="@mipmap/icon_army_listview_right"
+                />
 
         </LinearLayout>
 
@@ -205,12 +212,11 @@
             android:id="@+id/tv_play_toast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/background_green"
-            android:paddingBottom="8dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/listView"
+            android:layout_marginBottom="5dp"
+            android:background="@mipmap/icon_level_come_1"
+            android:paddingLeft="30dp"
             android:textColor="@color/colorwhite"
             android:visibility="gone" />
 
@@ -238,25 +244,28 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/img_play_set_anim"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+        <!--<ImageView-->
+            <!--android:id="@+id/img_play_set_anim"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@drawable/circle_zhubo" />-->
+        <TextView
+            android:id="@+id/tv_play_pmd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/circle_zhubo" />
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:visibility="gone"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:background="@drawable/shape_rec_zs"
+            android:maxLines="1"
+            android:text="跑马灯"
+            android:textColor="@color/colorBlue" />
     </RelativeLayout>
 
 
-    <cn.gtgs.base.playpro.widget.MarqueeTextView
-        android:id="@+id/tv_play_pmd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
-        android:text="跑马灯"
-        android:textColor="@color/colorBlue" />
+
 </RelativeLayout>

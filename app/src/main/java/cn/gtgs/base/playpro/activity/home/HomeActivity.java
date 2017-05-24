@@ -4,11 +4,18 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gt.okgo.OkGo;
 import com.gt.okgo.model.HttpParams;
 import com.gt.okgo.request.PostRequest;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.util.NetUtils;
 
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.PApplication;
@@ -23,6 +30,7 @@ import cn.gtgs.base.playpro.activity.home.presenter.HomePresenter;
 import cn.gtgs.base.playpro.activity.home.presenter.IHomeRefreshListener;
 import cn.gtgs.base.playpro.activity.home.search.SearchActivity;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
@@ -32,6 +40,7 @@ import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.DESUtil;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.MD5Util;
 import cn.gtgs.base.playpro.utils.StringUtils;
 import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
@@ -77,6 +86,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
         fragmentTransaction.commit();
         setTab(1);
         presenter.initData();
+        login();
     }
 
     @Override
@@ -120,8 +130,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                 break;
             case R.id.btn_recommented:
                 setTab(1);
-                if (null != mRecommented)
-                {
+                if (null != mRecommented) {
                     mRecommented.getPresend().initData();
                 }
                 break;
@@ -228,10 +237,86 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
     protected void onResume() {
         super.onResume();
         presenter.getInfo();
+        login();
     }
 
     @Override
     public void Refresh(Follow follow) {
         userInfo = follow;
+    }
+
+    public void login() {
+
+        String userName = "111";
+        String password = "111";
+        UserInfo loginInfo = userInfo.getMember();
+        if (null != loginInfo) {
+            userName = loginInfo.getMbPhone() + "";
+            password = MD5Util.getMD5("webcast" + loginInfo.getMbId());
+        }
+
+
+        EMClient.getInstance().login(userName, password, new EMCallBack() {//回调
+            @Override
+            public void onSuccess() {
+                EMClient.getInstance().groupManager().loadAllGroups();
+                EMClient.getInstance().chatManager().loadAllConversations();
+                Log.e("main", "登录聊天服务器成功！");
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                Log.e("main", "progress" + progress + "");
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                Log.e("main", "登录聊天服务器失败！");
+                if (code == 200) {
+                    EMClient.getInstance().logout(true);
+                    login();
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(HomeActivity.this, "登录失败，可能是服务器不稳定", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+        addConnectionListener();
+    }
+
+    void addConnectionListener() {
+        EMClient.getInstance().addConnectionListener(new EMConnectionListener() {
+            @Override
+            public void onConnected() {
+
+            }
+
+            @Override
+            public void onDisconnected(final int error) {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (error == EMError.USER_REMOVED) {
+                            HomeActivity.this.finish();
+                            Toast.makeText(HomeActivity.this, "帐号已经被移除", Toast.LENGTH_LONG).show();
+                        } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                            HomeActivity.this.finish();
+                            Toast.makeText(HomeActivity.this, "帐号在其他设备登录", Toast.LENGTH_LONG).show();
+                        } else {
+                            HomeActivity.this.finish();
+                            if (NetUtils.hasNetwork(HomeActivity.this))
+                                Toast.makeText(HomeActivity.this, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(HomeActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 }

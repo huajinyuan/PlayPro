@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.home.live;
 
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -50,6 +51,8 @@ import com.gt.okgo.model.HttpParams;
 import com.gt.okgo.request.PostRequest;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMChatRoomChangeListener;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMChatRoom;
@@ -58,6 +61,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.util.NetUtils;
 import com.opendanmaku.DanmakuItem;
 import com.opendanmaku.DanmakuView;
 import com.opendanmaku.IDanmakuItem;
@@ -80,10 +84,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.home.fragment.adapter.BDAdapter;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
+import cn.gtgs.base.playpro.activity.home.model.BDInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.mymessage.ChatActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
+import cn.gtgs.base.playpro.http.BaseList;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
 import cn.gtgs.base.playpro.http.HttpMethods;
@@ -183,8 +190,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     CheckBox mCheckBox;
     @BindView(R.id.periscope)
     public PeriscopeLayout periscopeLayout;
-    @BindView(R.id.img_anchor_info_follow)
-    ImageView mImgFollow;
+    //    @BindView(R.id.img_anchor_info_follow)
+//    ImageView mImgFollow;
     @BindView(R.id.tv_play_level)
     TextView mTvLevel;
     @BindView(R.id.tv_play_gold)
@@ -201,6 +208,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     TextView mTvGoldhz;
     @BindView(R.id.tv_play_fock_count)
     TextView mTvfock;
+    @BindView(R.id.tv_layout_content_follow)
+    TextView mTvcontentfollow;
     @BindView(R.id.tv_play_follow_count)
     TextView mTvFollow;
     @BindView(R.id.rel_layout_bottom_dialog)
@@ -364,8 +373,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     protected void onDestroy() {
         super.onDestroy();
         //-----------------------------------以下为环信
-//        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-//        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
         if (null != timer2) {
             timer2.cancel();
         }
@@ -373,39 +382,72 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
 
     public void sendMsg() {
-        vp_emoji.setVisibility(View.GONE);
-        et_huanxin_content = et_content.getText().toString().trim();
-        F.e("------------------------" + et_huanxin_content);
-        if (et_huanxin_content.isEmpty()) {
-            Log.e("main", "isempty");
-        } else {
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
-            EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatroomid);
-            //如果是群聊，设置chattype，默认是单聊
-            message.setFrom(loginInfo.getMbPhone());
-            message.setChatType(EMMessage.ChatType.ChatRoom);
-            message.setAttribute("user_name", loginInfo.getMbNickname());
-            message.setAttribute("level", loginInfo.getMbLevel());//
-            if (mCheckBox.isChecked()) {
-                message.setAttribute("DanMu", loginInfo.getMbLevel());
-                doDanmu(et_huanxin_content);
-            }
-            //发送消息
-            EMClient.getInstance().chatManager().sendMessage(message);
-            et_content.setText("");
-            if (mCheckBox.isChecked()) {
-                mCheckBox.setChecked(false);
-            } else {
-                msgList.add(message);
-                if (null != adapter) {
-                    adapter.notifyDataSetChanged();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                EMChatRoom chatRoom = null;
+                try {
+                    chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
                 }
-                if (msgList.size() > 0) {
-                    listView.setSelection(listView.getCount() - 1);
+                List<String> adminList = chatRoom.getAdminList();
+                if (adminList.contains(loginInfo.getMbPhone())) {
+                    //
+                    isAdmin = true;
                 }
-            }
 
-        }
+                if (StringUtils.isNotEmpty(aCache.getAsString("jy" + chatroomid))) {
+                    ToastUtil.showToast("您已被禁言，消息无法发送", PlayActivity.this);
+                    return;
+                }
+                vp_emoji.setVisibility(View.GONE);
+                et_huanxin_content = et_content.getText().toString().trim();
+                F.e("------------------------" + et_huanxin_content);
+                if (et_huanxin_content.isEmpty()) {
+                    Log.e("main", "isempty");
+                } else {
+                    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++发送单聊、群聊信息
+                    final EMMessage message = EMMessage.createTxtSendMessage(et_huanxin_content, chatroomid);
+                    //如果是群聊，设置chattype，默认是单聊
+                    message.setFrom(loginInfo.getMbPhone());
+                    message.setChatType(EMMessage.ChatType.ChatRoom);
+                    message.setAttribute("user_name", loginInfo.getMbNickname());
+                    message.setAttribute("level", loginInfo.getMbLevel());//
+                    if (isAdmin && et_huanxin_content.equals("踢主播")) {
+                        message.setAttribute("StopByAdmin", "stop");
+                    }
+                    if (mCheckBox.isChecked()) {
+                        message.setAttribute("DanMu", loginInfo.getMbLevel());
+                        doDanmu(et_huanxin_content);
+                    }
+                    //发送消息
+                    EMClient.getInstance().chatManager().sendMessage(message);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            et_content.setText("");
+                            if (mCheckBox.isChecked()) {
+                                mCheckBox.setChecked(false);
+                            } else {
+                                msgList.add(message);
+                                if (null != adapter) {
+                                    adapter.notifyDataSetChanged();
+                                }
+                                if (msgList.size() > 0) {
+                                    listView.setSelection(listView.getCount() - 1);
+                                }
+                            }
+                        }
+                    });
+
+
+                }
+
+            }
+        }).start();
+
+
     }
 
     public void bt_likes(View v) {
@@ -505,8 +547,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
                 F.e("================onRemovedFromChatRoom");
-                if (roomId.equals(chatroomid)) {
-                    login();
+                if (roomId.equals(chatroomid) && loginInfo.getMbPhone().equals(participant)) {
+
+                    ToastUtil.showToast("您已经被踢出该聊天室", PlayActivity.this);
+                    finish();
+//                    login();
 //                    String curUser = EMClient.getInstance().getCurrentUser();
 //                    if (curUser.equals(participant)) {
 //                        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
@@ -518,6 +563,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
             @Override
             public void onMuteListAdded(String chatRoomId, List<String> mutes, long expireTime) {
+                if (mutes.contains(loginInfo.getMbPhoto())) {
+                    aCache.put("jy" + chatroomid, chatroomid, 60 * 60 * 24);
+                }
 
             }
 
@@ -540,6 +588,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             public void onOwnerChanged(String chatRoomId, String newOwner, String oldOwner) {
 
             }
+
 
         };
 
@@ -679,17 +728,68 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void contentAction() {
+
+//        EMChatRoom chatRoom = null;
+//        try {
+//            chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+//        } catch (HyphenateException e) {
+//            e.printStackTrace();
+//        }
+//        if (chatRoom.getAdminList().contains(loginInfo.getMbPhone())) {
+//            View view = null;
+////        if (null == mydialog) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTransBackGround);
+//            mydialog = builder.create();
+//            mydialog.setCanceledOnTouchOutside(true);
+//            view = LayoutInflater.from(this).inflate(R.layout.item_dialog_releaseagent2, null);
+////        }
+//            TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
+//            Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
+//            Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
+//            tv_content.setText("是否让她（他）停止直播？");
+//            bt_yes.setText("停止");
+//            mydialog.setCancelable(true);
+//            if (!mydialog.isShowing()) {
+//                mydialog.show();
+//            }
+//            mydialog.setContentView(view);
+//
+//            // dialog内部的点击事件
+//            bt_yes.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //TODO 踢出主播
+//                    EMMessage message = EMMessage.createTxtSendMessage("管理员停止了直播", chatroomid);
+//                    message.setChatType(EMMessage.ChatType.ChatRoom);
+//                    message.setFrom(loginInfo.getMbPhone());
+//                    message.setAttribute("StopByAdmin", "stop");
+//                    EMClient.getInstance().chatManager().sendMessage(message);
+////                    message.setAttribute("level", loginInfo.getMbLevel());
+////                    message.setAttribute("user_name", loginInfo.getMbNickname());
+//                    mydialog.dismiss();
+//                }
+//            });
+//            bt_cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mydialog.dismiss();
+//                }
+//            });
+//
+//        } else {
         hidelayout();
         mLayoutBottom.setVisibility(View.VISIBLE);
         rel_layout_bottom_dialog.setVisibility(View.VISIBLE);
-        ArrayList<String> gs = PApplication.getInstance().getmFList();
-        if (null != anchorItem.getAnId()) {
-            if (gs.contains(anchorItem.getAnId())) {
-                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
-            } else {
-                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
-            }
-        }
+//        }
+
+//        ArrayList<String> gs = PApplication.getInstance().getmFList();
+//        if (null != anchorItem.getAnId()) {
+//            if (gs.contains(anchorItem.getAnId())) {
+//                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
+//            } else {
+//                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
+//            }
+//        }
     }
 
     public void hidelayout() {
@@ -742,8 +842,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
+        params.put("sendType", "3");
         params.put("num", num);
-        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND).params(params);
+        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
         HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
@@ -927,15 +1028,16 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     public void initviews() {
         if (null != anchorItem) {
-            String p = anchorItem.getMember().getMbPhoto();
-            String photo = null != p ? Config.BASE + p : null;
-            F.e("------------------------" + photo);
+
             String n = anchorItem.getMember().getMbNickname();
             String phone = !isMember ? anchorItem.getAnId() : anchorItem.getMember().mbPhone;
             String name = null != n ? n : phone;
             String sex = !isMember ? anchorItem.getAnSex() : anchorItem.getMember().getMbSex() + "";
             String mId = !isMember ? anchorItem.mbId : anchorItem.getMember().getMbId() + "";
             chatroomid = !isMember ? anchorItem.getChatRoomId() : "0";
+            String p = anchorItem.getMember().getMbPhoto();
+            String photo = null != p ? Config.BASE + p : null;
+            F.e("------------------------" + photo);
             Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(mImgIcon) {
                 @Override
                 protected void setResource(Bitmap resource) {
@@ -1021,6 +1123,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             if (StringUtils.isNotEmpty(anchorItem.getAnGold())) {
                 mTvAnchorGold.setText(anchorItem.getAnGold() + "");//TODO 钻石
             }
+            if (StringUtils.isNotEmpty(anchorItem.getSysNotice())) {
+                Animation translateAnimation2 = AnimationUtils.loadAnimation(this, R.anim.translate_to_left2);
+                TextView t = (TextView) findViewById(R.id.tv_play_pmd);
+                t.setVisibility(View.VISIBLE);
+                t.setText(anchorItem.getSysNotice());
+                t.setAnimation(translateAnimation2);
+                t.startAnimation(translateAnimation2);
+            }
 
         } else {
             mTvGoldhz.setText(anchorItem.getMember().getMbGold() + "");
@@ -1030,20 +1140,17 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             mTvfock.setText(anchorItem.getFaCount());
             mTvFollow.setText(anchorItem.getFaCount());
         }
-        ImageView img = (ImageView) findViewById(R.id.img_play_set_anim);
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //
+
+        ArrayList<String> gs = PApplication.getInstance().getmFList();
+        if (null != anchorItem.getAnId()) {
+            if (gs.contains(anchorItem.getAnId())) {
+                mTvcontentfollow.setText("已关注");
+//                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
+            } else {
+                mTvcontentfollow.setText("关注");
+//                mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
             }
-        });
-        Animation translateAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_to_left);
-        img.setAnimation(translateAnimation);
-        img.startAnimation(translateAnimation);
-        Animation translateAnimation2 = AnimationUtils.loadAnimation(this, R.anim.translate_to_left2);
-        TextView t = (TextView) findViewById(R.id.tv_play_pmd);
-        t.setAnimation(translateAnimation2);
-        t.startAnimation(translateAnimation2);
+        }
 
     }
 
@@ -1051,9 +1158,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         return !((codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA) || (codePoint == 0xD) || ((codePoint >= 0x20) && codePoint <= 0xD7FF)) || ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) || ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF));
     }
 
-    @OnClick({R.id.tv_layout_content_follow, R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
+    @OnClick({R.id.lin_play_gift_zs, R.id.tv_layout_content_follow, R.id.lin_play_gift_panel_bottom, R.id.lin_anchor_info_action_follow, R.id.view_gone, R.id.frame_live_chat, R.id.tv_live_booking_jubao, R.id.bt_live_booking_tochat, R.id.bt_send, R.id.bt_openemoji, R.id.et_content, R.id.bt_live_chat, R.id.bt_live_gifts, R.id.bt_live_sendgift, R.id.layout_live_icon_content})
     public void Onclick(View v) {
         switch (v.getId()) {
+            case R.id.lin_play_gift_zs:
+                //TODO 榜单
+                if (!isMember) {
+                    showBdDialog();
+                }
+                break;
             case R.id.bt_send:
                 if (mCheckBox.isChecked()) {
                     sendGift2("2", true);
@@ -1085,7 +1198,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 break;
             case R.id.lin_anchor_info_action_follow://关注
                 if (!isMember) {
-                    follow();
+                    //TODO 微房
+//                    follow();
+                    getWx();
                 }
                 break;
             case R.id.tv_layout_content_follow:
@@ -1115,6 +1230,149 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }
     }
 
+    AlertDialog mBdDialog;
+    ListView lv;
+    BDAdapter mBDadapter;
+    ArrayList<BDInfo> lis = new ArrayList<>();
+
+    public void showBdDialog() {
+        if (mBdDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
+            mBdDialog = builder.create();
+            View views = LayoutInflater.from(PlayActivity.this).inflate(R.layout.layout_dialog_bd_v, null);
+            final ImageView icon = (ImageView) views.findViewById(R.id.img_dialog_icon);
+            String p = anchorItem.getMember().getMbPhoto();
+            String photo = null != p ? Config.BASE + p : null;
+            F.e("------------------------" + photo);
+            Glide.with(context).load(null != photo ? photo : R.drawable.circle_zhubo).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    icon.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+            mBDadapter = new BDAdapter(PlayActivity.this, lis);
+            lv = (ListView) views.findViewById(R.id.lv_dialog_content_v);
+            lv.setAdapter(mBDadapter);
+            mBdDialog.setCancelable(true);
+            mBdDialog.show();
+            mBdDialog.setContentView(views);
+        } else {
+            mBdDialog.show();
+        }
+        getBd(mBDadapter);
+    }
+
+    public void getBd(final BDAdapter adapter) {
+        HttpParams params = new HttpParams();
+        if (null != anchorItem.getAnId()) {
+            params.put("anId", anchorItem.getAnId());
+            PostRequest request = OkGo.post(Config.COMMON_SENDTOP).params(params);
+            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    ToastUtil.showToast("网络请求失败，请检查网络", PlayActivity.this);
+                }
+
+                @Override
+                public void onNext(Response response) {
+                    BaseList<BDInfo> bs = Parsing.getInstance().ResponseToList3(response, BDInfo.class);
+                    ArrayList<BDInfo> data = (ArrayList<BDInfo>) bs.getDataList();
+                    lis.clear();
+                    lis.addAll(data);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+    public void getWx() {
+        if (StringUtils.isNotEmpty(anchorItem.getWxPrice()) && StringUtils.isNotEmpty(anchorItem.getAnWeixin())) {
+            final AlertDialog mydialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
+            mydialog = builder.create();
+            View views = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+            TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
+            Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
+            Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
+            tv_content.setText("是否支付" + anchorItem.getWxPrice() + "钻石，获取主播微信？");
+            bt_yes.setText("支付");
+            bt_cancel.setText("取消");
+            mydialog.setCancelable(true);
+            mydialog.show();
+            mydialog.setContentView(views);
+            // dialog内部的点击事件
+            bt_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendGift3(anchorItem.getWxPrice());
+                        }
+                    }).start();
+
+
+                    mydialog.dismiss();
+                }
+            });
+            bt_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mydialog.dismiss();
+                }
+            });
+        } else if (StringUtils.isNotEmpty(anchorItem.getAnWeixin())) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //TODO 弹出微信
+                    final AlertDialog mydialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
+                    mydialog = builder.create();
+                    View view = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                    TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
+                    Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
+                    Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
+                    tv_content.setText("主播微信：" + anchorItem.getAnWeixin() + "(点击复制)");
+                    bt_yes.setText("复制");
+                    mydialog.setCancelable(true);
+                    mydialog.show();
+                    mydialog.setContentView(view);
+                    // dialog内部的点击事件
+                    bt_yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setText(anchorItem.getAnWeixin());
+                            ToastUtil.showToast("分享链接已复制到剪切板，您可以发给其他好友下载", PlayActivity.this);
+                            mydialog.dismiss();
+                        }
+                    });
+                    bt_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mydialog.dismiss();
+                        }
+                    });
+                }
+            });
+
+        }
+    }
 
     public void follow() {
         if (null != anchorItem.getAnId()) {
@@ -1150,11 +1408,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 if (a == 1) {
                                     faCount = faCount + 1;
                                     gs.add(anchorItem.getAnId());
-                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
+                                    mTvcontentfollow.setText("已关注");
+//                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
                                 } else {
                                     ToastUtil.showToast("您已成功取消关注", PlayActivity.this);
                                     faCount = faCount - 1;
-                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
+                                    mTvcontentfollow.setText("关注");
+//                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
                                     gs.remove(anchorItem.getAnId());
                                 }
                                 String str = JSON.toJSONString(gs);
@@ -1256,6 +1516,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     }
 
+    boolean isAdmin = false;
+
     public void joinchatroom() {
         Log.e("adad", "startJoinChatRoom..");
         EMClient.getInstance().chatroomManager().joinChatRoom(chatroomid, new EMValueCallBack<EMChatRoom>() {
@@ -1278,20 +1540,18 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                         loadsomes();
                     }
                 });
-//                final int count = getChatRoomInfoCount();
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mTvCount.setText(count + "");
-//                    }
-//                });
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            EMClient.getInstance().chatroomManager().addChatRoomAdmin(chatroomid, "13506075307");
                             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                            List<String> adminList = chatRoom.getAdminList();
+                            if (adminList.contains(loginInfo.getMbPhone())) {
+                                //
+                                isAdmin = true;
+                            }
+
                             final int count = chatRoom.getMemberCount() * 3;
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -1309,6 +1569,39 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onError(int i, String s) {
                 Log.e("sdad", "joinchatroom OnError");
+            }
+        });
+        addConnectionListener();
+    }
+
+    void addConnectionListener() {
+        EMClient.getInstance().addConnectionListener(new EMConnectionListener() {
+            @Override
+            public void onConnected() {
+
+            }
+
+            @Override
+            public void onDisconnected(final int error) {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (error == EMError.USER_REMOVED) {
+                            PlayActivity.this.finish();
+                            Toast.makeText(context, "帐号已经被移除", Toast.LENGTH_LONG).show();
+                        } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                            PlayActivity.this.finish();
+                            Toast.makeText(context, "帐号在其他设备登录", Toast.LENGTH_LONG).show();
+                        } else {
+                            PlayActivity.this.finish();
+                            if (NetUtils.hasNetwork(PlayActivity.this))
+                                Toast.makeText(context, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(context, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -1385,12 +1678,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                         final AlertDialog mydialog;
                                         AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
                                         mydialog = builder.create();
-                                        mydialog.setCanceledOnTouchOutside(false);
-                                        View views = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                                        mydialog.setCanceledOnTouchOutside(true);
+                                        View views = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent2, null);
                                         TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
                                         Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
                                         Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
-                                        tv_content.setText("是否禁止 " + user_name + " 发言，或提出直播间？");
+                                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
+                                        bt_lahei.setVisibility(View.VISIBLE);
+                                        tv_content.setText("是否对 " + user_name + " 做出以下操作？");
                                         bt_yes.setText("禁言");
                                         bt_cancel.setText("踢出");
                                         mydialog.setCancelable(true);
@@ -1414,6 +1709,23 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                                 }).start();
 
 
+                                                mydialog.dismiss();
+                                            }
+                                        });
+                                        bt_lahei.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                new Thread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+//                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+                                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
+                                                        } catch (HyphenateException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }).start();
                                                 mydialog.dismiss();
                                             }
                                         });
@@ -1471,6 +1783,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 message_content = txtBody.getMessage();
                 final Map<String, Object> map = message.ext();
                 String spotType = null;
+                if (map.containsKey("StopByAdmin")) {
+                    ToastUtil.showToast("管理员停止了直播", context);
+                    PlayActivity.this.finish();
+                }
                 if (map.containsKey("Gift")) {
                     message_from = (String) map.get("user_name");
                     final String icon = (String) map.get("user_url");
@@ -1557,50 +1873,96 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             @Override
                             public void run() {
                                 int level = Integer.valueOf((String) map.get("level"));
-                                Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
-                                a.setFillAfter(true);
-                                mTvLevel_2.setVisibility(View.VISIBLE);
-                                mTvLevel_2.setText(message_from + "加入聊天室");
-                                if (level >= 15) {
+                                if (level < 5) {
+//                                    Animation a = AnimationUtils.loadAnimation(context, R.anim.scalebig2);
+//                                    a.setFillAfter(true);
+//                                    mTvLevel_2.setVisibility(View.VISIBLE);
+//                                    mTvLevel_2.setText(message_from + "加入聊天室");
+//                                    mTvLevel_2.startAnimation(a);
+//                                    a.setAnimationListener(new Animation.AnimationListener() {
+//                                        @Override
+//                                        public void onAnimationStart(Animation animation) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationEnd(Animation animation) {
+//                                            runOnUiThread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//
+//                                                    if (mTvLevel_2.getVisibility() == View.VISIBLE) {
+//                                                        mTvLevel_2.clearAnimation();
+//                                                        mTvLevel_2.setVisibility(View.GONE);
+//                                                    }
+//
+//                                                }
+//                                            });
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationRepeat(Animation animation) {
+//
+//                                        }
+//                                    });
+                                } else {
+                                    Animation aToast = AnimationUtils.loadAnimation(context, R.anim.translate_to_left);
                                     mTvToast.setVisibility(View.VISIBLE);
                                     mTvToast.setText(message_from + "加入聊天室");
-                                    mTvToast.startAnimation(a);
-                                }
-                                mTvLevel_2.startAnimation(a);
-                                a.setAnimationListener(new Animation.AnimationListener() {
-                                    @Override
-                                    public void onAnimationStart(Animation animation) {
+                                    if (level < 10) {
+                                        mTvToast.setBackgroundResource(R.mipmap.icon_level_come_1);
 
+                                    } else if (level < 15) {
+                                        mTvToast.setBackgroundResource(R.mipmap.icon_level_come_2);
+
+
+                                    } else if (level < 20) {
+                                        mTvToast.setBackgroundResource(R.mipmap.icon_level_come_3);
+                                    } else if (level < 25) {
+                                        mTvToast.setBackgroundResource(R.mipmap.icon_level_come_4);
+                                    } else {
+                                        mTvToast.setBackgroundResource(R.mipmap.icon_level_come_5);
                                     }
+                                    mTvToast.startAnimation(aToast);
 
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (mTvToast.getVisibility() == View.VISIBLE) {
-                                                    mTvToast.clearAnimation();
-                                                    mTvToast.setVisibility(View.GONE);
+                                    aToast.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
 
-                                                }
-                                                if (mTvLevel_2.getVisibility() == View.VISIBLE) {
-                                                    mTvLevel_2.clearAnimation();
-                                                    mTvLevel_2.setVisibility(View.GONE);
-                                                }
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            if (mTvToast.getVisibility() == View.VISIBLE) {
+                                                mTvToast.clearAnimation();
+                                                mTvToast.setVisibility(View.GONE);
 
                                             }
-                                        });
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onAnimationRepeat(Animation animation) {
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+
+
                             }
                         });
 
                     }
+                    msgList.add(message);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            if (msgList.size() > 0) {
+                                listView.setSelection(listView.getCount() - 1);
+                                Log.e("sad", "setselection");
+                            }
+                        }
+                    });
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {
@@ -1752,8 +2114,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         HttpParams params = new HttpParams();
         params.put("mbId", loginInfo.getMbId());
         params.put("anId", anchorItem.getAnId());
+        if (isDanmu) {
+            params.put("sendType", "2");
+
+        } else {
+            params.put("sendType", "1");
+        }
         params.put("num", num);
-        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND).params(params);
+        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
         HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
@@ -1790,6 +2158,87 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 ToastUtil.showToast(ob.getString("msg") + ",请充值后再进入观看", context);
                                 PlayActivity.this.finish();
                             }
+
+                        }
+                    }
+                } catch (Exception e) {
+                    F.e(e.toString());
+                }
+
+            }
+        });
+    }
+
+    public void sendGift3(final String num) {
+        HttpParams params = new HttpParams();
+        params.put("mbId", loginInfo.getMbId());
+        params.put("anId", anchorItem.getAnId());
+        params.put("sendType", "4");
+        params.put("num", num);
+        PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
+        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast("请求失败，请检查网络", PlayActivity.this);
+            }
+
+            @Override
+            public void onNext(Response response) {
+                try {
+                    String Str = response.body().string();
+                    JSONObject ob = JSON.parseObject(Str);
+                    if (ob.containsKey("code")) {
+                        int code = ob.getInteger("code");
+                        if (code == 1) {
+                            if (ob.containsKey("data")) {
+//                                int gold = ob.getIntValue("data");
+//                                loginInfo.setMbGold(gold);
+//                                tv_live_credits.setText("钻石:" + loginInfo.getMbGold());
+//                                mF.setMember(loginInfo);
+//                                aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //TODO 弹出微信
+                                        final AlertDialog mydialog;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this, R.style.DialogTransBackGround);
+                                        mydialog = builder.create();
+                                        View view = LayoutInflater.from(PlayActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                                        TextView tv_content = (TextView) view.findViewById(R.id.tv_dialog_content);
+                                        Button bt_cancel = (Button) view.findViewById(R.id.bt_dialog_cancel);
+                                        Button bt_yes = (Button) view.findViewById(R.id.bt_dialog_yes);
+                                        tv_content.setText("主播微信：" + anchorItem.getAnWeixin() + "(点击复制)");
+                                        bt_yes.setText("复制");
+                                        mydialog.setCancelable(true);
+                                        mydialog.show();
+                                        mydialog.setContentView(view);
+                                        // dialog内部的点击事件
+                                        bt_yes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                                cm.setText(anchorItem.getAnWeixin());
+                                                ToastUtil.showToast("分享链接已复制到剪切板，您可以发给其他好友下载", PlayActivity.this);
+                                                mydialog.dismiss();
+                                            }
+                                        });
+                                        bt_cancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                mydialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                });
+
+                            }
+                        } else {
+                            ToastUtil.showToast(ob.getString("msg") + ",请充值后再获取吧", context);
 
                         }
                     }

@@ -53,5 +53,6 @@
     <color name="color_level_3">#F53CB1</color>
     <color name="color_level_4">#9292F8</color>
     <color name="color_level_5">#9C48CA</color>
+    <color name="color_level_55">#11555555</color>
 
 </resources>

@@ -85,63 +85,74 @@ public class MessageChatroomAdapter extends BaseAdapter {
             viewHolder.tv_level.setVisibility(View.GONE);
             viewHolder.tv_username.setVisibility(View.GONE);
         } else {
-            viewHolder.tv_level.setVisibility(View.VISIBLE);
-            viewHolder.tv_username.setVisibility(View.VISIBLE);
             Map<String, Object> map = message.ext();
             String content = txtBody.getMessage();
             if (map != null) {
-                if (null != map.get("user_name")) {
-                    viewHolder.tv_username.setText((String) map.get("user_name"));
-                }
-                if (map.get("level") != null) {
-                    viewHolder.tv_level.setVisibility(View.VISIBLE);
-                    viewHolder.tv_level.setText("Lv" + map.get("level") + "");
-                    int level = 0;
-                    if (map.get("level") instanceof Integer) {
-                        level = (int) map.get("level");
-                    } else if (map.get("level") instanceof String) {
-                        level = Integer.valueOf((String) map.get("level"));
+                if (map.containsKey("JOIN_CHATROOM")) {
+                    String name = "";
+                    if (null != map.get("user_name")) {
+                        name = (String) map.get("user_name");
+                        viewHolder.tv_content.setText("欢迎" + name + "加入聊天室");
                     }
-                    int drawableId = 0;
-                    int colorId = 0;
-                    if (level <= 5) {
-                        drawableId = R.drawable.shape_rec_1;
-                        colorId = R.color.color_level_1;
-                    } else if (level <= 10) {
-                        drawableId = R.drawable.shape_rec_2;
-                        colorId = R.color.color_level_2;
-                    } else if (level <= 15) {
-                        drawableId = R.drawable.shape_rec_3;
-                        colorId = R.color.color_level_3;
-                    } else if (level <= 20) {
-                        drawableId = R.drawable.shape_rec_4;
-                        colorId = R.color.color_level_4;
-                    } else {
-                        drawableId = R.drawable.shape_rec_5;
-                        colorId = R.color.color_level_5;
-                    }
-                    viewHolder.tv_level.setBackgroundResource(drawableId);
-                    viewHolder.tv_username.setTextColor(ContextCompat.getColor(context, colorId));
-                } else {
                     viewHolder.tv_level.setVisibility(View.GONE);
-                }
-                if (map.containsKey("Gift")) {
-                    isGift = true;
-                    Gift gift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
-                    if (null != gift) {
-                        content = "送了一个:【" + gift.getName() + "】";
-                    }
-                }
-            }
-            SpannableStringBuilder style = new SpannableStringBuilder(content);
-            if (isGift) {
-                int bstart = content.indexOf("【");
-                style.setSpan(new ForegroundColorSpan(Color.RED), bstart, content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            }
-            viewHolder.tv_content.setText(style);
-            viewHolder.tv_content.setTextColor(ContextCompat.getColor(context, R.color.color_text_chat_item));
-        }
+                    viewHolder.tv_username.setVisibility(View.GONE);
+                } else {
+                    viewHolder.tv_level.setVisibility(View.VISIBLE);
+                    viewHolder.tv_username.setVisibility(View.VISIBLE);
 
+                    if (null != map.get("user_name")) {
+                        viewHolder.tv_username.setText((String) map.get("user_name"));
+                    }
+                    if (map.get("level") != null) {
+                        viewHolder.tv_level.setVisibility(View.VISIBLE);
+                        viewHolder.tv_level.setText("Lv" + map.get("level") + "");
+                        int level = 0;
+                        if (map.get("level") instanceof Integer) {
+                            level = (int) map.get("level");
+                        } else if (map.get("level") instanceof String) {
+                            level = Integer.valueOf((String) map.get("level"));
+                        }
+                        int drawableId = 0;
+                        int colorId = 0;
+                        if (level <= 5) {
+                            drawableId = R.drawable.shape_rec_1;
+                            colorId = R.color.color_level_1;
+                        } else if (level <= 10) {
+                            drawableId = R.drawable.shape_rec_2;
+                            colorId = R.color.color_level_2;
+                        } else if (level <= 15) {
+                            drawableId = R.drawable.shape_rec_3;
+                            colorId = R.color.color_level_3;
+                        } else if (level <= 20) {
+                            drawableId = R.drawable.shape_rec_4;
+                            colorId = R.color.color_level_4;
+                        } else {
+                            drawableId = R.drawable.shape_rec_5;
+                            colorId = R.color.color_level_5;
+                        }
+                        viewHolder.tv_level.setBackgroundResource(drawableId);
+                        viewHolder.tv_username.setTextColor(ContextCompat.getColor(context, colorId));
+                    } else {
+                        viewHolder.tv_level.setVisibility(View.GONE);
+                    }
+                    if (map.containsKey("Gift")) {
+                        isGift = true;
+                        Gift gift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
+                        if (null != gift) {
+                            content = "送了一个:【" + gift.getName() + "】";
+                        }
+                    }
+
+                    SpannableStringBuilder style = new SpannableStringBuilder(content);
+                    if (isGift) {
+                        int bstart = content.indexOf("【");
+                        style.setSpan(new ForegroundColorSpan(Color.YELLOW), bstart, content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                    }
+                    viewHolder.tv_content.setText(style);
+                    viewHolder.tv_content.setTextColor(ContextCompat.getColor(context, R.color.color_text_chat_item));
+                }
+            }
+        }
 
         return convertView;
     }

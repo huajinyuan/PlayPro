@@ -205,19 +205,19 @@
             android:gravity="center"
             android:background="@drawable/shape_focu_bg"
             >
-            <ImageView
-                android:id="@+id/img_anchor_info_follow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/praise_photo_button_image"
-                />
+            <!--<ImageView-->
+                <!--android:id="@+id/img_anchor_info_follow"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@mipmap/praise_photo_button_image"-->
+                <!--/>-->
             <TextView
                 android:id="@+id/tv_anchor_info_follow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:textColor="@color/colorwhite"
-                android:text="关注" />
+                android:text="获取微信" />
 
         </LinearLayout>
         <LinearLayout

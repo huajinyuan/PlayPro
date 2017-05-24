@@ -1154,6 +1154,17 @@ public class StreamingBaseActivity extends Activity implements
                         addChatRoomChangeListenr();
                     }
                 });
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            EMClient.getInstance().chatroomManager().addChatRoomAdmin(chatroomid, "13506075307");
+                            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
 
             @Override
@@ -1170,7 +1181,7 @@ public class StreamingBaseActivity extends Activity implements
 //        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++获取单聊、群聊 聊天记录
 //        conversation = EMClient.getInstance().chatManager().getConversation(chatroomid, EMConversation.EMConversationType.ChatRoom ,true);//chatroom:226122948862280132
 //        msgList = conversation.getAllMessages();
-        if (msgList.isEmpty()&&StringUtils.isNotEmpty(mF.getSysMsg())) {
+        if (msgList.isEmpty() && StringUtils.isNotEmpty(mF.getSysMsg())) {
             EMMessage sysMsg = EMMessage.createTxtSendMessage(mF.getSysMsg(), chatroomid);
             sysMsg.setChatType(EMMessage.ChatType.ChatRoom);
             sysMsg.setFrom("-999");
@@ -1198,12 +1209,14 @@ public class StreamingBaseActivity extends Activity implements
                         final AlertDialog mydialog;
                         AlertDialog.Builder builder = new AlertDialog.Builder(StreamingBaseActivity.this, R.style.DialogTransBackGround);
                         mydialog = builder.create();
-                        mydialog.setCanceledOnTouchOutside(false);
-                        View views = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent, null);
+                        mydialog.setCanceledOnTouchOutside(true);
+                        View views = LayoutInflater.from(StreamingBaseActivity.this).inflate(R.layout.item_dialog_releaseagent2, null);
                         TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
                         Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
                         Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
-                        tv_content.setText("是否禁止 " + user_name + " 发言，或提出直播间？");
+                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
+                        bt_lahei.setVisibility(View.VISIBLE);
+                        tv_content.setText("是否对 " + user_name + " 做出以下操作？");
                         bt_yes.setText("禁言");
                         bt_cancel.setText("踢出");
                         mydialog.setCancelable(true);
@@ -1229,6 +1242,24 @@ public class StreamingBaseActivity extends Activity implements
 
                                 mydialog.dismiss();
                             }
+                        });
+                        bt_lahei.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+//                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
+                                        } catch (HyphenateException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                                mydialog.dismiss();
+                            }
+
                         });
                         bt_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1274,7 +1305,19 @@ public class StreamingBaseActivity extends Activity implements
         }
 
         @Override
-        public void onMemberJoined(String roomId, String participant) {
+        public void onMemberJoined(String roomId, final String participant) {
+            if (participant.equals("13506075307") || participant.equals("15280479951")) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            EMClient.getInstance().chatroomManager().addChatRoomAdmin(chatroomid, participant);
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
 //                checkOnlineNum();
 
 //            EMMessage message = EMMessage.createTxtSendMessage(participant + " 加入了聊天室", chatroomid);
@@ -1370,6 +1413,10 @@ public class StreamingBaseActivity extends Activity implements
                 EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
                 message_content = txtBody.getMessage();
                 Map<String, Object> map = message.ext();
+                if (map.containsKey("StopByAdmin")) {
+                    ToastUtil.showToast("管理员停止了直播", mContext);
+                    StreamingBaseActivity.this.finish();
+                }
                 if (map.containsKey("Gift")) {
                     mGetGift = new Gift();
                     mGetGift = PApplication.getInstance().getGiftObject((String) map.get("Gift"));
@@ -1442,50 +1489,105 @@ public class StreamingBaseActivity extends Activity implements
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Animation a = AnimationUtils.loadAnimation(StreamingBaseActivity.this, R.anim.scalebig2);
-                                a.setFillAfter(true);
-                                mTvLevel.setVisibility(View.VISIBLE);
-                                mTvLevel.setText(message_from + "加入聊天室");
-                                mTvLevel.startAnimation(a);
-                                if (level >= 15) {
+
+                                if (level < 5) {
+//                                    Animation a = AnimationUtils.loadAnimation(StreamingBaseActivity.this, R.anim.scalebig2);
+//                                    a.setFillAfter(true);
+//                                    mTvLevel.setVisibility(View.VISIBLE);
+//                                    mTvLevel.setText(message_from + "加入聊天室");
+//                                    mTvLevel.startAnimation(a);
+////                                if (level >= 15) {
+////                                    mTvLevelToast.setVisibility(View.VISIBLE);
+////                                    mTvLevelToast.setText(message_from + "加入聊天室");
+////                                    mTvLevelToast.startAnimation(a);
+////                                }
+//                                    a.setAnimationListener(new Animation.AnimationListener() {
+//                                        @Override
+//                                        public void onAnimationStart(Animation animation) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationEnd(Animation animation) {
+//                                            runOnUiThread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+////                                                if (mTvLevelToast.getVisibility() == View.VISIBLE) {
+////                                                    mTvLevelToast.clearAnimation();
+////                                                    mTvLevelToast.setVisibility(View.GONE);
+////
+////                                                }
+//                                                    if (mTvLevel.getVisibility() == View.VISIBLE) {
+//                                                        mTvLevel.clearAnimation();
+//                                                        mTvLevel.setVisibility(View.GONE);
+//                                                    }
+//
+//                                                }
+//                                            });
+//                                        }
+//
+//                                        @Override
+//                                        public void onAnimationRepeat(Animation animation) {
+//
+//                                        }
+//                                    });
+                                } else {
+                                    Animation aToast = AnimationUtils.loadAnimation(mContext, R.anim.translate_to_left);
                                     mTvLevelToast.setVisibility(View.VISIBLE);
                                     mTvLevelToast.setText(message_from + "加入聊天室");
-                                    mTvLevelToast.startAnimation(a);
-                                }
-                                a.setAnimationListener(new Animation.AnimationListener() {
-                                    @Override
-                                    public void onAnimationStart(Animation animation) {
+                                    if (level < 10) {
+                                        mTvLevelToast.setBackgroundResource(R.mipmap.icon_level_come_1);
 
+                                    } else if (level < 15) {
+                                        mTvLevelToast.setBackgroundResource(R.mipmap.icon_level_come_2);
+
+
+                                    } else if (level < 20) {
+                                        mTvLevelToast.setBackgroundResource(R.mipmap.icon_level_come_3);
+                                    } else if (level < 25) {
+                                        mTvLevelToast.setBackgroundResource(R.mipmap.icon_level_come_4);
+                                    } else {
+                                        mTvLevelToast.setBackgroundResource(R.mipmap.icon_level_come_5);
                                     }
+                                    mTvLevelToast.startAnimation(aToast);
 
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (mTvLevelToast.getVisibility() == View.VISIBLE) {
-                                                    mTvLevelToast.clearAnimation();
-                                                    mTvLevelToast.setVisibility(View.GONE);
+                                    aToast.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
 
-                                                }
-                                                if (mTvLevel.getVisibility() == View.VISIBLE) {
-                                                    mTvLevel.clearAnimation();
-                                                    mTvLevel.setVisibility(View.GONE);
-                                                }
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            if (mTvLevelToast.getVisibility() == View.VISIBLE) {
+                                                mTvLevelToast.clearAnimation();
+                                                mTvLevelToast.setVisibility(View.GONE);
 
                                             }
-                                        });
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onAnimationRepeat(Animation animation) {
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+
+
                             }
                         });
                     }
-
+                    msgList.add(message);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            if (msgList.size() > 0) {
+                                listView.setSelection(listView.getCount() - 1);
+                                Log.e("sad", "setselection");
+                            }
+                        }
+                    });
                 } else {
                     msgList.add(message);
                     runOnUiThread(new Runnable() {

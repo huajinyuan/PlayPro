@@ -93,6 +93,10 @@ public interface Config {
      */
     String POST_MEMBER_SEND = BASE_URL + "member/send";
     /**
+     * 礼物赠送(mbId&anId&num)
+     */
+    String POST_MEMBER_SEND2 = BASE_URL + "member/sendV2";
+    /**
      * 搜索
      */
     String POST_SEARCH = BASE_URL + "anchor/search";
@@ -112,7 +116,12 @@ public interface Config {
     String MEMBER_LIVESTATUS = BASE_URL + "anchor/liveStatus";
     /***/
     String MEMBER_CSLIST = BASE_URL + "common/attendants";
-//    ?appType=2
+    //    ?appType=2
     String CHECK_VERSION = BASE_URL + "app/update";
+    String COMMON_RECHARGEPIC = BASE_URL + "common/rechargePic";
+    String COMMON_TX = BASE_URL + "anchor/exCharge";
+    String COMMON_TXON = BASE_URL + "anchor/exChargeOn";
+    String COMMON_TXOFF = BASE_URL + "anchor/exChargeOff";
+    String COMMON_SENDTOP = BASE_URL + "anchor/sendTop";
 
 }

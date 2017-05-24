@@ -30,14 +30,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <!--测试-->
+
+        <!-- 测试 -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1164170515115835#webcast" />
-        <!--正式-->
-        <!--<meta-data-->
-            <!--android:name="EASEMOB_APPKEY"-->
-            <!--android:value="1179170426178382#webcast" />-->
+        <!-- 正式 -->
+        <!-- <meta-data -->
+        <!-- android:name="EASEMOB_APPKEY" -->
+        <!-- android:value="1179170426178382#webcast" /> -->
         <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -74,8 +75,9 @@
             android:configChanges="orientation|screenSize"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".activity.home.live.PlayActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".activity.home.live.PlayActivity"
+            android:windowSoftInputMode="adjustPan" />
         <!-- android:windowSoftInputMode="adjustPan" -->
         <activity android:name=".activity.center.GetCoinActivity" />
         <activity android:name=".activity.home.mymessage.ChatActivity" />
@@ -83,7 +85,11 @@
         <activity android:name=".activity.center.SettingActivity" />
         <activity android:name=".activity.home.search.SearchActivity" />
         <activity android:name=".activity.center.EdtInfoActivity" />
-        <activity android:name=".activity.center.CSActivity"/>
+        <activity android:name=".activity.center.CSActivity" />
+        <activity android:name=".activity.center.MySyActivity" />
+        <activity android:name=".activity.center.QrCzhActivity" />
+        <activity android:name=".activity.center.CZListActivity" />
+        <activity android:name=".activity.center.TXActivity"></activity>
     </application>
 
 </manifest>

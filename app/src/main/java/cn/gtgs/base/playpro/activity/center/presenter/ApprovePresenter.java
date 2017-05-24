@@ -57,6 +57,11 @@ public class ApprovePresenter implements IApprove {
                 ToastUtil.showToast("请填写QQ号", delegate.getActivity());
                 return;
             }
+            if (StringUtils.isEmpty(delegate.getWx()))
+            {
+                ToastUtil.showToast("请填写wx号", delegate.getActivity());
+                return;
+            }
             if (StringUtils.isNotEmpty(delegate.getIntroduce()))
             {
                 params.put("anRemark", delegate.getIntroduce());
@@ -65,6 +70,7 @@ public class ApprovePresenter implements IApprove {
             params.put("mbId", info.getMbId());
             params.put("anQq", delegate.getQQ());
             params.put("anSex", delegate.getSex());
+            params.put("anWeixin", delegate.getWx());
             params.put("anQq", delegate.getVideoStatus());
 //            params.put("anSex","");
             params.put("anPhoto", path);

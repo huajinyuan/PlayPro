@@ -54,4 +54,5 @@
         <attr name="backgroundColor" />
         <attr name="textColor" />
     </declare-styleable>
+
 </resources>

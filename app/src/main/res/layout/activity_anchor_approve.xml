@@ -47,6 +47,34 @@
             />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorwhite"
+        android:layout_marginTop="10dp"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="微信号" />
+
+        <EditText
+            android:id="@+id/edt_approve_wx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textSize="14sp"
+            android:background="@null"
+            android:hint="请填写您的微信号"
+            />
+
+    </RelativeLayout>
 
     <!--<View-->
     <!--android:layout_width="match_parent"-->

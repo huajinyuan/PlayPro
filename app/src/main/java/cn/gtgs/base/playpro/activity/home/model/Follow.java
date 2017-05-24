@@ -37,6 +37,9 @@ public class Follow implements Serializable {
     public int dayGold = 0;
     public double anGoldAble = 0;
     public int anPrice;
+    public String sysNotice;
+    public String wxPrice;
+    public String anWeixin;
 
     public UserInfo member;
 
@@ -272,11 +275,35 @@ public class Follow implements Serializable {
         this.wordLimit = wordLimit;
     }
 
+    public String getSysNotice() {
+        return sysNotice;
+    }
+
+    public void setSysNotice(String sysNotice) {
+        this.sysNotice = sysNotice;
+    }
+
+    public String getWxPrice() {
+        return wxPrice;
+    }
+
+    public void setWxPrice(String wxPrice) {
+        this.wxPrice = wxPrice;
+    }
+
+    public String getAnWeixin() {
+        return anWeixin;
+    }
+
+    public void setAnWeixin(String anWeixin) {
+        this.anWeixin = anWeixin;
+    }
 
     @Override
     public String toString() {
         return "Follow{" +
-                "anQq='" + anQq + '\'' +
+                "anGold='" + anGold + '\'' +
+                ", anQq='" + anQq + '\'' +
                 ", isRecommend='" + isRecommend + '\'' +
                 ", anRemark='" + anRemark + '\'' +
                 ", flag='" + flag + '\'' +
@@ -295,7 +322,6 @@ public class Follow implements Serializable {
                 ", anSex='" + anSex + '\'' +
                 ", liveCount='" + liveCount + '\'' +
                 ", faId='" + faId + '\'' +
-                ", anGold='" + anGold + '\'' +
                 ", anGoldGet='" + anGoldGet + '\'' +
                 ", liveStatus='" + liveStatus + '\'' +
                 ", anPhoto='" + anPhoto + '\'' +
@@ -304,6 +330,9 @@ public class Follow implements Serializable {
                 ", dayGold=" + dayGold +
                 ", anGoldAble=" + anGoldAble +
                 ", anPrice=" + anPrice +
+                ", sysNotice='" + sysNotice + '\'' +
+                ", wxPrice='" + wxPrice + '\'' +
+                ", anWeixin='" + anWeixin + '\'' +
                 ", member=" + member +
                 '}';
     }

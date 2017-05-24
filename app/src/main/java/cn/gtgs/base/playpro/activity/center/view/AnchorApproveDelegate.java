@@ -22,6 +22,8 @@ public class AnchorApproveDelegate extends AppDelegate {
 //    public TextView mTvVideoStatus;
     @BindView(R.id.edt_approve_introduce)
     public EditText mEdtIntroduce;
+    @BindView(R.id.edt_approve_wx)
+    public EditText mEdtwx;
     @BindView(R.id.img_approve_icon)
     ImageView Icon;
     @BindView(R.id.rg_approve_sex)
@@ -70,5 +72,9 @@ public class AnchorApproveDelegate extends AppDelegate {
     public String getVideoStatus()
     {
         return mRadioGroupVideo.getCheckedRadioButtonId()==R.id.rb_approve_y?"是":"否";
+    }
+    public String getWx()
+    {
+        return mEdtwx.getText().toString();
     }
 }
