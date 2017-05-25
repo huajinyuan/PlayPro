@@ -45,8 +45,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:textColor="@color/colorBlue"
-                android:textSize="15sp" />
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/colorwhite"
+                android:background="@drawable/shape_rec_1"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

@@ -275,4 +275,19 @@
         android:layout_marginLeft="8dp"
         android:text="在线时长：00:00:00"
         android:textColor="@color/colorBlue" />
+    <TextView
+        android:id="@+id/tv_play_pmd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:ellipsize="marquee"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:background="@drawable/shape_rec_zs"
+        android:maxLines="1"
+        android:text="跑马灯"
+        android:textColor="@color/colorBlue" />
 </RelativeLayout>

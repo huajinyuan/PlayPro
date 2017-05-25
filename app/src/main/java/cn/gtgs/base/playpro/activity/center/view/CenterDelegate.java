@@ -60,6 +60,10 @@ public class CenterDelegate extends AppDelegate {
     TextView mTvGoldCurren;
     @BindView(R.id.tv_center_next_gold)
     TextView mTvGoldNext;
+    @BindView(R.id.tv_level_curren)
+    TextView mTvlevelCurren;
+    @BindView(R.id.tv_level_next)
+    TextView mTvlevelnext;
     @BindView(R.id.goodprogress_conter_pro)
     GoodProgressView progressView;
     UserInfo info;
@@ -109,6 +113,7 @@ public class CenterDelegate extends AppDelegate {
         if (StringUtils.isNotEmpty(follow.getAnStatus()) && follow.getAnStatus().equals("0")) {
             if (StringUtils.isNotEmpty(follow.getAnGold())) {
                 setProGold(Integer.valueOf(follow.getAnGold()));
+
             }
         } else {
             setProGold(info.getMbGoldPay());
@@ -135,6 +140,9 @@ public class CenterDelegate extends AppDelegate {
 
     public void setProGold(int gold) {
         int c = AppUtil.getDJ(Integer.valueOf(gold));
+        int next = c+1;
+        mTvlevelCurren.setText("LV"+c);
+        mTvlevelnext.setText("LV"+next);
         int nextGold = AppUtil.getNextGold(c + 1);
         mTvGoldCurren.setText(gold + "");
         mTvGoldNext.setText(nextGold + "");

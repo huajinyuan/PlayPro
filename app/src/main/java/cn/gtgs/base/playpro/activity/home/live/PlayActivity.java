@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -217,6 +219,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     @BindView(R.id.rel_play_content)
     RelativeLayout mRelContent;
     ACache aCache;
+    PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +245,9 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 //            e.printStackTrace();
 //        }
         setContentView(R.layout.activity_play);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         gifts = new ArrayList<>();
         context = this;
         ButterKnife.bind(this);
@@ -347,6 +353,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         super.onResume();
         if (!isMember) {
             try {
+                mWakeLock.acquire();
                 vv_test.setVideoPath(new DESUtil().decrypt(anchorItem.getWcPullAddress()));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -358,7 +365,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     @Override
     protected void onPause() {
         super.onPause();
-        vv_test.pause();
+        if (!isMember) {
+            vv_test.pause();
+            mWakeLock.release();
+        }
     }
 
     @Override
@@ -373,11 +383,15 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     protected void onDestroy() {
         super.onDestroy();
         //-----------------------------------以下为环信
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-        EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
-        if (null != timer2) {
-            timer2.cancel();
+        if (!isMember) {
+            EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+            EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
+            if (null != timer2) {
+                timer2.cancel();
+            }
         }
+
+
     }
 
 
@@ -401,7 +415,12 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     ToastUtil.showToast("您已被禁言，消息无法发送", PlayActivity.this);
                     return;
                 }
-                vp_emoji.setVisibility(View.GONE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        vp_emoji.setVisibility(View.GONE);
+                    }
+                });
                 et_huanxin_content = et_content.getText().toString().trim();
                 F.e("------------------------" + et_huanxin_content);
                 if (et_huanxin_content.isEmpty()) {
@@ -1095,7 +1114,13 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                 for (int i = str.length() - 1; i >= 0; i--) {
                     if (!isEmojiCharacter(str.charAt(i))) {
                         if (!StringUtils.isChinese(str.charAt(i)) || str.charAt(i) == '夜' || str.charAt(i) == '狼') {
-                            istrue = false;
+                            if (str.charAt(i) == '[' || str.charAt(i) == ']') {
+
+                                istrue = true;
+                            } else {
+                                istrue = false;
+
+                            }
                         }
                     }
                 }
@@ -1402,7 +1427,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             int i = ob.getIntValue("code");
                             int faCount = Integer.valueOf(anchorItem.getFaCount());
                             if (i == 1) {
-                                ToastUtil.showToast("您已成功关注该主播", PlayActivity.this);
                                 int a = ob.getInteger("data");
                                 ArrayList<String> gs = PApplication.getInstance().getmFList();
                                 if (a == 1) {
@@ -1411,7 +1435,6 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                     mTvcontentfollow.setText("已关注");
 //                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image2);
                                 } else {
-                                    ToastUtil.showToast("您已成功取消关注", PlayActivity.this);
                                     faCount = faCount - 1;
                                     mTvcontentfollow.setText("关注");
 //                                    mImgFollow.setImageResource(R.mipmap.praise_photo_button_image);
@@ -1683,8 +1706,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                         TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
                                         Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
                                         Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
-                                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
-                                        bt_lahei.setVisibility(View.VISIBLE);
+//                                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
+//                                        bt_lahei.setVisibility(View.VISIBLE);
                                         tv_content.setText("是否对 " + user_name + " 做出以下操作？");
                                         bt_yes.setText("禁言");
                                         bt_cancel.setText("踢出");
@@ -1712,23 +1735,23 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                                 mydialog.dismiss();
                                             }
                                         });
-                                        bt_lahei.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                new Thread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        try {
-//                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
-                                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
-                                                        } catch (HyphenateException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                }).start();
-                                                mydialog.dismiss();
-                                            }
-                                        });
+//                                        bt_lahei.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                new Thread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        try {
+////                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+//                                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
+//                                                        } catch (HyphenateException e) {
+//                                                            e.printStackTrace();
+//                                                        }
+//                                                    }
+//                                                }).start();
+//                                                mydialog.dismiss();
+//                                            }
+//                                        });
                                         bt_cancel.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -1821,13 +1844,21 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                     });
                 } else if (map.containsKey("Recharge")) {
                     // TODO 收费
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showShoufeiDialog(Integer.valueOf((String) map.get("Recharge")));
-                            vv_test.pause();
-                        }
-                    });
+                    EMChatRoom chatRoom = null;
+                    try {
+                        chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                    }
+                    if (!chatRoom.getAdminList().contains(loginInfo.getMbPhone())) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showShoufeiDialog(Integer.valueOf((String) map.get("Recharge")));
+                                vv_test.pause();
+                            }
+                        });
+                    }
 
 
                 } else if (map.containsKey("DanMu")) {

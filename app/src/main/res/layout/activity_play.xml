@@ -259,6 +259,8 @@
             android:layout_marginTop="8dp"
             android:ellipsize="marquee"
             android:visibility="gone"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
             android:marqueeRepeatLimit="marquee_forever"
             android:background="@drawable/shape_rec_zs"
             android:maxLines="1"

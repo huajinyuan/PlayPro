@@ -15,7 +15,6 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.util.NetUtils;
 
 import butterknife.OnClick;
 import cn.gtgs.base.playpro.PApplication;
@@ -237,7 +236,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
     protected void onResume() {
         super.onResume();
         presenter.getInfo();
-        login();
+
     }
 
     @Override
@@ -308,11 +307,11 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                             HomeActivity.this.finish();
                             Toast.makeText(HomeActivity.this, "帐号在其他设备登录", Toast.LENGTH_LONG).show();
                         } else {
-                            HomeActivity.this.finish();
-                            if (NetUtils.hasNetwork(HomeActivity.this))
-                                Toast.makeText(HomeActivity.this, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
-                            else
-                                Toast.makeText(HomeActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
+//                            HomeActivity.this.finish();
+//                            if (NetUtils.hasNetwork(HomeActivity.this))
+//                                Toast.makeText(HomeActivity.this, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
+//                            else
+//                                Toast.makeText(HomeActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

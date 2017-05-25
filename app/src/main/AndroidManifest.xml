@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -32,14 +31,11 @@
         tools:replace="android:icon">
 
         <!-- 测试 -->
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="1164170515115835#webcast" />
         <!-- 正式 -->
-        <!-- <meta-data -->
-        <!-- android:name="EASEMOB_APPKEY" -->
-        <!-- android:value="1179170426178382#webcast" /> -->
-        <!-- 声明SDK所需的service SDK核心功能 -->
+        <meta-data
+        android:name="EASEMOB_APPKEY"
+        android:value="1179170426178382#webcast" />
+        <!--声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />

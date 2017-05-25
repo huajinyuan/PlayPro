@@ -149,7 +149,7 @@ public class PApplication extends Application {
             int b = i + 1;
             switch (i) {
                 case 0:
-                    g.setCredits("5");
+                    g.setCredits("1");
                     g.setName("黄瓜");
                     break;
                 case 1:

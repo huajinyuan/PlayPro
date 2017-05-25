@@ -80,7 +80,6 @@ public class LoginActivity extends DataBindActivity<LoginDelegate> implements IL
 
     @Override
     public void LoginSuccess(Follow userInfo) {
-        ToastUtil.showToast("LoginSuccess", this);
         mACache.put(ACacheKey.CURRENT_ACCOUNT, userInfo);
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);

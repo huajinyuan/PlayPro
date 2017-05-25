@@ -134,7 +134,7 @@ public class GoodProgressView extends View {
 //      float wordWidth = 26*unit;//字长
         float offsetLength = 5 * unit;//留空
 //      float width = 300*unit;//绘画区域的长度
-        float height = 12 * unit;//绘画区域的高度
+        float height = 30 * unit;//绘画区域的高度
         float progressWidth = 288 * unit;//绘画区域的长度
 
         mPaint.setAntiAlias(true);

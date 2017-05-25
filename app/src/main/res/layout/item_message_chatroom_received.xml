@@ -42,6 +42,7 @@
             android:layout_marginLeft="3dp"
             android:layout_toRightOf="@id/tv_level"
             android:text="用户名:"
+            android:maxLength="4"
             android:textColor="@color/colorBlue"
             android:textSize="@dimen/sp_12" />
 

@@ -16,7 +16,9 @@ import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.fragment.presenter.IRecommentedItemListener;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.utils.AppUtil;
 import cn.gtgs.base.playpro.utils.PixelUtil;
+import cn.gtgs.base.playpro.utils.StringUtils;
 
 /**
  * Created by  on 2016/9/2.
@@ -76,8 +78,26 @@ public class RecommentedAdapter extends RecyclerView.Adapter<RecommentedAdapter.
         } else if (anchorItem.getLiveStatus().equals("3")) {
             holder.tvStatus.setText("开车");
             holder.tvStatus.setBackgroundResource(R.drawable.background_green);
-
         }
+if (StringUtils.isNotEmpty(anchorItem.getAnGold())){
+ int level = AppUtil.getDJ(Integer.valueOf(anchorItem.getAnGold()));
+ if (level<5){
+     holder.tvName.setBackgroundResource(R.drawable.shape_rec_1);
+ }else if (level<10){
+     holder.tvName.setBackgroundResource(R.drawable.shape_rec_2);
+ }else if (level<15){
+     holder.tvName.setBackgroundResource(R.drawable.shape_rec_3);
+ }else if (level<20){
+     holder.tvName.setBackgroundResource(R.drawable.shape_rec_4);
+ }else {
+     holder.tvName.setBackgroundResource(R.drawable.shape_rec_5);
+ }
+}
+
+
+
+
+
 
     }
 

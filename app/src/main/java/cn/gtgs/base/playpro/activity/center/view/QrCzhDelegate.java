@@ -24,6 +24,10 @@ public class QrCzhDelegate extends AppDelegate {
     ImageView mImgQr;
     @BindView(R.id.img_qr_czh_qr2)
     ImageView mImgQr2;
+    @BindView(R.id.tv_qr_tip1)
+    TextView tip1;
+    @BindView(R.id.tv_qr_tip2)
+    TextView tip2;
 
     @Override
     public int getRootLayoutId() {
@@ -38,14 +42,23 @@ public class QrCzhDelegate extends AppDelegate {
         setmTvTitle("加好友充值");
 
     }
+    public ImageView getmImgQr()
+    {
+        return  mImgQr;
+    }  public ImageView getmImgQr2()
+    {
+        return  mImgQr2;
+    }
 
     public void setmImgQr(ArrayList<PicInfo> pics) {
         if (pics.size() > 0) {
             Glide.with(this.getActivity()).load(Config.BASE + pics.get(0).getAdImage()).into(mImgQr);
+            tip1.setText(pics.get(0).getAdTitle());
         }
         if (pics.size() > 1) {
 
             Glide.with(this.getActivity()).load(Config.BASE + pics.get(1).getAdImage()).into(mImgQr2);
+            tip1.setText(pics.get(1).getAdTitle());
         }
     }
 

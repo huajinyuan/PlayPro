@@ -1,5 +1,6 @@
 package cn.gtgs.base.playpro.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -119,7 +120,7 @@ public class ChatEmoticoViewPager extends ViewPager implements OnItemClickListen
 
 	@Override
 	public void onItemClick(AdapterView<?> gridView, View view, int position, long id) {
-		String key = PApplication.emoticonKeyList.get(gridView.getId() * 21 +  position);
+		@SuppressLint("ResourceType") String key = PApplication.emoticonKeyList.get(gridView.getId() * 21 +  position);
 		if(onEmoticoSelectedListener!=null){
 			onEmoticoSelectedListener.onEmoticoSelected(key);
 		}

@@ -1,6 +1,7 @@
 package cn.gtgs.base.playpro.activity.center.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.gtgs.base.playpro.R;
+import cn.gtgs.base.playpro.activity.center.QrCzhActivity;
 import cn.gtgs.base.playpro.activity.center.model.Gold;
 import cn.gtgs.base.playpro.utils.StringUtils;
 
@@ -69,6 +71,13 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.AnchorHotViewH
             this.tv_gold = (TextView) itemView.findViewById(R.id.tv_gold);
             this.tv_gold_value = (TextView) itemView.findViewById(R.id.tv_gold_value);
             this.tv_gold_gifts = (TextView) itemView.findViewById(R.id.tv_gold_gifts);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, QrCzhActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 }

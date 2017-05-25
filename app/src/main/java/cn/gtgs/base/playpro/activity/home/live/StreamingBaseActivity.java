@@ -799,9 +799,9 @@ public class StreamingBaseActivity extends Activity implements
         tv_live_id = (TextView) findViewById(R.id.tv_live_id);
         tv_live_onlinenum = (TextView) findViewById(R.id.tv_live_onlinenum);
         ll_live_onlinenum = (LinearLayout) findViewById(R.id.ll_live_onlinenum);
-        if (StringUtils.isNotEmpty(mF.getFaCount())) {
-            tv_live_onlinenum.setText(mF.getFaCount());
-        }
+//        if (StringUtils.isNotEmpty(mF.getFaCount())) {
+//            tv_live_onlinenum.setText(mF.getFaCount());
+//        }
 
 //        tv_live_id.setText("ID:" + loginInfo.id);
         iv_live_option.setOnClickListener(new View.OnClickListener() {
@@ -913,6 +913,14 @@ public class StreamingBaseActivity extends Activity implements
 ////            });
 //        }
         mTvGoldCount.setText(mF.getAnGold() + "");
+        if (StringUtils.isNotEmpty(mF.getSysNotice())) {
+            Animation translateAnimation2 = AnimationUtils.loadAnimation(this, R.anim.translate_to_left2);
+            TextView t = (TextView) findViewById(R.id.tv_play_pmd);
+            t.setVisibility(View.VISIBLE);
+            t.setText(mF.getSysNotice());
+            t.setAnimation(translateAnimation2);
+            t.startAnimation(translateAnimation2);
+        }
 
     }
 
@@ -1158,8 +1166,15 @@ public class StreamingBaseActivity extends Activity implements
                     @Override
                     public void run() {
                         try {
-                            EMClient.getInstance().chatroomManager().addChatRoomAdmin(chatroomid, "13506075307");
                             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                       final int count = chatRoom.getMemberCount()*3;
+                            runOnUiThread(new Runnable() {
+                           @Override
+                           public void run() {
+                               tv_live_onlinenum.setText(count+"");
+                           }
+                       });
+
                         } catch (HyphenateException e) {
                             e.printStackTrace();
                         }
@@ -1214,8 +1229,8 @@ public class StreamingBaseActivity extends Activity implements
                         TextView tv_content = (TextView) views.findViewById(R.id.tv_dialog_content);
                         Button bt_cancel = (Button) views.findViewById(R.id.bt_dialog_cancel);
                         Button bt_yes = (Button) views.findViewById(R.id.bt_dialog_yes);
-                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
-                        bt_lahei.setVisibility(View.VISIBLE);
+//                        Button bt_lahei = (Button) views.findViewById(R.id.bt_dialog_center);
+//                        bt_lahei.setVisibility(View.VISIBLE);
                         tv_content.setText("是否对 " + user_name + " 做出以下操作？");
                         bt_yes.setText("禁言");
                         bt_cancel.setText("踢出");
@@ -1243,24 +1258,24 @@ public class StreamingBaseActivity extends Activity implements
                                 mydialog.dismiss();
                             }
                         });
-                        bt_lahei.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-//                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
-                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
-                                        } catch (HyphenateException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }).start();
-                                mydialog.dismiss();
-                            }
-
-                        });
+//                        bt_lahei.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                new Thread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        try {
+////                                            EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatroomid, members);
+//                                            EMClient.getInstance().chatroomManager().blockChatroomMembers(chatroomid, members);
+//                                        } catch (HyphenateException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                }).start();
+//                                mydialog.dismiss();
+//                            }
+//
+//                        });
                         bt_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1306,7 +1321,7 @@ public class StreamingBaseActivity extends Activity implements
 
         @Override
         public void onMemberJoined(String roomId, final String participant) {
-            if (participant.equals("13506075307") || participant.equals("15280479951")) {
+            if (participant.equals("18616375556") || participant.equals("13562180843")) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -1463,11 +1478,14 @@ public class StreamingBaseActivity extends Activity implements
                         @Override
                         public void run() {
                             try {
-                                final EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                                 EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                               final int count =chatRoom.getMemberCount() * 3;
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mF.setFaCount(chatRoom.getMemberCount() * 3 + "");
+                                        mF.setFaCount(count + "");
+                                        tv_live_onlinenum.setText(count+"");
                                     }
                                 });
 //                    return chatRoom.getMemberCount() * 3;
@@ -1477,12 +1495,12 @@ public class StreamingBaseActivity extends Activity implements
                         }
                     }).start();
 //                    mF.setFaCount(getChatRoomInfoCount() + "");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tv_live_onlinenum.setText(mF.getFaCount() + "");
-                        }
-                    });
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            tv_live_onlinenum.setText(mF.getFaCount() + "");
+//                        }
+//                    });
                     if (map.containsKey("level")) {
                         final int level = Integer.valueOf((String) map.get("level"));
 
