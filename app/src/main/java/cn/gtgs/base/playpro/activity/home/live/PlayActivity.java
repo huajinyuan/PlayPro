@@ -63,7 +63,6 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.NetUtils;
 import com.opendanmaku.DanmakuItem;
 import com.opendanmaku.DanmakuView;
 import com.opendanmaku.IDanmakuItem;
@@ -335,6 +334,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             try {
                 mWakeLock.acquire();
                 vv_test.setVideoPath(new DESUtil().decrypt(anchorItem.getWcPullAddress()));
+                login();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -348,6 +348,8 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (!isMember) {
             vv_test.pause();
             mWakeLock.release();
+            EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+            EMClient.getInstance().chatroomManager().leaveChatRoom(chatroomid);
         }
     }
 
@@ -1575,11 +1577,11 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             PlayActivity.this.finish();
                             Toast.makeText(context, "帐号在其他设备登录", Toast.LENGTH_LONG).show();
                         } else {
-                            PlayActivity.this.finish();
-                            if (NetUtils.hasNetwork(PlayActivity.this))
-                                Toast.makeText(context, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
-                            else
-                                Toast.makeText(context, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
+//                            PlayActivity.this.finish();
+//                            if (NetUtils.hasNetwork(PlayActivity.this))
+//                                Toast.makeText(context, "连接不到聊天服务器", Toast.LENGTH_LONG).show();
+//                            else
+//                                Toast.makeText(context, "当前网络不可用，请检查网络设置", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -1589,7 +1591,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
     public void sendJoinMSG() {
         //TODO 发送加入消息
-        if (loginInfo.getMbLevel()>=5){
+        if (loginInfo.getMbLevel() >= 5) {
             EMMessage message = EMMessage.createTxtSendMessage("进来逛逛", chatroomid);
             message.setFrom(loginInfo.getMbPhone());
             message.setChatType(EMMessage.ChatType.ChatRoom);

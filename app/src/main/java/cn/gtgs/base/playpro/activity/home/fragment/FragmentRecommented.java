@@ -2,9 +2,6 @@ package cn.gtgs.base.playpro.activity.home.fragment;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -21,12 +18,13 @@ import cn.gtgs.base.playpro.base.presenter.FragmentPresenter;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.ToastUtil;
+import cn.gtgs.base.playpro.widget.PullLoadMoreRecyclerView;
 
 /**
  * Created by  on 2017/4/26.
  */
 
-public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> implements SwipeRefreshLayout.OnRefreshListener, IRecommentedItemListener {
+public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> implements PullLoadMoreRecyclerView.PullLoadMoreListener, IRecommentedItemListener {
     RecommentedPresenter presenter;
     Follow mF;
     UserInfo info;
@@ -40,7 +38,11 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
     public void init() {
         presenter = new RecommentedPresenter(viewDelegate, this);
         presenter.initData();
-        viewDelegate.getmSwp().setOnRefreshListener(this);
+//        viewDelegate.getmSwp().setOnRefreshListener(this);
+        viewDelegate.getmPullLoadMoreRecyclerView().setRefreshing(true);
+        viewDelegate.getmPullLoadMoreRecyclerView().setFooterViewText("loading");
+        viewDelegate.getmPullLoadMoreRecyclerView().setLinearLayout();
+        viewDelegate.getmPullLoadMoreRecyclerView().setOnPullLoadMoreListener(this);
         mF = (Follow) ACache.get(getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = mF.getMember();
     }
@@ -50,22 +52,26 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
         presenter.refresh();
     }
 
+    @Override
+    public void onLoadMore() {
+        presenter.getData(false);
+    }
 
-    public RecommentedPresenter getPresend()
-    {
+
+    public RecommentedPresenter getPresend() {
         return presenter;
     }
+
     @Override
     public void itemCliclk(Follow follow) {
         mF = (Follow) ACache.get(getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = mF.getMember();
-        if (info.isAdmin()){
+        if (info.isAdmin()) {
             Intent intent = new Intent(getActivity(), PlayActivity.class);
             intent.putExtra("anchoritem", follow);
             intent.putExtra("IsMember", false);
             getActivity().startActivity(intent);
-        }
-        else{
+        } else {
             if (follow.getLiveStatus().equals("3") || follow.getAnPrice() != 0) {
                 showShoufeiDialog(follow);
             } else {
@@ -116,43 +122,44 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
         });
     }
 
-    public void initLoadMoreListener()
-    {
-        viewDelegate.getmRecContent().setOnScrollListener(new RecyclerView.OnScrollListener() {
-            int lastVisibleItem ;
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                //判断RecyclerView的状态 是空闲时，同时，是最后一个可见的ITEM时才加载
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == viewDelegate.getmRecContent().getAdapter().getItemCount()) {
-
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
+//    public void initLoadMoreListener() {
+//        viewDelegate.getmRecContent().setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            int lastVisibleItem;
 //
-//                            List<String> footerDatas = new ArrayList<String>();
-//                            for (int i = 0; i< 10; i++) {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
 //
-//                                footerDatas.add("footer  item" + i);
-//                            }
-//                            viewDelegate.getmRecContent().getAdapter().AddFooterItem(footerDatas);
-//                        }
-//                    }, 3000);
-                    viewDelegate.getmSwp().setRefreshing(true);
-
-                }
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                //最后一个可见的ITEM
-                lastVisibleItem=layoutManager.findLastVisibleItemPosition();
-            }
-        });
-
-
-    }
+//                //判断RecyclerView的状态 是空闲时，同时，是最后一个可见的ITEM时才加载
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == viewDelegate.getmRecContent().getAdapter().getItemCount()) {
+//
+////                    new Handler().postDelayed(new Runnable() {
+////                        @Override
+////                        public void run() {
+////
+////                            List<String> footerDatas = new ArrayList<String>();
+////                            for (int i = 0; i< 10; i++) {
+////
+////                                footerDatas.add("footer  item" + i);
+////                            }
+////                            viewDelegate.getmRecContent().getAdapter().AddFooterItem(footerDatas);
+////                        }
+////                    }, 3000);
+////                    viewDelegate.getmSwp().setRefreshing(true);
+//                    viewDelegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                //最后一个可见的ITEM
+//                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+//            }
+//        });
+//
+//
+//    }
 }

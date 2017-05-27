@@ -62,7 +62,7 @@ public class StarPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
+                ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
             }
 
             @Override
@@ -105,7 +105,7 @@ public class StarPresenter implements IRecommented {
 
         HttpParams params = new HttpParams();
         params.put("page", "1");
-        params.put("count", "30");
+        params.put("count", "100");
         GetRequest request = OkGo.get(Config.POST_ANCHOR_TOP).params(params);
 
 //        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
@@ -117,8 +117,7 @@ public class StarPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-                if (delegate.getmSwp().isRefreshing())
-                {
+                if (delegate.getmSwp().isRefreshing()) {
                     delegate.getmSwp().setRefreshing(false);
                 }
             }

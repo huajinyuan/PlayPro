@@ -1,6 +1,5 @@
 package cn.gtgs.base.playpro.activity.home.fragment.view;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import cn.gtgs.base.playpro.activity.home.model.ADInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.base.view.AppDelegate;
 import cn.gtgs.base.playpro.http.Config;
+import cn.gtgs.base.playpro.widget.PullLoadMoreRecyclerView;
 import cn.gtgs.base.playpro.widget.bn.CarouselView;
 
 /**
@@ -27,10 +27,13 @@ import cn.gtgs.base.playpro.widget.bn.CarouselView;
 
 public class RecommentedDelegate extends AppDelegate {
     GridLayoutManager gridLayoutManager;
-    @BindView(R.id.rec_recomment_content)
+    //    @BindView(R.id.rec_recomment_content)
     RecyclerView mRecContent;
-    @BindView(R.id.swp_pull_comment)
-    SwipeRefreshLayout mSwp;
+    @BindView(R.id.rec_recomment_content)
+    PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
+
+    //    @BindView(R.id.swp_pull_comment)
+//    SwipeRefreshLayout mSwp;
     @BindView(R.id.CarouselView)
     CarouselView cardView;
     RecommentedAdapter adapter;
@@ -41,12 +44,20 @@ public class RecommentedDelegate extends AppDelegate {
         return R.layout.fragment_recommented;
     }
 
-    public void setData(ArrayList<Follow> follows, IRecommentedItemListener listener) {
-        mDatas.clear();
-        mDatas.addAll(follows);
-        if (mSwp.isRefreshing()) {
-            mSwp.setRefreshing(false);
+    @Override
+    public void initWidget() {
+        super.initWidget();
+        if (null == mRecContent) {
+            mRecContent = mPullLoadMoreRecyclerView.getRecyclerView();
+            mRecContent.setVerticalScrollBarEnabled(true);
         }
+    }
+
+    public void setData(ArrayList<Follow> follows, IRecommentedItemListener listener, boolean isRefresh) {
+        if (isRefresh) {
+            mDatas.clear();
+        }
+        mDatas.addAll(follows);
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         if (null == adapter) {
             mRecContent.setLayoutManager(gridLayoutManager);
@@ -61,8 +72,12 @@ public class RecommentedDelegate extends AppDelegate {
         }
     }
 
-    public SwipeRefreshLayout getmSwp() {
-        return mSwp;
+//    public SwipeRefreshLayout getmSwp() {
+//        return mSwp;
+//    }
+
+    public PullLoadMoreRecyclerView getmPullLoadMoreRecyclerView() {
+        return mPullLoadMoreRecyclerView;
     }
 
     public void setAD(final ArrayList<ADInfo> ads) {
@@ -87,8 +102,8 @@ public class RecommentedDelegate extends AppDelegate {
             }
         });
     }
-    public RecyclerView getmRecContent()
-    {
+
+    public RecyclerView getmRecContent() {
         return mRecContent;
     }
 

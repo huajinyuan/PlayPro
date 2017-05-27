@@ -11,14 +11,18 @@
         android:layout_height="180dp"
         android:visibility="gone" />
 
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swp_pull_comment"
+    <cn.gtgs.base.playpro.widget.PullLoadMoreRecyclerView
+        android:id="@+id/rec_recomment_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/rec_recomment_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"/>
+
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swp_pull_comment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/rec_recomment_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

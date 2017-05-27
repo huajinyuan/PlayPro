@@ -37,6 +37,7 @@ public class RecommentedPresenter implements IRecommented {
     ACache aCache;
     Follow follow;
     UserInfo info;
+    private int page = 1;
 
     public RecommentedPresenter(RecommentedDelegate delegate, IRecommentedItemListener listener) {
         this.delegate = delegate;
@@ -49,7 +50,7 @@ public class RecommentedPresenter implements IRecommented {
     @Override
     public void initData() {
         doRefresh();
-        getData();
+        getData(true);
         getAdverts();
     }
 
@@ -59,20 +60,23 @@ public class RecommentedPresenter implements IRecommented {
 
     }
 
-    public void refresh()
-    {
+    public void refresh() {
+        page = 1;
         doRefresh();
-        getData();
+        getData(true);
     }
 
 
-    private void getData() {
+    public void getData(final boolean isRefresh) {
 
 //        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
+        if (!isRefresh) {
+            page++;
+        }
 
         HttpParams params = new HttpParams();
-        params.put("page", "1");
-        params.put("count", "100");
+        params.put("page", page);
+        params.put("count", "5");
         params.put("isRecommend", "1");
 
 //        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST).params(params);
@@ -85,10 +89,11 @@ public class RecommentedPresenter implements IRecommented {
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
-                if (delegate.getmSwp().isRefreshing()) {
-                    delegate.getmSwp().setRefreshing(false);
+                ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
+                if (!isRefresh) {
+                    page--;
                 }
+                delegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
             }
 
             @Override
@@ -97,7 +102,8 @@ public class RecommentedPresenter implements IRecommented {
                 F.e("-----------------------------" + bList.toString());
                 ArrayList<Follow> follows = (ArrayList<Follow>) bList.getDataList();
                 F.e("-----------------------------" + follows.toString());
-                delegate.setData(follows,listener);
+                delegate.setData(follows, listener, isRefresh);
+                delegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
             }
         });
 
@@ -145,24 +151,27 @@ public class RecommentedPresenter implements IRecommented {
         HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
-                if (delegate.getmSwp().isRefreshing()) {
-                    delegate.getmSwp().setRefreshing(false);
-                }
+//                if (delegate.getmSwp().isRefreshing()) {
+//                    delegate.getmSwp().setRefreshing(false);
+//                }
+                delegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
             }
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast("请求失败，请检查网络",delegate.getActivity());
-                if (delegate.getmSwp().isRefreshing()) {
-                    delegate.getmSwp().setRefreshing(false);
-                }
+                ToastUtil.showToast("请求失败，请检查网络", delegate.getActivity());
+//                if (delegate.getmSwp().isRefreshing()) {
+//                    delegate.getmSwp().setRefreshing(false);
+//                }
+                delegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
             }
 
             @Override
             public void onNext(Response response) {
-                if (delegate.getmSwp().isRefreshing()) {
-                    delegate.getmSwp().setRefreshing(false);
-                }
+//                if (delegate.getmSwp().isRefreshing()) {
+//                    delegate.getmSwp().setRefreshing(false);
+//                }
+                delegate.getmPullLoadMoreRecyclerView().setPullLoadMoreCompleted();
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 if (null != bs.getData()) {
                     follow = bs.getData();
