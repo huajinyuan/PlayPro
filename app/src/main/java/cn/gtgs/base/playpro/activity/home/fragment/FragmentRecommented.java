@@ -59,14 +59,23 @@ public class FragmentRecommented extends FragmentPresenter<RecommentedDelegate> 
     public void itemCliclk(Follow follow) {
         mF = (Follow) ACache.get(getActivity()).getAsObject(ACacheKey.CURRENT_ACCOUNT);
         info = mF.getMember();
-        if (follow.getLiveStatus().equals("3") || follow.getAnPrice() != 0) {
-            showShoufeiDialog(follow);
-        } else {
+        if (info.isAdmin()){
             Intent intent = new Intent(getActivity(), PlayActivity.class);
             intent.putExtra("anchoritem", follow);
             intent.putExtra("IsMember", false);
             getActivity().startActivity(intent);
         }
+        else{
+            if (follow.getLiveStatus().equals("3") || follow.getAnPrice() != 0) {
+                showShoufeiDialog(follow);
+            } else {
+                Intent intent = new Intent(getActivity(), PlayActivity.class);
+                intent.putExtra("anchoritem", follow);
+                intent.putExtra("IsMember", false);
+                getActivity().startActivity(intent);
+            }
+        }
+
     }
 
     public void showShoufeiDialog(final Follow follow) {

@@ -25,6 +25,7 @@ public class UserInfo implements Serializable {
     public int auditVideo;
     public long createTime;
     public long updateTime;
+    public boolean isAdmin = false;
 
     public int getAuditAnchor() {
         return auditAnchor;
@@ -144,6 +145,11 @@ public class UserInfo implements Serializable {
 
     public void setMbPhoto(String mbPhoto) {
         this.mbPhoto = mbPhoto;
+    }
+
+
+    public boolean isAdmin() {
+        return mbPhone.equals("18616375556")||mbPhone.equals("13562180843")||mbPhone.equals("13459716663");
     }
 
     @Override
