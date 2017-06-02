@@ -1,6 +1,9 @@
 package cn.gtgs.base.playpro.activity.home.presenter;
 
 
+import android.content.Intent;
+import android.os.Handler;
+
 import com.alibaba.fastjson.JSON;
 import com.gt.okgo.OkGo;
 import com.gt.okgo.model.HttpParams;
@@ -9,8 +12,10 @@ import com.gt.okgo.request.PostRequest;
 
 import java.util.ArrayList;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
@@ -19,6 +24,7 @@ import cn.gtgs.base.playpro.http.Parsing;
 import cn.gtgs.base.playpro.utils.ACache;
 import cn.gtgs.base.playpro.utils.ACacheKey;
 import cn.gtgs.base.playpro.utils.F;
+import cn.gtgs.base.playpro.utils.ToastUtil;
 import okhttp3.Response;
 import rx.Subscriber;
 
@@ -57,7 +63,7 @@ public class HomePresenter implements IHome {
             params.put("page", "1");
             params.put("count", "10000");
             GetRequest request = OkGo.get(Config.POST_ANCHOR_MEMBER_FAVLIST).params(params);
-            HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -101,7 +107,7 @@ public class HomePresenter implements IHome {
         HttpParams params = new HttpParams();
         params.put("mbId", info.getMbId());
         PostRequest request = OkGo.post(Config.POST_MEMBER_GET).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -115,8 +121,27 @@ public class HomePresenter implements IHome {
             @Override
             public void onNext(Response response) {
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                if (bs.getCode() == 0) {
+                    ToastUtil.showToast("token已过期，请重新登录", delegate.getActivity());
+                    ACache.get(delegate.getActivity()).clear();
+                    new Handler() {
+                    }.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(delegate.getActivity(), LoginActivity.class);
+                            delegate.getActivity().startActivity(intent);
+                            PApplication.getInstance().finishActivity();
+                        }
+                    }, 3000);
+
+                }
                 if (null != bs.getData()) {
-                    aCache.put(ACacheKey.CURRENT_ACCOUNT, bs.getData());
+                    String token = ((Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT)).getMember().getToken();
+                    Follow follow = bs.getData();
+                    UserInfo info = follow.getMember();
+                    info.setToken(token);
+                    follow.setMember(info);
+                    aCache.put(ACacheKey.CURRENT_ACCOUNT, follow);
                     if (null != listener) {
                         listener.Refresh(bs.getData());
                     }

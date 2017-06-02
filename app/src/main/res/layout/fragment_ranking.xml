@@ -3,45 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorbg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/LAYOUT_TOP_HEADER"
         android:layout_width="match_parent"
-        android:background="@color/colorwhite"
         android:layout_height="45.5dp"
-        android:padding="0.0px" >
+        android:background="@color/colorwhite"
+        android:padding="0.0px">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/btn_tyrants"
                 android:layout_width="match_parent"
                 android:layout_height="45.5dp"
-                android:background="@drawable/shape_orange_indicator_r"
-                android:text="土豪榜"
-                android:gravity="center"
                 android:layout_weight="1"
+                android:background="@drawable/shape_orange_indicator_r"
+                android:gravity="center"
+                android:text="土豪榜"
                 android:textColor="@color/colorBlue" />
+
             <View
                 android:layout_width="0.5dp"
                 android:layout_height="45.5dp"
-                android:background="@color/colorbg"/>
+                android:background="@color/colorbg" />
 
             <TextView
                 android:id="@+id/btn_star"
                 android:layout_width="match_parent"
                 android:layout_height="45.5dp"
+                android:layout_weight="1"
                 android:background="@color/float_transparent"
                 android:gravity="center"
-                android:text="明星榜"
+                android:text="月榜"
+                android:textColor="@color/gray_btn_bg_pressed_color" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="45.5dp"
+                android:background="@color/colorbg" />
+
+            <TextView
+                android:id="@+id/btn_star_week"
+                android:layout_width="match_parent"
+                android:layout_height="45.5dp"
                 android:layout_weight="1"
+                android:background="@color/float_transparent"
+                android:gravity="center"
+                android:text="周榜"
                 android:textColor="@color/gray_btn_bg_pressed_color" />
         </LinearLayout>
 
@@ -50,8 +65,8 @@
 
     <FrameLayout
         android:id="@+id/layout_ranking_content"
-        android:layout_marginTop="0.5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="0.5dp" />
 
 </LinearLayout>

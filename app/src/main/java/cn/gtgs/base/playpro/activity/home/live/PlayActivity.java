@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -90,6 +91,7 @@ import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.activity.home.model.BDInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
 import cn.gtgs.base.playpro.activity.home.mymessage.ChatActivity;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.BaseList;
 import cn.gtgs.base.playpro.http.Config;
@@ -433,18 +435,18 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
     }
 
     public void bt_likes(View v) {
-        v.setClickable(false);
-        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "DianZan", chatroomid);
-        message.setChatType(EMMessage.ChatType.ChatRoom);
-        message.setFrom(loginInfo.getMbPhone());
-        message.setAttribute("user_name", loginInfo.getMbNickname());
-        message.setAttribute("DianZan", "DianZan");
-        message.setAttribute("level", loginInfo.getMbLevel());
-        EMClient.getInstance().chatManager().sendMessage(message);
-        if (temp) {
-            new MyTimer(2000, 300).start();
-            temp = false;
-        }
+//        v.setClickable(false);
+//        EMMessage message = EMMessage.createTxtSendMessage("[key]" + "DianZan", chatroomid);
+//        message.setChatType(EMMessage.ChatType.ChatRoom);
+//        message.setFrom(loginInfo.getMbPhone());
+//        message.setAttribute("user_name", loginInfo.getMbNickname());
+//        message.setAttribute("DianZan", "DianZan");
+//        message.setAttribute("level", loginInfo.getMbLevel());
+//        EMClient.getInstance().chatManager().sendMessage(message);
+//        if (temp) {
+//            new MyTimer(2000, 300).start();
+//            temp = false;
+//        }
 
     }
 
@@ -684,7 +686,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         params.put("userName", loginInfo.getMbPhone());
         params.put("friendName", anchorItem.getMember().getMbPhone());
         PostRequest request = OkGo.post(Config.MEMBER_ADDFRIEND).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -827,7 +829,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         params.put("sendType", "3");
         params.put("num", num);
         PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -855,7 +857,21 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             }
                             giftPost();
 
-                        } else {
+                        }
+                        else if (code == 0){
+                            ToastUtil.showToast("token已过期，请重新登录",PlayActivity.this);
+                            ACache.get(PlayActivity.this).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(PlayActivity.this, LoginActivity.class);
+                                    PlayActivity.this.startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
+                        }
+                        else {
                             ToastUtil.showToast(ob.getString("msg"), context);
                         }
                     }
@@ -1256,7 +1272,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         if (null != anchorItem.getAnId()) {
             params.put("anId", anchorItem.getAnId());
             PostRequest request = OkGo.post(Config.COMMON_SENDTOP).params(params);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -1366,7 +1382,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             params.put("mbId", loginInfo.getMbId());
             params.put("anId", anchorItem.getAnId());
             PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -1405,6 +1421,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 aCache.put(ACacheKey.CURRENT_FOLLOW, str);
                                 anchorItem.setFaCount(faCount + "");
 //                                initviews();
+                            }else if (i == 0){
+
+                                ToastUtil.showToast("token已过期，请重新登录",PlayActivity.this);
+                                ACache.get(PlayActivity.this).clear();
+                                new Handler() {
+                                }.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(PlayActivity.this, LoginActivity.class);
+                                        PlayActivity.this.startActivity(intent);
+                                        PApplication.getInstance().finishActivity();
+                                    }
+                                }, 3000);
                             }
                         }
                     } catch (Exception e) {
@@ -1735,6 +1764,10 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             }
         });
         adapter = new MessageChatroomAdapter(msgList, PlayActivity.this);
+        int maxlenth = Integer.valueOf(anchorItem.getWordLimit());
+        if (maxlenth > 0) {
+            adapter.setmMaxLenth(maxlenth);
+        }
         listView.setAdapter(adapter);
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
         if (msgList.size() > 0)
@@ -1789,13 +1822,14 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
 
                 } else if (map.containsKey("DianZan")) {
 
-                    message_from = (String) map.get("user_name");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showLikes(message_from);
-                        }
-                    });
+                    return;
+//                    message_from = (String) map.get("user_name");
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            showLikes(message_from);
+//                        }
+//                    });
                 } else if (map.containsKey("Recharge")) {
                     // TODO 收费
 //                    EMChatRoom chatRoom = null;
@@ -2089,7 +2123,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         }
         params.put("num", num);
         PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -2118,7 +2152,20 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                             if (isDanmu) {
                                 sendMsg();
                             }
-                        } else {
+                        }else if (code==0){
+                            ToastUtil.showToast("token已过期，请重新登录",PlayActivity.this);
+                            ACache.get(PlayActivity.this).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(PlayActivity.this, LoginActivity.class);
+                                    PlayActivity.this.startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
+
+                        }else {
                             if (isDanmu) {
                                 ToastUtil.showToast(ob.getString("msg") + "，充值后再发弹幕吧", context);
                             } else {
@@ -2143,7 +2190,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         params.put("sendType", "4");
         params.put("num", num);
         PostRequest request = OkGo.post(Config.POST_MEMBER_SEND2).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -2204,6 +2251,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
                                 });
 
                             }
+                        }else if (code==0){
+                            ToastUtil.showToast("token已过期，请重新登录",PlayActivity.this);
+                            ACache.get(PlayActivity.this).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(PlayActivity.this, LoginActivity.class);
+                                    PlayActivity.this.startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
+
                         } else {
                             ToastUtil.showToast(ob.getString("msg") + ",请充值后再获取吧", context);
 
@@ -2222,7 +2282,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         HttpParams params = new HttpParams();
         params.put("anId", anId);
         PostRequest request = OkGo.post(Config.POST_ANCHOR_GET).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -2236,6 +2296,19 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
             @Override
             public void onNext(Response response) {
                 HttpBase<Follow> bf = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                if (bf.getCode()==0){
+                    ToastUtil.showToast("token已过期，请重新登录",PlayActivity.this);
+                    ACache.get(PlayActivity.this).clear();
+                    new Handler() {
+                    }.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(PlayActivity.this, LoginActivity.class);
+                            PlayActivity.this.startActivity(intent);
+                            PApplication.getInstance().finishActivity();
+                        }
+                    }, 3000);
+                }
                 anchorItem = bf.getData();
                 chatroomid = anchorItem.getChatRoomId();
                 if (StringUtils.isNotEmpty(anchorItem.getWordLimit())) {

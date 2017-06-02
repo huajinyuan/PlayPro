@@ -11,8 +11,11 @@ import com.gt.okgo.request.PutRequest;
 import java.io.IOException;
 
 import cn.gtgs.base.playpro.PApplication;
-import cn.gtgs.base.playpro.activity.home.live.model.LoginInfo;
+import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.utils.ACache;
+import cn.gtgs.base.playpro.utils.ACacheKey;
+import cn.gtgs.base.playpro.utils.F;
 import okhttp3.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,11 +44,15 @@ public class HttpMethods {
     public HttpHeaders getHeaders() {
         HttpHeaders heads = new HttpHeaders(); //header不支持中文，不允许有特殊字符
         ACache aCache = ACache.get(PApplication.getInstance());
-        LoginInfo loginInfo = (LoginInfo) aCache.getAsObject("logininfo");
-//        Account account = (Account) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
-        heads.put("Authorization", "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIiwianRpIjoiM1Y5MzRaMXg5OGg4b3Y1ZTQ4NUk3bERjNndONDN2NEgifQ.eyJpc3MiOiJodHRwOlwvXC93d3cueWVxdXR2LmNuIiwiYXVkIjoiaHR0cDpcL1wvd3d3LnllcXV0di5jbiIsImp0aSI6IjNWOTM0WjF4OThoOG92NWU0ODVJN2xEYzZ3TjQzdjRIIiwiaWF0IjoxNDkzOTU2MDIyLCJleHAiOjE1MjU0OTIwMjIsInR5cGUiOiJjbGllbnQiLCJpZCI6MX0.");
-
-
+        Follow follow = (Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT);
+        if (null != follow) {
+            UserInfo info = follow.getMember();
+            if (null != info) {
+                String token = info.getToken();
+                heads.put("token", token);
+                F.e("token=====================" + token);
+            }
+        }
         return heads;
     }
 

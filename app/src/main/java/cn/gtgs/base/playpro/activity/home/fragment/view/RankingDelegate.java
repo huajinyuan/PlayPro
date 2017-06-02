@@ -16,17 +16,22 @@ public class RankingDelegate extends AppDelegate {
     TextView mBtnTyrants;
     @BindView(R.id.btn_star)
     TextView mBtnStar;
+    @BindView(R.id.btn_star_week)
+    TextView mBtnWeek;
 
 
     @Override
     public int getRootLayoutId() {
         return R.layout.fragment_ranking;
     }
+
     private void clearStatus() {
         mBtnTyrants.setBackgroundResource(R.color.float_transparent);
         mBtnTyrants.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.gray_btn_bg_pressed_color));
         mBtnStar.setBackgroundResource(R.color.float_transparent);
         mBtnStar.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.gray_btn_bg_pressed_color));
+        mBtnWeek.setBackgroundResource(R.color.float_transparent);
+        mBtnWeek.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.gray_btn_bg_pressed_color));
     }
 
     public void setStatus(int i) {
@@ -39,6 +44,10 @@ public class RankingDelegate extends AppDelegate {
             case 1:
                 mBtnStar.setBackgroundResource(R.drawable.shape_orange_indicator_r);
                 mBtnStar.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlue));
+                break;
+            case 2:
+                mBtnWeek.setBackgroundResource(R.drawable.shape_orange_indicator_r);
+                mBtnWeek.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlue));
                 break;
         }
     }

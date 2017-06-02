@@ -25,6 +25,7 @@ public class UserInfo implements Serializable {
     public int auditVideo;
     public long createTime;
     public long updateTime;
+    public String token;
     public boolean isAdmin = false;
 
     public int getAuditAnchor() {
@@ -148,28 +149,38 @@ public class UserInfo implements Serializable {
     }
 
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public boolean isAdmin() {
-        return mbPhone.equals("18616375556")||mbPhone.equals("13562180843")||mbPhone.equals("13459716663");
+        return mbPhone.equals("18616375556") || mbPhone.equals("13562180843") || mbPhone.equals("15912345678") || mbPhone.equals("15812345678");
     }
 
     @Override
     public String toString() {
         return "UserInfo{" +
-                "mbId=" + mbId +
+                "auditAnchor=" + auditAnchor +
+                ", mbId=" + mbId +
                 ", mbPhone='" + mbPhone + '\'' +
                 ", flag='" + flag + '\'' +
                 ", mbCode='" + mbCode + '\'' +
                 ", mbNickname='" + mbNickname + '\'' +
                 ", mbPhoto='" + mbPhoto + '\'' +
                 ", mbAge=" + mbAge +
-                ", mbGoldPay='" + mbGoldPay + '\'' +
+                ", mbGoldPay=" + mbGoldPay +
                 ", mbGold=" + mbGold +
                 ", MbLevel=" + MbLevel +
-                ", auditAnchor=" + auditAnchor +
                 ", mbSex=" + mbSex +
                 ", auditVideo=" + auditVideo +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", token='" + token + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

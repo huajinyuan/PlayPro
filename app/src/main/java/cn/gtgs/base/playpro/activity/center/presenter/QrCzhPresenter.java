@@ -38,7 +38,7 @@ public class QrCzhPresenter {
 
     public void getPic() {
         PostRequest request = OkGo.post(Config.COMMON_RECHARGEPIC);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
             }

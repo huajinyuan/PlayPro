@@ -46,7 +46,7 @@ public class TxListPresenter {
             } else {
                 request = OkGo.post(Config.COMMON_TXOFF).params(params);
             }
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 

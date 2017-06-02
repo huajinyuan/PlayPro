@@ -31,6 +31,7 @@ public class MessageChatroomAdapter extends BaseAdapter {
     private List<EMMessage> msgs;
     private Context context;
     private LayoutInflater inflater;
+    private int mMaxLenth = -1;
 
     public MessageChatroomAdapter(List<EMMessage> msgs, Context context_) {
         this.msgs = msgs;
@@ -64,6 +65,9 @@ public class MessageChatroomAdapter extends BaseAdapter {
         return 2;
     }
 
+    public void setmMaxLenth(int maxLenth){
+        this.mMaxLenth = maxLenth;
+    }
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -80,8 +84,10 @@ public class MessageChatroomAdapter extends BaseAdapter {
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
 
         if (message.getFrom().equals("-999")) {
-            viewHolder.tv_content.setText(txtBody.getMessage());
-            viewHolder.tv_content.setTextColor(ContextCompat.getColor(context, R.color.colorBlue));
+            viewHolder.tv_chatcontent_sys.setText(txtBody.getMessage());
+            viewHolder.tv_chatcontent_sys.setVisibility(View.VISIBLE);
+            viewHolder.tv_chatcontent_sys.setTextColor(ContextCompat.getColor(context, R.color.colorBlue));
+            viewHolder.tv_content.setVisibility(View.GONE);
             viewHolder.tv_level.setVisibility(View.GONE);
             viewHolder.tv_username.setVisibility(View.GONE);
         } else {
@@ -92,11 +98,18 @@ public class MessageChatroomAdapter extends BaseAdapter {
                     String name = "";
                     if (null != map.get("user_name")) {
                         name = (String) map.get("user_name");
-                        viewHolder.tv_content.setText("欢迎" + name + "加入聊天室");
+                        viewHolder.tv_chatcontent_sys.setText("欢迎" + name + "加入聊天室");
                     }
+                    viewHolder.tv_chatcontent_sys.setVisibility(View.VISIBLE);
+                    viewHolder.tv_content.setVisibility(View.GONE);
                     viewHolder.tv_level.setVisibility(View.GONE);
                     viewHolder.tv_username.setVisibility(View.GONE);
                 } else {
+                    if (mMaxLenth > 0) {
+                        viewHolder.tv_content.setMaxEms(mMaxLenth);
+                    }
+                    viewHolder.tv_chatcontent_sys.setVisibility(View.GONE);
+                    viewHolder.tv_content.setVisibility(View.VISIBLE);
                     viewHolder.tv_level.setVisibility(View.VISIBLE);
                     viewHolder.tv_username.setVisibility(View.VISIBLE);
 
@@ -160,11 +173,13 @@ public class MessageChatroomAdapter extends BaseAdapter {
     public static class ViewHolder {
         TextView tv_username, tv_level;
         EmoticonsTextView tv_content;
+        EmoticonsTextView tv_chatcontent_sys;
 
         public ViewHolder(View view) {
             tv_username = (TextView) view.findViewById(R.id.tv_username);
             tv_level = (TextView) view.findViewById(R.id.tv_level);
             tv_content = (EmoticonsTextView) view.findViewById(R.id.tv_chatcontent);
+            tv_chatcontent_sys = (EmoticonsTextView) view.findViewById(R.id.tv_chatcontent_sys);
         }
     }
 }

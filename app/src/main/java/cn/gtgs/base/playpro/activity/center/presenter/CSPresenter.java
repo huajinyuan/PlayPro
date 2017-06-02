@@ -38,7 +38,7 @@ public class CSPresenter {
 
     public void getinfo() {
         PostRequest request = OkGo.post(Config.MEMBER_CSLIST);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
             }

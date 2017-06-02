@@ -56,6 +56,17 @@
             android:maxWidth="210.0dp"
             android:textColor="@color/color_text_chat_item"
             android:textSize="@dimen/sp_12" />
+        <cn.gtgs.base.playpro.widget.EmoticonsTextView
+            android:id="@+id/tv_chatcontent_sys"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_username"
+            android:maxWidth="210.0dp"
+            android:textColor="@color/color_text_chat_item"
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/tv_userid"

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -108,6 +109,7 @@ import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.R;
 import cn.gtgs.base.playpro.activity.home.live.model.Gift;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpBase;
@@ -311,7 +313,8 @@ public class StreamingBaseActivity extends Activity implements
         }
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
-
+        PLANETS.add("5");
+        PLANETS.add("10");
         gestureDetector = new GestureDetector(this, onGestureListener);
         FACE_SIZE = (int) (0.5F + this.getResources().getDisplayMetrics().density * 20);
         aCache = ACache.get(this);
@@ -463,7 +466,7 @@ public class StreamingBaseActivity extends Activity implements
         params.put("status", status);
         params.put("anPrice", price);
         PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -780,9 +783,10 @@ public class StreamingBaseActivity extends Activity implements
     private void initUIs() {
         mRootView = (RelativeLayout) findViewById(R.id.content);
         mRootView.addOnLayoutChangeListener(this);
-        for (int i = 5; i <= 25; i++) {
-            PLANETS.add(i + "");
-        }
+//        for (int i = 5; i <= 25; i++) {
+//            PLANETS.add(i + "");
+//        }
+
         initDialogSettings();
         iv_live_option = (ImageView) findViewById(R.id.iv_live_option);
         mSatusTextView = (TextView) findViewById(R.id.streamingStatus);
@@ -1167,13 +1171,13 @@ public class StreamingBaseActivity extends Activity implements
                     public void run() {
                         try {
                             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-                       final int count = chatRoom.getMemberCount()*3;
+                            final int count = chatRoom.getMemberCount() * 3;
                             runOnUiThread(new Runnable() {
-                           @Override
-                           public void run() {
-                               tv_live_onlinenum.setText(count+"");
-                           }
-                       });
+                                @Override
+                                public void run() {
+                                    tv_live_onlinenum.setText(count + "");
+                                }
+                            });
 
                         } catch (HyphenateException e) {
                             e.printStackTrace();
@@ -1203,6 +1207,10 @@ public class StreamingBaseActivity extends Activity implements
             msgList.add(sysMsg);
         }
         adapter = new MessageChatroomAdapter(msgList, StreamingBaseActivity.this);
+        int maxlenth = Integer.valueOf(mF.getWordLimit());
+        if (maxlenth > 0) {
+            adapter.setmMaxLenth(maxlenth);
+        }
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -1321,7 +1329,7 @@ public class StreamingBaseActivity extends Activity implements
 
         @Override
         public void onMemberJoined(String roomId, final String participant) {
-            if (participant.equals("18616375556") || participant.equals("13562180843")) {
+            if (participant.equals("18616375556") || participant.equals("13562180843") || participant.equals("15912345678") || participant.equals("15812345678")) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -1457,12 +1465,13 @@ public class StreamingBaseActivity extends Activity implements
 
 
                 } else if (map.containsKey("DianZan")) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showLikes(message_from);
-                        }
-                    });
+                    return;
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            showLikes(message_from);
+//                        }
+//                    });
                 } else if (map.containsKey("DanMu")) {
                     //TODO 弹幕
                     runOnUiThread(new Runnable() {
@@ -1478,14 +1487,14 @@ public class StreamingBaseActivity extends Activity implements
                         @Override
                         public void run() {
                             try {
-                                 EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
-                               final int count =chatRoom.getMemberCount() * 3;
+                                EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatroomid);
+                                final int count = chatRoom.getMemberCount() * 3;
 
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         mF.setFaCount(count + "");
-                                        tv_live_onlinenum.setText(count+"");
+                                        tv_live_onlinenum.setText(count + "");
                                     }
                                 });
 //                    return chatRoom.getMemberCount() * 3;
@@ -2078,7 +2087,7 @@ public class StreamingBaseActivity extends Activity implements
         HttpParams params = new HttpParams();
         params.put("mbId", userInfo.getMbId());
         PostRequest request = OkGo.post(Config.POST_MEMBER_GET).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
             }
@@ -2090,10 +2099,26 @@ public class StreamingBaseActivity extends Activity implements
             @Override
             public void onNext(Response response) {
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
+                if (bs.getCode() == 0) {
+                    ToastUtil.showToast("token已过期，请重新登录",StreamingBaseActivity.this);
+                    ACache.get(StreamingBaseActivity.this).clear();
+                    new Handler() {
+                    }.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(StreamingBaseActivity.this, LoginActivity.class);
+                            StreamingBaseActivity.this.startActivity(intent);
+                            PApplication.getInstance().finishActivity();
+                        }
+                    }, 3000);
+
+                }
                 if (null != bs.getData()) {
+                    String token = userInfo.getToken();
                     mF = bs.getData();
                     aCache.put(ACacheKey.CURRENT_ACCOUNT, mF);
                     userInfo = mF.getMember();
+                    userInfo.setToken(token);
                     mTvGoldCount.setText(userInfo.getMbGold() + "");
                 }
             }

@@ -1,5 +1,8 @@
 package cn.gtgs.base.playpro.activity.center.presenter;
 
+import android.content.Intent;
+import android.os.Handler;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.okgo.OkGo;
@@ -8,8 +11,10 @@ import com.gt.okgo.request.PostRequest;
 
 import java.io.IOException;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.center.view.TXDelegate;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
 import cn.gtgs.base.playpro.utils.ACache;
@@ -57,7 +62,7 @@ public class TxPresenter {
             params.put("exchargeType", value);
             params.put("amount", delegate.getCount());
             PostRequest request = OkGo.post(Config.COMMON_TX).params(params);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -79,7 +84,19 @@ public class TxPresenter {
                             if (code == 1) {
                                 ToastUtil.showToast("订单已提交，请耐心等候", delegate.getActivity());
                                 delegate.getActivity().finish();
-                            } else {
+                            }else if (code==0){
+                                ToastUtil.showToast("token已过期，请重新登录", delegate.getActivity());
+                                ACache.get(delegate.getActivity()).clear();
+                                new Handler() {
+                                }.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(delegate.getActivity(), LoginActivity.class);
+                                        delegate.getActivity().startActivity(intent);
+                                        PApplication.getInstance().finishActivity();
+                                    }
+                                }, 3000);
+                            }else {
                                 ToastUtil.showToast(ob.getString("msg"), delegate.getActivity());
                             }
                         }

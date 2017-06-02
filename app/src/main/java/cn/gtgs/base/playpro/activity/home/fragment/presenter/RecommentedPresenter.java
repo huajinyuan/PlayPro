@@ -1,6 +1,9 @@
 package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 
 
+import android.content.Intent;
+import android.os.Handler;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.okgo.OkGo;
@@ -11,9 +14,11 @@ import com.gt.okgo.request.PostRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.fragment.view.RecommentedDelegate;
 import cn.gtgs.base.playpro.activity.home.model.ADInfo;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.BaseList;
 import cn.gtgs.base.playpro.http.Config;
@@ -81,7 +86,7 @@ public class RecommentedPresenter implements IRecommented {
 
 //        PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST).params(params);
         PostRequest request = OkGo.post(Config.POST_ANCHOR_LIST_LIVE).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -112,7 +117,7 @@ public class RecommentedPresenter implements IRecommented {
     public void getAdverts() {
 //        GET_ADVERTS
         GetRequest request = OkGo.get(Config.GET_ADVERTS);
-        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -129,6 +134,23 @@ public class RecommentedPresenter implements IRecommented {
                 try {
                     Str = response.body().string();
                     JSONObject ob = JSON.parseObject(Str);
+                    if (ob.containsKey("code")){
+                        int code = ob.getInteger("code");
+                        if (code == 0){
+                            ToastUtil.showToast("token已过期，请重新登录", delegate.getActivity());
+                            ACache.get(delegate.getActivity()).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(delegate.getActivity(), LoginActivity.class);
+                                    delegate.getActivity().startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
+                        }
+                    }
+
                     if (ob.containsKey("dataList")) {
                         ArrayList<ADInfo> r = (ArrayList<ADInfo>) JSON.parseArray(ob.getJSONArray("dataList").toJSONString(), ADInfo.class);
                         if (null != r && !r.isEmpty()) {
@@ -148,7 +170,7 @@ public class RecommentedPresenter implements IRecommented {
         HttpParams params = new HttpParams();
         params.put("mbId", info.getMbId());
         PostRequest request = OkGo.post(Config.POST_MEMBER_GET).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 //                if (delegate.getmSwp().isRefreshing()) {
@@ -175,6 +197,13 @@ public class RecommentedPresenter implements IRecommented {
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 if (null != bs.getData()) {
                     follow = bs.getData();
+
+                    String token = ((Follow) aCache.getAsObject(ACacheKey.CURRENT_ACCOUNT)).getMember().getToken();
+//                    Follow follow = bs.getData();
+                    UserInfo info = follow.getMember();
+                    info.setToken(token);
+                    follow.setMember(info);
+                    aCache.put(ACacheKey.CURRENT_ACCOUNT, follow);
                     aCache.put(ACacheKey.CURRENT_ACCOUNT, bs.getData());
                 }
             }

@@ -48,7 +48,7 @@ public class SearchPresenter implements ISearch {
             HttpParams params = new HttpParams();
             params.put("searchKey", content);
             PostRequest request = OkGo.post(Config.POST_SEARCH).params(params);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 

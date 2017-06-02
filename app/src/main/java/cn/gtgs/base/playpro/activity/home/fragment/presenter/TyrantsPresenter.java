@@ -45,7 +45,7 @@ public class TyrantsPresenter implements IRecommented {
         params.put("page", "1");
         params.put("count", "30");
         GetRequest request = OkGo.get(Config.POST_MEMBER_TOP).params(params);
-        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 

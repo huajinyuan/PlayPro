@@ -2,6 +2,7 @@ package cn.gtgs.base.playpro.activity.home;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -29,6 +30,7 @@ import cn.gtgs.base.playpro.activity.home.presenter.HomePresenter;
 import cn.gtgs.base.playpro.activity.home.presenter.IHomeRefreshListener;
 import cn.gtgs.base.playpro.activity.home.search.SearchActivity;
 import cn.gtgs.base.playpro.activity.home.view.HomeDelegate;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.base.presenter.ActivityPresenter;
 import cn.gtgs.base.playpro.http.Config;
@@ -158,7 +160,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
             PostRequest request = OkGo.post(Config.POST_ANCHOR_OPEN).params(params);
             viewDelegate.showPro();
             viewDelegate.getmPlayView().setClickable(false);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 
@@ -176,23 +178,40 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
                     viewDelegate.hidePro();
                     viewDelegate.getmPlayView().setClickable(true);
                     HttpBase<Follow> baseF = Parsing.getInstance().ResponseToObject(response, Follow.class);
-                    Follow follow = baseF.getData();
-                    F.e("--------------" + follow.toString());
-                    if (StringUtils.isNotEmpty(follow.getAnStatus()) && follow.getAnStatus().equals("0")) {
-                        Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
-                        try {
-                            intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
-                            intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
-                            intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
-                            startActivity(intent);
-                            Updatestatus();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
+                    if (baseF.getCode()==1){
+                        Follow follow = baseF.getData();
+                        F.e("--------------" + follow.toString());
+                        if (StringUtils.isNotEmpty(follow.getAnStatus()) && follow.getAnStatus().equals("0")) {
+                            Intent intent = new Intent(HomeActivity.this, HWCodecCameraStreamingActivity.class);
+                            try {
+                                intent.putExtra(Config.EXTRA_KEY_PUB_URL, Config.EXTRA_PUBLISH_URL_PREFIX + new DESUtil().decrypt(follow.getWcPushAddress()));
+                                intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow.chatRoomId);
+                                intent.putExtra(Config.EXTRA_KEY_PUB_FOLLOW, follow);
+                                startActivity(intent);
+                                Updatestatus();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
 
-                        ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", HomeActivity.this);
+                            ToastUtil.showToast("您还未申请开通直播，请跳转到个人中心申请", HomeActivity.this);
+                        }
+
+                    }else if (baseF.getCode()==0){
+
+                        ToastUtil.showToast("token已过期，请重新登录", HomeActivity.this);
+                        ACache.get(HomeActivity.this).clear();
+                        new Handler() {
+                        }.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                HomeActivity.this.startActivity(intent);
+                                PApplication.getInstance().finishActivity();
+                            }
+                        }, 3000);
                     }
+
 
                 }
             });
@@ -211,7 +230,7 @@ public class HomeActivity extends ActivityPresenter<HomeDelegate> implements IHo
             params.put("status", "2");
             params.put("anPrice", 0);
             PostRequest request = OkGo.post(Config.MEMBER_LIVESTATUS).params(params);
-            HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 

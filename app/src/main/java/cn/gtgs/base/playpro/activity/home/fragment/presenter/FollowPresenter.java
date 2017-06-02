@@ -1,6 +1,9 @@
 package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 
 
+import android.content.Intent;
+import android.os.Handler;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.okgo.OkGo;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.fragment.view.FollowDelegate;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
@@ -55,7 +59,7 @@ public class FollowPresenter implements IFollow {
         params.put("mbId", info.getMbId());
         params.put("anId", follow.getAnId());
         PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -87,6 +91,18 @@ public class FollowPresenter implements IFollow {
                             String str = JSON.toJSONString(gs);
                             aCache.put(ACacheKey.CURRENT_FOLLOW, str);
                             getData();
+                        }else if (i==0){
+                            ToastUtil.showToast("token已过期，请重新登录", delegate.getActivity());
+                            ACache.get(delegate.getActivity()).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(delegate.getActivity(), LoginActivity.class);
+                                    delegate.getActivity().startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
                         }
                     }
                 } catch (Exception e) {
@@ -104,7 +120,7 @@ public class FollowPresenter implements IFollow {
             params.put("page", "1");
             params.put("count", "100");
             GetRequest request = OkGo.get(Config.POST_ANCHOR_MEMBER_FAVLIST).params(params);
-            HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+            HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
                 @Override
                 public void onCompleted() {
 

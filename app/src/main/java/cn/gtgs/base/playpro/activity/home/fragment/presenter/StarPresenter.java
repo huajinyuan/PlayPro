@@ -1,6 +1,9 @@
 package cn.gtgs.base.playpro.activity.home.fragment.presenter;
 
 
+import android.content.Intent;
+import android.os.Handler;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.okgo.OkGo;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import cn.gtgs.base.playpro.PApplication;
 import cn.gtgs.base.playpro.activity.home.fragment.view.StarDelegate;
 import cn.gtgs.base.playpro.activity.home.model.Follow;
+import cn.gtgs.base.playpro.activity.login.LoginActivity;
 import cn.gtgs.base.playpro.activity.login.model.UserInfo;
 import cn.gtgs.base.playpro.http.Config;
 import cn.gtgs.base.playpro.http.HttpMethods;
@@ -54,7 +58,7 @@ public class StarPresenter implements IRecommented {
         params.put("mbId", info.getMbId());
         params.put("anId", anId);
         PostRequest request = OkGo.post(Config.POST_ANCHOR_MEMBER_fav).params(params);
-        HttpMethods.getInstance().doPost(request, false).subscribe(new Subscriber<Response>() {
+        HttpMethods.getInstance().doPost(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -90,6 +94,18 @@ public class StarPresenter implements IRecommented {
                             aCache.put(ACacheKey.CURRENT_FOLLOW, str);
 //                            ToastUtil.showToast("操作成功",delegate.getActivity());
                             delegate.AddapterChange();
+                        } else if (i == 0) {
+                            ToastUtil.showToast("token已过期，请重新登录", delegate.getActivity());
+                            ACache.get(delegate.getActivity()).clear();
+                            new Handler() {
+                            }.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(delegate.getActivity(), LoginActivity.class);
+                                    delegate.getActivity().startActivity(intent);
+                                    PApplication.getInstance().finishActivity();
+                                }
+                            }, 3000);
                         }
                     }
                 } catch (Exception e) {
@@ -106,10 +122,8 @@ public class StarPresenter implements IRecommented {
         HttpParams params = new HttpParams();
         params.put("page", "1");
         params.put("count", "100");
-        GetRequest request = OkGo.get(Config.POST_ANCHOR_TOP).params(params);
-
-//        GetRequest request = OkGo.get("https://api.yequtv.cn/v1/regions/350500/popular_anchors?key=z45CasVgh8K3q6300g0d95VkK197291A");
-        HttpMethods.getInstance().doGet(request, false).subscribe(new Subscriber<Response>() {
+        GetRequest request = OkGo.get(Config.COMMON_MONTHTOP).params(params);
+        HttpMethods.getInstance().doGet(request, true).subscribe(new Subscriber<Response>() {
             @Override
             public void onCompleted() {
 
@@ -124,7 +138,9 @@ public class StarPresenter implements IRecommented {
 
             @Override
             public void onNext(Response response) {
-
+                if (delegate.getmSwp().isRefreshing()) {
+                    delegate.getmSwp().setRefreshing(false);
+                }
                 try {
                     F.e(response.body().toString());
                     ArrayList<Follow> lists = (ArrayList<Follow>) Parsing.getInstance().ResponseToList3(response, Follow.class).dataList;
