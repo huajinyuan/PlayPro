@@ -2100,7 +2100,7 @@ public class StreamingBaseActivity extends Activity implements
             public void onNext(Response response) {
                 HttpBase<Follow> bs = Parsing.getInstance().ResponseToObject(response, Follow.class);
                 if (bs.getCode() == 0) {
-                    ToastUtil.showToast("token已过期，请重新登录",StreamingBaseActivity.this);
+                    ToastUtil.showToast("token已过期，请重新登录", StreamingBaseActivity.this);
                     ACache.get(StreamingBaseActivity.this).clear();
                     new Handler() {
                     }.postDelayed(new Runnable() {

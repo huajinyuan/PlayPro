@@ -3,9 +3,9 @@
     <translate
         android:duration="10000"
         android:fillAfter="true"
-        android:fromXDelta="0"
+        android:fromXDelta="1000"
         android:fromYDelta="0"
         android:repeatCount="infinite"
-        android:toXDelta="-1500"
+        android:toXDelta="-1000"
         android:toYDelta="0" />
 </set>
