@@ -227,6 +227,7 @@ public class PlayActivity extends AppCompatActivity implements OnEmoticoSelected
         super.onCreate(savedInstanceState);
         PApplication.getInstance().mActiviyts.add(this);
         setContentView(R.layout.activity_play);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
